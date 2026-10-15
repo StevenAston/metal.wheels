@@ -1,0 +1,11 @@
+# Future demand driver (Task 1.4): per-capita in-use stock saturation x population.
+domain: demand
+parameters:
+  dem.saturation_stock_per_capita:
+    value: 250
+    unit: kg/person
+    status: assumption
+    distribution: uniform
+    low: 215
+    high: 300
+    note: "ASSUMPTION carried from the planning discussion; a source is to be pinned down in Task 1.4. Context: Glöser-Chahoud 2017 p. 119 cites ~130 kg/person for Europe in 1990 rising to ~180 kg/person today."

@@ -1,0 +1,83 @@
+# Primary energy per kg refined copper as a function of ore grade g (mass fraction) and depth D.
+#   Norgate option:   E(g) = a + b / g                     [MJ/kg]
+#   Depth term:       + k_D * max(0, D - D_0)               [MJ/kg]
+#   Koppelaar option: ln E = a + c*D + b/g  (Eq. 4)          [E in MJ/kg, D in m]
+domain: energy
+parameters:
+  # --- Norgate & Jahanshahi 2010 (LCA, incl. embodied energy; pyrometallurgical route) ---
+  # Source values: 72 / 131 / 249 MJ/kg (75 um grind) and 129 / 244 / 474 MJ/kg (5 um grind)
+  # at 1.0 / 0.5 / 0.25 % Cu. a + b/g reproduces all six exactly.
+  en.norgate.coarse.a:
+    value: 13.0
+    unit: MJ/kg
+    status: derived
+    source: norgate_jahanshahi_2010
+    locator: "Values as tabulated in Koppelaar & Koppelaar 2016, Table 1 and text, p. 4"
+    note: "Fitted constant term; beneficiation to 75 um plus smelting."
+  en.norgate.coarse.b:
+    value: 0.59
+    unit: MJ/kg
+    status: derived
+    source: norgate_jahanshahi_2010
+    locator: "Values as tabulated in Koppelaar & Koppelaar 2016, Table 1 and text, p. 4"
+    note: "Grade coefficient with g as a mass fraction (59 MJ/kg per wt% Cu)."
+  en.norgate.fine.a:
+    value: 14.0
+    unit: MJ/kg
+    status: derived
+    source: norgate_jahanshahi_2010
+    locator: "Values as tabulated in Koppelaar & Koppelaar 2016, Table 1 and text, p. 4"
+    note: "Fitted constant term; beneficiation to 5 um plus smelting."
+  en.norgate.fine.b:
+    value: 1.15
+    unit: MJ/kg
+    status: derived
+    source: norgate_jahanshahi_2010
+    locator: "Values as tabulated in Koppelaar & Koppelaar 2016, Table 1 and text, p. 4"
+    note: "Grade coefficient with g as a mass fraction (115 MJ/kg per wt% Cu)."
+  en.norgate.grade_min:
+    value: 0.001
+    unit: "1"
+    status: sourced
+    source: koppelaar_2016
+    locator: "p. 4 (Norgate & Jahanshahi 'established values between a 0.1 and 3.0 % ore grade')"
+    note: "Range guard: warn below this grade."
+  en.norgate.grade_max:
+    value: 0.03
+    unit: "1"
+    status: sourced
+    source: koppelaar_2016
+    locator: "p. 4"
+    note: "Range guard: warn above this grade."
+
+  # --- Depth term ---
+  en.depth.reference_depth:
+    value: 497
+    unit: m
+    status: sourced
+    source: harmsen_2013
+    locator: "§2.1.5, p. 65 (weighted average depth of present-day mines, from Long 2011)"
+    note: "Grade-only energy studies already embody mines at this depth; only depth beyond it adds energy."
+  en.depth.energy_per_m:
+    value: 0.029
+    unit: MJ/kg/m
+    status: sourced
+    distribution: uniform
+    low: 0.029
+    high: 0.046
+    source: harmsen_2013
+    locator: "§2.1.5, p. 65 (2.9 MJ/kg Cu per 100 m)"
+    range_source: koppelaar_2016
+    note: "Low = Harmsen 2013 (overburden removal, 9 Canadian open pits). High = Pitt & Wadsworth 1980, 4.6 MJ/kg per 100 m at 0.55 % grade, as tabulated in Koppelaar 2016 Table 1."
+
+  # --- Koppelaar & Koppelaar 2016, Eq. (4), Table 5 (mining + concentrating only) ---
+  en.koppelaar.surface.a: {value: 1.463, unit: "1", status: sourced, source: koppelaar_2016, locator: "Table 5, p. 12, surface mine, milling/flotation, total energy, Eq. (4)", note: "SE 0.2619. ln-space intercept."}
+  en.koppelaar.surface.c: {value: 0.000374, unit: 1/m, status: sourced, source: koppelaar_2016, locator: "Table 5, p. 12, surface, Eq. (4)", note: "Depth coefficient, SE 0.0002 (p = 0.085, not significant at 5 %)."}
+  en.koppelaar.surface.b: {value: 0.0119, unit: "1", status: sourced, source: koppelaar_2016, locator: "Table 5, p. 12, surface, Eq. (4)", note: "Inverse-grade coefficient with g as a mass fraction. SE 0.0019. R2 = 0.63."}
+  en.koppelaar.underground.a: {value: 0.820, unit: "1", status: sourced, source: koppelaar_2016, locator: "Table 5, p. 12, underground, milling/flotation, total energy, Eq. (4)", note: "SE 0.1572."}
+  en.koppelaar.underground.c: {value: 0.00083, unit: 1/m, status: sourced, source: koppelaar_2016, locator: "Table 5, p. 12, underground, Eq. (4)", note: "SE 0.0002."}
+  en.koppelaar.underground.b: {value: 0.0151, unit: "1", status: sourced, source: koppelaar_2016, locator: "Table 5, p. 12, underground, Eq. (4)", note: "SE 0.0012. R2 = 0.84."}
+  en.koppelaar.grade_min: {value: 0.0022, unit: "1", status: sourced, source: koppelaar_2016, locator: "p. 10 (observed head grades 0.22-4.8 %)", note: "Range guard."}
+  en.koppelaar.grade_max: {value: 0.048, unit: "1", status: sourced, source: koppelaar_2016, locator: "p. 10", note: "Range guard."}
+  en.koppelaar.depth_min: {value: 50, unit: m, status: sourced, source: koppelaar_2016, locator: "p. 10 (depth 50-1200 m, mean 530 m)", note: "Range guard."}
+  en.koppelaar.depth_max: {value: 1200, unit: m, status: sourced, source: koppelaar_2016, locator: "p. 10", note: "Range guard. Values beyond these bounds are extrapolations and are logged as warnings."}

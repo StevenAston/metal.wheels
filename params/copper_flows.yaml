@@ -1,0 +1,92 @@
+# Copper end-of-life partition and production/fabrication losses.
+# Flow figures quoted in notes are kt Cu for 2011 from Helbig et al. 2020 SI, Figure S11
+# (itself Glöser-Chahoud 2017 Abbildung 5.8 plus mining losses to tailings).
+domain: copper_flows
+parameters:
+  cu.eol_collection_rate:
+    value: 0.67
+    unit: "1"
+    status: sourced
+    distribution: normal
+    low: 0.53
+    high: 0.81
+    source: gloser_chahoud_2017
+    locator: "Tabelle 5.3, p. 114 (EoL CR = g/e; mean 2002-2012)"
+    note: "Mean 0.67, SD 0.07 over 2002-2012; bounds are mean +/- 2 SD."
+
+  cu.eol_processing_rate:
+    value: 0.69
+    unit: "1"
+    status: sourced
+    distribution: normal
+    low: 0.67
+    high: 0.71
+    source: gloser_chahoud_2017
+    locator: "Tabelle 5.3, p. 114 (EoL PR = i/g; mean 2002-2012)"
+    note: "Mean 0.69, SD 0.01; bounds are mean +/- 2 SD. Collected EoL copper not processed into old scrap goes to 'other scrap markets' (largely steel and aluminium scrap streams)."
+
+  cu.eol_recycling_rate_reported:
+    value: 0.46
+    unit: "1"
+    status: sourced
+    low: 0.41
+    high: 0.51
+    source: gloser_chahoud_2017
+    locator: "Tabelle 5.3, p. 114 (EoL RR = i/e; mean 2002-2012, SD 0.05)"
+    note: "Calibration target, not a model input. Should equal collection x processing to within rounding (0.67 x 0.69 = 0.462)."
+
+  cu.tailings_share_of_ore_cu:
+    value: 0.18
+    unit: "1"
+    status: sourced
+    source: gloser_2013
+    locator: "Quoted in Helbig et al. 2020 SI (MMC1) §2.6, p. S7"
+    note: "Share of copper in mined ore lost to tailings. S11 2011: 3,550 kt of 19,800 kt in ore."
+
+  cu.production_yield:
+    value: 0.8347
+    unit: "1"
+    status: sourced
+    source: charpentier_poncelet_2022
+    locator: "Supplementary Data, sheet '1. Data - Process yields (m)', row 29_Cu"
+    note: "Taken by Charpentier Poncelet from Helbig 2020 / Glöser-Chahoud 2017. Equals refined copper / (Cu in ore + low-quality scrap) in S11: 19,700 / (19,800 + 3,800)."
+
+  cu.smelting_loss_fraction:
+    value: 0.0175
+    unit: "1"
+    status: derived
+    source: helbig_2020
+    locator: "SI Figure S11, p. S8"
+    note: "Smelting losses / smelter input = 350 / (16,250 + 3,800) kt."
+
+  cu.fabrication_yield:
+    value: 0.8241
+    unit: "1"
+    status: sourced
+    source: charpentier_poncelet_2022
+    locator: "Supplementary Data, sheet '1. Data - Process yields (m)', row 29_Cu"
+    note: "Final goods / semis: 20,850 / 25,250 in S11. The shortfall is mostly new scrap that returns (see cu.new_scrap_recovery)."
+
+  cu.new_scrap_recovery:
+    value: 0.9231
+    unit: "1"
+    status: sourced
+    source: charpentier_poncelet_2022
+    locator: "Supplementary Data, sheet '1. Data - Process yields (m)', row 29_Cu"
+    note: "Share of fabrication residues recovered as new scrap."
+
+  cu.fabrication_loss_fraction:
+    value: 0.0139
+    unit: "1"
+    status: derived
+    source: helbig_2020
+    locator: "SI Figure S11, p. S8"
+    note: "True losses at fabrication and manufacturing / semis = (150 + 200) / 25,250 kt."
+
+  cu.in_use_dissipation_fraction:
+    value: 0.0216
+    unit: "1"
+    status: derived
+    source: helbig_2020
+    locator: "SI Figure S11, p. S8"
+    note: "In-use dissipation / final goods = 450 / 20,850 kt. Applied to inflow; Charpentier Poncelet assign it by sector (chemicals 100 %, transport 0.4 %, construction 0.2 %)."

@@ -120,7 +120,7 @@ metal.wheels/
 2. **Execution environment.** Development and tests run in Claude's cloud workspace; GitHub is the hub; Steve's folder `C:\Users\steve\Development\metal.wheels` becomes a clone so he can run and tinker locally.
 3. **Remote.** GitHub. Licences: MIT (code), CC-BY-4.0 (docs, reports, registry text).
 4. **Population driver.** UN World Population Prospects 2024, medium variant to 2100, then held flat; low/high variants as scenarios.
-5. **Sector scheme.** Glöser-Chahoud's 15 product groups as the core; Charpentier Poncelet sector collection yields mapped where finer data is missing.
+5. **Sector scheme.** Glöser-Chahoud's 16 product groups (Tabelle 5.1) as the core; Charpentier Poncelet sector collection yields mapped where finer data is missing.
 6. **Endowment.** Harmsen 2013 and Kesler & Wilkinson 2008 always shown **side by side**; neither is "default".
 7. **Steel scope.** Minimal Phase 2 module with exogenous steel demand and scrap supply by product class (Daehn/Pauliuk).
 
@@ -391,3 +391,4 @@ metal.wheels/
 ## Change Log
 
 - **2026-10-15** — Plan confirmed. Open Questions resolved (see above). Python requirement relaxed to ≥ 3.12 (dev env is 3.13). Task 1.1 input changed to Steve's DS140 mirror owing to the USGS appropriations lapse. Licence files added to structure.
+- **2026-10-15** — Task 0.2: Glöser-Chahoud Tabelle 5.1 has 16 product groups, not 15 (corrected above). Added `params/demand.yaml` (saturation stock, Task 1.4) to the structure; mass parameters (tailings density) live in `geology.yaml`. Registry convention: grades are mass fractions, never percent (Gerst's ln-wt% parameters stored as published and converted in code). Added optional `range_source` field so bounds can cite a different source from the central value.

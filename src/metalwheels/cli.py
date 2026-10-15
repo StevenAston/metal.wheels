@@ -45,3 +45,59 @@ def info() -> None:
     typer.echo(f"metalwheels {__version__}")
     typer.echo(f"Python {platform.python_version()} on {platform.system()}")
     typer.echo(f"Default Monte Carlo workers: {max(1, (os.cpu_count() or 1) - 2)}")
+
+
+params_app = typer.Typer(help="Inspect the parameter registry.", no_args_is_help=True)
+app.add_typer(params_app, name="params")
+
+
+def _fmt(x: float | None) -> str:
+    return "" if x is None else f"{x:g}"
+
+
+@params_app.command("list")
+def params_list(
+    domain: str | None = typer.Option(None, "--domain", "-d", help="Only show one domain."),
+    params_dir: str | None = typer.Option(
+        None, "--params-dir", help="Parameter directory (default: repo params/)."
+    ),
+    notes: bool = typer.Option(False, "--notes", help="Include the note column."),
+) -> None:
+    """List every parameter with its value, unit, range and provenance."""
+    from rich.console import Console
+    from rich.table import Table
+
+    from metalwheels import registry
+
+    try:
+        reg = registry.load(params_dir)
+    except registry.RegistryError as exc:
+        log.error("%s", exc)
+        raise typer.Exit(code=1) from exc
+
+    items = [p for p in reg.values() if domain is None or p.domain == domain]
+    if domain is not None and not items:
+        log.error("no parameters in domain %r (domains: %s)", domain, ", ".join(reg.domains))
+        raise typer.Exit(code=1)
+
+    table = Table(title=f"Parameter registry ({len(items)} of {len(reg)})", show_lines=False)
+    for col in ("key", "value", "unit", "low", "high", "dist", "status", "source", "locator"):
+        table.add_column(col, overflow="fold")
+    if notes:
+        table.add_column("note", overflow="fold")
+    for p in sorted(items, key=lambda q: (q.domain, q.key)):
+        row = [
+            p.key,
+            _fmt(p.value),
+            p.unit,
+            _fmt(p.low),
+            _fmt(p.high),
+            p.distribution,
+            p.status,
+            p.source or "",
+            p.locator or "",
+        ]
+        if notes:
+            row.append(p.note or "")
+        table.add_row(*row)
+    Console(width=200).print(table)

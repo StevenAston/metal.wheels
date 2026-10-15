@@ -1,0 +1,96 @@
+# Grade-tonnage distribution, endowment by depth, and ore/tailings material properties.
+domain: geology
+parameters:
+  # --- Lognormal grade-tonnage (Gerst 2008) ---
+  # Gerst's convention: parameters of ln(grade in wt%), tonnage-weighted. The model converts to
+  # mass fractions internally. Median grade = exp(mu_w) = 0.516 %.
+  geo.grade.gerst.mu_w:
+    value: -0.6616
+    unit: "1"
+    status: sourced
+    source: gerst_2008
+    locator: "Table 3, p. 620, 'Global porphyry'"
+    note: "Location parameter of ln(grade, wt%). Gerst reports median 0.52 %, mean 0.56 %. Porphyry deposits only; sediment-hosted (mu_w 0.4269) and VMS (-0.3949) differ and may make the true global distribution bimodal."
+  geo.grade.gerst.sigma2_w:
+    value: 0.1567
+    unit: "1"
+    status: sourced
+    source: gerst_2008
+    locator: "Table 3, p. 620, 'Global porphyry'"
+    note: "Variance of ln(grade, wt%)."
+  geo.grade.kesler_ext.mu_w:
+    value: -0.7467
+    unit: "1"
+    status: sourced
+    source: gerst_2008
+    locator: "p. 623, text following eqs 16-17 (extrapolation to Kesler & Wilkinson endowment)"
+    note: "Grade distribution extrapolated to the larger Kesler & Wilkinson 2008 resource."
+  geo.grade.kesler_ext.sigma2_w:
+    value: 0.1892
+    unit: "1"
+    status: sourced
+    source: gerst_2008
+    locator: "p. 623, text following eqs 16-17 (extrapolation to Kesler & Wilkinson endowment)"
+
+  # --- Endowment bracket A: Harmsen 2013 Table 1 (land-based, all deposit types, first 5 km) ---
+  geo.endow.harmsen.layer_0_1km: {value: 3350, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Originally in ground'", note: "Up to 1 km"}
+  geo.endow.harmsen.layer_1_2km: {value: 4790, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Originally in ground'", note: "1-2 km"}
+  geo.endow.harmsen.layer_2_3km: {value: 5740, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Originally in ground'", note: "2-3 km"}
+  geo.endow.harmsen.layer_3_4km: {value: 5740, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Originally in ground'", note: "3-4 km"}
+  geo.endow.harmsen.layer_4_5km: {value: 5270, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Originally in ground'", note: "4-5 km. Layers sum to the table total of 2.49E+04 Mt."}
+  geo.endow.harmsen.produced_0_1km: {value: 526, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Produced'", note: "Cumulative production to about 2010 from the first km."}
+  geo.endow.harmsen.produced_1_2km: {value: 54.1, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Produced'"}
+  geo.endow.harmsen.produced_share_top_500m:
+    value: 0.85
+    unit: "1"
+    status: sourced
+    source: harmsen_2013
+    locator: "§2.1.2, p. 64 (from Long 2011)"
+    note: "Share of first-km production assumed to come from the top 500 m."
+
+  # --- Endowment bracket B: Kesler & Wilkinson 2008 ---
+  geo.endow.kesler.above_3_3km:
+    value: 89000
+    unit: Mt
+    status: sourced
+    source: kesler_wilkinson_2008
+    locator: "p. 257 ('recoverable resource of ~8.9 x 10^10 t of copper')"
+    note: "All deposit types above 3.3 km, taken as the likely limit of mining. Enough for ~5,500 years of 2008 mine production."
+  geo.endow.kesler.porphyry_all_depths:
+    value: 170000
+    unit: Mt
+    status: sourced
+    source: kesler_wilkinson_2008
+    locator: "Abstract, p. 255 (~1.7 x 10^11 t)"
+  geo.endow.kesler.all_types_all_depths:
+    value: 300000
+    unit: Mt
+    status: sourced
+    source: kesler_wilkinson_2008
+    locator: "Abstract, p. 255 (~3 x 10^11 t)"
+
+  # --- USGS 2013 global assessment ---
+  geo.usgs.identified:
+    value: 2100
+    unit: Mt
+    status: sourced
+    source: usgs_fs_2014_3004
+    locator: "p. 1, summary"
+    note: "Identified resources (reserves plus other identified resources) at the 2013 assessment."
+  geo.usgs.undiscovered_mean:
+    value: 3500
+    unit: Mt
+    status: sourced
+    source: usgs_fs_2014_3004
+    locator: "p. 1, summary and Table 1 (total copper)"
+    note: "Mean undiscovered: porphyry within 1 km, sediment-hosted stratabound within 2.5 km of surface."
+
+  # --- Material properties ---
+  geo.tailings_dry_density:
+    value: 1.6
+    unit: t/m3
+    status: assumption
+    distribution: uniform
+    low: 1.3
+    high: 1.8
+    note: "ASSUMPTION pending a source in Task 1.7 (typical settled dry density of hard-rock tailings)."

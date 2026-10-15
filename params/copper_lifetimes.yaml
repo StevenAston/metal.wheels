@@ -1,0 +1,57 @@
+# Copper product groups: mean service lifetime and fabrication (production) efficiency.
+# Source: Glöser-Chahoud 2017, Tabelle 5.1, p. 107 (values validated by industry representatives).
+# Fabrication efficiency = share of processed semis that ends up in the final product; the rest
+# returns to semis producers as new scrap. It is a loop, NOT a loss (true fabrication losses are
+# `cu.fabrication_loss_fraction` in copper_flows.yaml).
+# Lifetimes are normal distributions with sigma = `cu.lifetime_sigma_fraction` x mean.
+domain: copper_lifetimes
+parameters:
+  cu.lifetime_sigma_fraction:
+    value: 0.15
+    unit: "1"
+    status: sourced
+    source: gloser_chahoud_2017
+    locator: "§5.2, p. 107 (text above Tabelle 5.1)"
+    note: "Gaussian lifetime distributions with SD = 15 % of the expected value."
+
+  # --- Bauwesen (construction) ---
+  cu.lifetime.construction_pipes: {value: 40, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Rohre"}
+  cu.fab_efficiency.construction_pipes: {value: 0.95, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Rohre"}
+  cu.lifetime.construction_cooling: {value: 40, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Gebäudekühlung (building cooling)"}
+  cu.fab_efficiency.construction_cooling: {value: 0.90, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Gebäudekühlung (building cooling)"}
+  cu.lifetime.construction_facades: {value: 50, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Fassaden (facades, roofing)"}
+  cu.fab_efficiency.construction_facades: {value: 0.85, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Fassaden (facades, roofing)"}
+  cu.lifetime.construction_communication: {value: 30, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Gebäude-Kommunikation (building communication wiring)"}
+  cu.fab_efficiency.construction_communication: {value: 0.90, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Gebäude-Kommunikation (building communication wiring)"}
+  cu.lifetime.construction_power: {value: 40, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Stromübertragung (building power wiring)"}
+  cu.fab_efficiency.construction_power: {value: 0.90, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Stromübertragung (building power wiring)"}
+
+  # --- Infrastruktur (infrastructure) ---
+  cu.lifetime.infrastructure_telecom: {value: 30, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Telekommunikationsleitungen (telecom lines)"}
+  cu.fab_efficiency.infrastructure_telecom: {value: 0.90, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Telekommunikationsleitungen (telecom lines)"}
+  cu.lifetime.infrastructure_power: {value: 30, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Stromerzeugung (power generation and distribution)"}
+  cu.fab_efficiency.infrastructure_power: {value: 0.85, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Stromerzeugung (power generation and distribution)"}
+
+  # --- Industrie (industrial equipment) ---
+  cu.lifetime.industry_electrical: {value: 15, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Elektrische Anlagen (electrical equipment)"}
+  cu.fab_efficiency.industry_electrical: {value: 0.80, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Elektrische Anlagen (electrical equipment)"}
+  cu.lifetime.industry_thermal: {value: 20, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Thermische Anlagen (thermal equipment)"}
+  cu.fab_efficiency.industry_thermal: {value: 0.90, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Thermische Anlagen (thermal equipment)"}
+
+  # --- Transport ---
+  cu.lifetime.transport_cars: {value: 14, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Automobil"}
+  cu.fab_efficiency.transport_cars: {value: 0.75, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Automobil"}
+  cu.lifetime.transport_trucks: {value: 16, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Lkw (Lastkraftwagen, lorries)"}
+  cu.fab_efficiency.transport_trucks: {value: 0.80, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Lkw (Lastkraftwagen, lorries)"}
+  cu.lifetime.transport_air_space_marine: {value: 25, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Luft- und Raumfahrt, Schiffe"}
+  cu.fab_efficiency.transport_air_space_marine: {value: 0.80, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Luft- und Raumfahrt, Schiffe"}
+
+  # --- Konsum & Elektronik (consumer & electronics) ---
+  cu.lifetime.consumer_general: {value: 8, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Konsum allgemein"}
+  cu.fab_efficiency.consumer_general: {value: 0.75, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Konsum allgemein"}
+  cu.lifetime.consumer_refrigeration: {value: 10, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Kühl- und Gefrierschränke"}
+  cu.fab_efficiency.consumer_refrigeration: {value: 0.80, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Kühl- und Gefrierschränke"}
+  cu.lifetime.consumer_electronics: {value: 8, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Elektronik"}
+  cu.fab_efficiency.consumer_electronics: {value: 0.75, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Elektronik"}
+  cu.lifetime.consumer_other: {value: 10, unit: a, status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Sonstiges"}
+  cu.fab_efficiency.consumer_other: {value: 0.75, unit: "1", status: sourced, source: gloser_chahoud_2017, locator: "Tabelle 5.1, p. 107", note: "Sonstiges"}
