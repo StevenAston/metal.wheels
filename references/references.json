@@ -1,0 +1,764 @@
+[
+  {
+    "publisher": "Springer Science and Business Media LLC",
+    "issue": "8",
+    "DOI": "10.1038/s41893-022-00895-8",
+    "type": "journal-article",
+    "page": "717-726",
+    "title": "Losses and lifetimes of metals in the economy",
+    "volume": "5",
+    "author": [
+      {
+        "given": "Alexandre",
+        "family": "Charpentier Poncelet"
+      },
+      {
+        "given": "Christoph",
+        "family": "Helbig"
+      },
+      {
+        "given": "Philippe",
+        "family": "Loubet"
+      },
+      {
+        "given": "Antoine",
+        "family": "Beylot"
+      },
+      {
+        "given": "Stéphanie",
+        "family": "Muller"
+      },
+      {
+        "given": "Jacques",
+        "family": "Villeneuve"
+      },
+      {
+        "given": "Bertrand",
+        "family": "Laratte"
+      },
+      {
+        "given": "Andrea",
+        "family": "Thorenz"
+      },
+      {
+        "given": "Axel",
+        "family": "Tuma"
+      },
+      {
+        "given": "Guido",
+        "family": "Sonnemann"
+      }
+    ],
+    "container-title": "Nature Sustainability",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1038/s41893-022-00895-8",
+    "id": "charpentier_poncelet_2022",
+    "note": "An Author Correction was published: doi:10.1038/s41893-022-00918-4 (contents not yet reviewed). Supplementary Data workbook used for Cu process yields."
+  },
+  {
+    "publisher": "American Chemical Society (ACS)",
+    "issue": "16",
+    "DOI": "10.1021/es505515z",
+    "type": "journal-article",
+    "page": "9443-9451",
+    "title": "Lost by Design",
+    "volume": "49",
+    "author": [
+      {
+        "given": "Luca",
+        "family": "Ciacci"
+      },
+      {
+        "given": "Barbara K.",
+        "family": "Reck"
+      },
+      {
+        "given": "N. T.",
+        "family": "Nassar"
+      },
+      {
+        "given": "T. E.",
+        "family": "Graedel"
+      }
+    ],
+    "container-title": "Environmental Science & Technology",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1021/es505515z",
+    "id": "ciacci_2015"
+  },
+  {
+    "publisher": "American Chemical Society (ACS)",
+    "issue": "11",
+    "DOI": "10.1021/acs.est.7b00997",
+    "type": "journal-article",
+    "page": "6599-6606",
+    "title": "How Will Copper Contamination Constrain Future Global Steel Recycling?",
+    "volume": "51",
+    "author": [
+      {
+        "given": "Katrin E.",
+        "family": "Daehn"
+      },
+      {
+        "given": "André",
+        "family": "Cabrera Serrenho"
+      },
+      {
+        "given": "Julian M.",
+        "family": "Allwood"
+      }
+    ],
+    "container-title": "Environmental Science & Technology",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1021/acs.est.7b00997",
+    "id": "daehn_2017"
+  },
+  {
+    "publisher": "Springer Science and Business Media LLC",
+    "issue": "3",
+    "DOI": "10.1007/s11663-019-01537-9",
+    "type": "journal-article",
+    "page": "1225-1240",
+    "title": "Finding the Most Efficient Way to Remove Residual Copper from Steel Scrap",
+    "volume": "50",
+    "author": [
+      {
+        "given": "Katrin E.",
+        "family": "Daehn"
+      },
+      {
+        "given": "André Cabrera",
+        "family": "Serrenho"
+      },
+      {
+        "given": "Julian",
+        "family": "Allwood"
+      }
+    ],
+    "container-title": "Metallurgical and Materials Transactions B",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1007/s11663-019-01537-9",
+    "id": "daehn_2019"
+  },
+  {
+    "publisher": "Society of Economic Geologists, Inc.",
+    "issue": "3",
+    "DOI": "10.2113/gsecongeo.103.3.615",
+    "type": "journal-article",
+    "page": "615-628",
+    "title": "Revisiting the Cumulative Grade-Tonnage Relationship for Major Copper Ore Types",
+    "volume": "103",
+    "author": [
+      {
+        "given": "M. D.",
+        "family": "Gerst"
+      }
+    ],
+    "container-title": "Economic Geology",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.2113/gsecongeo.103.3.615",
+    "id": "gerst_2008"
+  },
+  {
+    "publisher": "American Chemical Society (ACS)",
+    "issue": "12",
+    "DOI": "10.1021/es400069b",
+    "type": "journal-article",
+    "page": "6564-6572",
+    "title": "Dynamic Analysis of Global Copper Flows. Global Stocks, Postconsumer Material Flows, Recycling Indicators, and Uncertainty Evaluation",
+    "volume": "47",
+    "author": [
+      {
+        "given": "Simon",
+        "family": "Glöser"
+      },
+      {
+        "given": "Marcel",
+        "family": "Soulier"
+      },
+      {
+        "given": "Luis A.",
+        "family": "Tercero Espinoza"
+      }
+    ],
+    "container-title": "Environmental Science & Technology",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1021/es400069b",
+    "id": "gloser_2013"
+  },
+  {
+    "type": "thesis",
+    "language": "de",
+    "author": [
+      {
+        "family": "Glöser-Chahoud",
+        "given": "Simon"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "DOI": "10.21268/20170724-133145",
+    "publisher": "MyCoRe Community",
+    "title": "Quantitative Analyse der Kritikalität mineralischer und metallischer Rohstoffe unter Verwendung eines systemdynamischen Modell-Ansatzes",
+    "URL": "https://dokumente.ub.tu-clausthal.de/receive/clausthal_mods_00000524",
+    "id": "gloser_chahoud_2017"
+  },
+  {
+    "publisher": "Elsevier BV",
+    "DOI": "10.1016/j.energy.2012.12.006",
+    "type": "journal-article",
+    "page": "62-73",
+    "title": "The impact of copper scarcity on the efficiency of 2050 global renewable energy scenarios",
+    "volume": "50",
+    "author": [
+      {
+        "given": "J.H.M.",
+        "family": "Harmsen"
+      },
+      {
+        "given": "A.L.",
+        "family": "Roes"
+      },
+      {
+        "given": "M.K.",
+        "family": "Patel"
+      }
+    ],
+    "container-title": "Energy",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1016/j.energy.2012.12.006",
+    "id": "harmsen_2013"
+  },
+  {
+    "publisher": "Elsevier BV",
+    "DOI": "10.1016/j.resconrec.2019.104537",
+    "type": "journal-article",
+    "page": "104537",
+    "title": "Quantitative assessment of dissipative losses of 18 metals",
+    "volume": "153",
+    "author": [
+      {
+        "given": "Christoph",
+        "family": "Helbig"
+      },
+      {
+        "given": "Andrea",
+        "family": "Thorenz"
+      },
+      {
+        "given": "Axel",
+        "family": "Tuma"
+      }
+    ],
+    "container-title": "Resources, Conservation and Recycling",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1016/j.resconrec.2019.104537",
+    "article-number": "104537",
+    "id": "helbig_2020"
+  },
+  {
+    "publisher": "Geological Society of America",
+    "issue": "3",
+    "DOI": "10.1130/g24317a.1",
+    "type": "journal-article",
+    "page": "255",
+    "title": "Earth's copper resources estimated from tectonic diffusion of porphyry copper deposits",
+    "volume": "36",
+    "author": [
+      {
+        "given": "Stephen E.",
+        "family": "Kesler"
+      },
+      {
+        "given": "Bruce H.",
+        "family": "Wilkinson"
+      }
+    ],
+    "container-title": "Geology",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1130/G24317A.1",
+    "id": "kesler_wilkinson_2008"
+  },
+  {
+    "publisher": "Springer Science and Business Media LLC",
+    "issue": "2",
+    "DOI": "10.1007/s41247-016-0012-x",
+    "type": "journal-article",
+    "title": "The Ore Grade and Depth Influence on Copper Energy Inputs",
+    "volume": "1",
+    "author": [
+      {
+        "given": "R. H. E. M.",
+        "family": "Koppelaar"
+      },
+      {
+        "given": "H.",
+        "family": "Koppelaar"
+      }
+    ],
+    "container-title": "BioPhysical Economics and Resource Quality",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1007/s41247-016-0012-x",
+    "article-number": "11",
+    "id": "koppelaar_2016"
+  },
+  {
+    "publisher": "Elsevier BV",
+    "DOI": "10.1016/j.scitotenv.2011.09.075",
+    "type": "journal-article",
+    "page": "138-147",
+    "title": "Metal lost and found: Dissipative uses and releases of copper in the United States 1975–2000",
+    "volume": "417-418",
+    "author": [
+      {
+        "given": "Reid J.",
+        "family": "Lifset"
+      },
+      {
+        "given": "Matthew J.",
+        "family": "Eckelman"
+      },
+      {
+        "given": "E.M.",
+        "family": "Harper"
+      },
+      {
+        "given": "Zeke",
+        "family": "Hausfather"
+      },
+      {
+        "given": "Gonzalo",
+        "family": "Urbina"
+      }
+    ],
+    "container-title": "Science of The Total Environment",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2012
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1016/j.scitotenv.2011.09.075",
+    "id": "lifset_2012"
+  },
+  {
+    "id": "morales_2021",
+    "type": "paper-conference",
+    "title": "Geotechnical characterization of an old copper tailings impoundment by using the Cone Penetration Test and Laboratory Testing",
+    "author": [
+      {
+        "family": "Morales",
+        "given": "Camilo"
+      },
+      {
+        "family": "Castillo",
+        "given": "Emilia"
+      },
+      {
+        "family": "Posch",
+        "given": "Jean Paul"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "container-title": "Tailings 2021 (Gecamin conference proceedings)",
+    "publisher": "Gecamin",
+    "URL": "https://www.srk.com/en/publications/geotechnical-characterization-of-an-old-copper-tailings-impoundment-by-using-the-cone-penetration-test-and-laboratory-testing",
+    "note": "SRK Chile. Table 1 gives in-situ and Proctor dry densities for a Chilean copper tailings impoundment."
+  },
+  {
+    "publisher": "Society of Economic Geologists",
+    "issue": "6",
+    "DOI": "10.5382/econgeo.2018.4590",
+    "type": "journal-article",
+    "page": "1235-1267",
+    "title": "Growing Global Copper Resources, Reserves and Production: Discovery Is Not the Only Control on Supply",
+    "volume": "113",
+    "author": [
+      {
+        "given": "Gavin M.",
+        "family": "Mudd"
+      },
+      {
+        "given": "Simon M.",
+        "family": "Jowitt"
+      }
+    ],
+    "container-title": "Economic Geology",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.5382/econgeo.2018.4590",
+    "id": "mudd_jowitt_2018"
+  },
+  {
+    "publisher": "Elsevier BV",
+    "issue": "2",
+    "DOI": "10.1016/j.mineng.2009.10.002",
+    "type": "journal-article",
+    "page": "65-73",
+    "title": "Low grade ores – Smelt, leach or concentrate?",
+    "volume": "23",
+    "author": [
+      {
+        "given": "T.",
+        "family": "Norgate"
+      },
+      {
+        "given": "S.",
+        "family": "Jahanshahi"
+      }
+    ],
+    "container-title": "Minerals Engineering",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1016/j.mineng.2009.10.002",
+    "id": "norgate_jahanshahi_2010"
+  },
+  {
+    "publisher": "Elsevier BV",
+    "DOI": "10.1016/j.resconrec.2013.10.005",
+    "type": "journal-article",
+    "page": "190-201",
+    "title": "Modelling future copper ore grade decline based on a detailed assessment of copper resources and mining",
+    "volume": "83",
+    "author": [
+      {
+        "given": "S.",
+        "family": "Northey"
+      },
+      {
+        "given": "S.",
+        "family": "Mohr"
+      },
+      {
+        "given": "G.M.",
+        "family": "Mudd"
+      },
+      {
+        "given": "Z.",
+        "family": "Weng"
+      },
+      {
+        "given": "D.",
+        "family": "Giurco"
+      }
+    ],
+    "container-title": "Resources, Conservation and Recycling",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1016/j.resconrec.2013.10.005",
+    "id": "northey_2014",
+    "note": "A corrigendum was published in 2020: doi:10.1016/j.resconrec.2019.104598 (contents not yet reviewed)."
+  },
+  {
+    "id": "unep_2013_metal_recycling",
+    "type": "report",
+    "title": "Metal Recycling: Opportunities, Limits, Infrastructure",
+    "author": [
+      {
+        "literal": "UNEP International Resource Panel"
+      }
+    ],
+    "editor": [
+      {
+        "family": "Reuter",
+        "given": "Markus A."
+      },
+      {
+        "family": "Hudson",
+        "given": "Christian"
+      },
+      {
+        "family": "van Schaik",
+        "given": "Antoinette"
+      },
+      {
+        "family": "Heiskanen",
+        "given": "Kari"
+      },
+      {
+        "family": "Meskers",
+        "given": "Christina"
+      },
+      {
+        "family": "Hagelüken",
+        "given": "Christian"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "publisher": "United Nations Environment Programme",
+    "publisher-place": "Nairobi",
+    "URL": "https://wedocs.unep.org/20.500.11822/8423",
+    "note": "A Report of the Working Group on the Global Metal Flows to the International Resource Panel. Source of the Metal Wheel."
+  },
+  {
+    "publisher": "U.S. Geological Survey",
+    "DOI": "10.3133/ds140",
+    "type": "report",
+    "title": "Historical statistics for mineral and material commodities in the United States",
+    "author": [
+      {
+        "given": "Thomas",
+        "family": "Kelly"
+      },
+      {
+        "given": "Grecia R.",
+        "family": "Matos"
+      },
+      {
+        "given": "David A.",
+        "family": "Buckingham"
+      },
+      {
+        "given": "Carl A.",
+        "family": "DiFrancesco"
+      },
+      {
+        "given": "Kenneth E.",
+        "family": "Porter"
+      },
+      {
+        "given": "Cyrus",
+        "family": "Berry"
+      },
+      {
+        "given": "Melissa",
+        "family": "Crane"
+      },
+      {
+        "given": "Thomas",
+        "family": "Goonan"
+      },
+      {
+        "given": "John",
+        "family": "Sznopek"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.3133/ds140",
+    "id": "usgs_ds140",
+    "collection-title": "Data Series",
+    "number": "140"
+  },
+  {
+    "publisher": "U.S. Geological Survey",
+    "DOI": "10.3133/ds896",
+    "type": "report",
+    "title": "Historical global statistics for mineral and material commodities",
+    "author": [
+      {
+        "given": "Grecia R.",
+        "family": "Matos"
+      },
+      {
+        "given": "Lisa D.",
+        "family": "Miller"
+      },
+      {
+        "given": "James J.",
+        "family": "Barry"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.3133/ds896",
+    "id": "usgs_ds896",
+    "collection-title": "Data Series",
+    "number": "896"
+  },
+  {
+    "publisher": "U.S. Geological Survey",
+    "DOI": "10.3133/fs20143004",
+    "type": "report",
+    "title": "Estimate of undiscovered copper resources of the world, 2013",
+    "author": [
+      {
+        "given": "Kathleen M.",
+        "family": "Johnson"
+      },
+      {
+        "given": "Jane M.",
+        "family": "Hammarstrom"
+      },
+      {
+        "given": "Michael L.",
+        "family": "Zientek"
+      },
+      {
+        "given": "Connie L.",
+        "family": "Dicken"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.3133/fs20143004",
+    "id": "usgs_fs_2014_3004",
+    "collection-title": "Fact Sheet",
+    "number": "2014-3004"
+  },
+  {
+    "publisher": "US Geological Survey",
+    "DOI": "10.3133/mcs2026",
+    "type": "report",
+    "title": "Mineral commodity summaries 2026",
+    "container-title": "",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.3133/mcs2026",
+    "id": "usgs_mcs_2026"
+  },
+  {
+    "id": "valero_valero_2014",
+    "type": "book",
+    "title": "Thanatia: The Destiny of the Earth's Mineral Resources: A Thermodynamic Cradle-to-Cradle Assessment",
+    "author": [
+      {
+        "family": "Valero Capilla",
+        "given": "Antonio"
+      },
+      {
+        "family": "Valero Delgado",
+        "given": "Alicia"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "publisher": "World Scientific",
+    "publisher-place": "Singapore",
+    "ISBN": "9789814273930",
+    "URL": "https://doi.org/10.1142/9789814273947_0010",
+    "note": "URL is the DOI of the chapter 'Thanatia and the Crepuscular Earth Model'; no book-level DOI found in Crossref."
+  }
+]

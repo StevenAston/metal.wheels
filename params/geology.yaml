@@ -87,10 +87,12 @@ parameters:
 
   # --- Material properties ---
   geo.tailings_dry_density:
-    value: 1.6
+    value: 1.40
     unit: t/m3
-    status: assumption
+    status: sourced
     distribution: uniform
-    low: 1.3
-    high: 1.8
-    note: "ASSUMPTION pending a source in Task 1.7 (typical settled dry density of hard-rock tailings)."
+    low: 1.30
+    high: 1.48
+    source: morales_2021
+    locator: "Table 1, 'Natural dry density' (sand cone): dam zone 1.39-1.48, pond zone 1.30-1.44 t/m3"
+    note: "In-situ dry density of a decades-old conventional (slurry) copper TSF in Chile; value is the midpoint of the combined in-situ range. Laboratory limits from the same table: standard-Proctor maximum 1.94 (dam) / 1.80 (pond), minimum 1.30; specific gravity 2.72-2.79. Proctor maxima are an upper bound for compacted or filtered (dry-stack) storage, not conventional ponds. Single-site evidence."
