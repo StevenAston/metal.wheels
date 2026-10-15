@@ -1,5 +1,26 @@
 [
   {
+    "id": "ceec_2021",
+    "type": "report",
+    "title": "Mining Energy Consumption 2021",
+    "author": [
+      {
+        "family": "Allen",
+        "given": "Marc"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "publisher": "engeco, commissioned by The Weir Group PLC; hosted by the Coalition for Eco-Efficient Comminution (CEEC)",
+    "URL": "https://www.ceecthefuture.org/resources/mining-energy-consumption-2021",
+    "note": "Cu, Au, iron ore, Ni and Li mining and concentrating: ~1.68 EJ/a, ~0.5 % of global final energy; smelting excluded. Whole mining industry ~12 EJ/a (~3.5 %). Average site split: comminution 25 %, mobile diesel 46 %, ventilation 15 %, other electricity 14 %. Publication year inferred from title (not stated on the page)."
+  },
+  {
     "publisher": "Springer Science and Business Media LLC",
     "issue": "8",
     "DOI": "10.1038/s41893-022-00895-8",
@@ -318,6 +339,47 @@
     "id": "helbig_2020"
   },
   {
+    "id": "iea_2020_steel_roadmap",
+    "type": "report",
+    "title": "Iron and Steel Technology Roadmap: Towards more sustainable steelmaking",
+    "author": [
+      {
+        "literal": "International Energy Agency"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "publisher": "IEA",
+    "publisher-place": "Paris",
+    "URL": "https://www.iea.org/reports/iron-and-steel-technology-roadmap",
+    "note": "Published 8 October 2020. Steel ~8 % of global final energy demand; steel from scrap needs roughly one-eighth of the energy of steel from ore."
+  },
+  {
+    "id": "iea_2021_heavy_industry_efficiency",
+    "type": "webpage",
+    "title": "Driving Energy Efficiency in Heavy Industries",
+    "author": [
+      {
+        "literal": "International Energy Agency"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "publisher": "IEA",
+    "URL": "https://www.iea.org/articles/driving-energy-efficiency-in-heavy-industries",
+    "note": "Published 17 March 2021. Industry >30 % of global total primary energy demand. States scrap-EAF steel is 60-70 % less energy-intensive than primary, which conflicts with the 1/8 ratio in iea_2020_steel_roadmap; resolve on a common energy basis in Task 2.4."
+  },
+  {
     "publisher": "Geological Society of America",
     "issue": "3",
     "DOI": "10.1130/g24317a.1",
@@ -417,6 +479,31 @@
     },
     "URL": "http://dx.doi.org/10.1016/j.scitotenv.2011.09.075",
     "id": "lifset_2012"
+  },
+  {
+    "id": "michaux_2021",
+    "type": "report",
+    "title": "The Mining of Minerals and the Limits to Growth",
+    "author": [
+      {
+        "family": "Michaux",
+        "given": "Simon P."
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "publisher": "Geological Survey of Finland (GTK)",
+    "publisher-place": "Espoo",
+    "collection-title": "GTK Open File Work Report",
+    "number": "16/2021",
+    "DOI": "10.13140/RG.2.2.10175.84640",
+    "URL": "https://www.researchgate.net/publication/351712079",
+    "note": "DOI is a ResearchGate DOI. Relevant here: §9 decreasing grind size, §10 ore hardness (JKTech A*b by decade), §13 energy in mining."
   },
   {
     "id": "morales_2021",
@@ -549,6 +636,34 @@
     "URL": "http://dx.doi.org/10.1016/j.resconrec.2013.10.005",
     "id": "northey_2014",
     "note": "A corrigendum was published in 2020: doi:10.1016/j.resconrec.2019.104598 (contents not yet reviewed)."
+  },
+  {
+    "id": "rotzer_schmidt_2020",
+    "type": "article-journal",
+    "title": "Historical, Current, and Future Energy Demand from Global Copper Production and Its Impact on Climate Change",
+    "author": [
+      {
+        "family": "Rötzer",
+        "given": "Nadine"
+      },
+      {
+        "family": "Schmidt",
+        "given": "Mario"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "container-title": "Resources",
+    "volume": "9",
+    "issue": "4",
+    "page": "44",
+    "DOI": "10.3390/resources9040044",
+    "note": "Cumulative energy demand (CED) of global copper; quoted by Michaux 2021: CED rises ~30 % to 89 GJ-eq/t cathode if grade falls to 0.5 %. Candidate cross-check for Task 1.6."
   },
   {
     "id": "unep_2013_metal_recycling",
@@ -757,7 +872,7 @@
     },
     "publisher": "World Scientific",
     "publisher-place": "Singapore",
-    "ISBN": "9789814273930",
+    "ISBN": "978-981-4273-93-0",
     "URL": "https://doi.org/10.1142/9789814273947_0010",
     "note": "URL is the DOI of the chapter 'Thanatia and the Crepuscular Earth Model'; no book-level DOI found in Crossref."
   }

@@ -28,7 +28,7 @@ def test_entries_have_title_and_year(bib):
 
 
 def test_planned_sources_present(bib):
-    """The Task 0.3 list in PLAN.md (CEEC 2021 and IEA pending identification)."""
+    """The Task 0.3 list in PLAN.md."""
     expected = {
         "gloser_2013",
         "gloser_chahoud_2017",
@@ -49,6 +49,9 @@ def test_planned_sources_present(bib):
         "ciacci_2015",
         "unep_2013_metal_recycling",
         "valero_valero_2014",
+        "ceec_2021",
+        "iea_2020_steel_roadmap",
+        "iea_2021_heavy_industry_efficiency",
     }
     assert expected <= set(bib)
 
