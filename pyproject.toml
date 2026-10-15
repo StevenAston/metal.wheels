@@ -47,6 +47,8 @@ select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
 [tool.ruff.lint.per-file-ignores]
 # Model code mirrors the equations in its docstrings (E, M, W, T, ...).
 "src/metalwheels/{copper,steel,cascade,ratchets}/*.py" = ["N806"]
+# Report text and tables: long prose lines are clearer unwrapped.
+"src/metalwheels/report.py" = ["E501", "RUF001"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -5,6 +5,7 @@ to 1e-6; replaying historical production gives a 2010 mined grade within 0.5-0.7
 import math
 
 import numpy as np
+import pandas as pd
 import pytest
 from scipy import integrate
 
@@ -131,6 +132,8 @@ def test_paced_discovery_keeps_lead(reg, history):
     prof, r = geo.extraction_for(reg, "kesler", yrs, demand)
     after = yrs > 2010
     avail = prof.discovered.sum() + r.discovered_fraction * prof.undiscovered.sum()
-    lead = (avail - np.cumsum(r.extracted)) / demand
+    k = int(reg.value("geo.discovery_smoothing_years"))
+    trend = pd.Series(demand).rolling(k, min_periods=1).mean().to_numpy()
+    lead = (avail - np.cumsum(r.extracted)) / trend
     assert (lead[after] >= r.lead_years * (1 - 1e-9)).all()
     assert (np.diff(r.discovered_fraction) >= 0).all()

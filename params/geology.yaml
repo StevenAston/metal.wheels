@@ -152,3 +152,10 @@ parameters:
     source: harmsen_2013
     locator: "§2.1.3, p. 65 ('a copper concentrate with a grade between 27 % and 30 %')"
     note: "Mass fraction of Cu in flotation concentrate; tailings mass = ore - concentrate."
+  geo.discovery_smoothing_years:
+    value: 10
+    unit: a
+    status: assumption
+    low: 1
+    high: 30
+    note: "Paced discovery keeps discovered-unmined copper >= lead x the trailing mean of annual extraction over this many years (exploration responds to demand trends, not single years). Introduced to remove a discovery pulse when population is held flat after 2100."

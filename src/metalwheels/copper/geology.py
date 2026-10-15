@@ -20,11 +20,12 @@ of 1900-2010 extraction from the top 500 m matches Harmsen's statement (0.85 x 5
 At cost level lam each slice is worked down to grade g_i = 100 b / (lam - P_i), with b the Norgate
 grade coefficient, so extraction always takes the cheapest remaining copper across slices.
 
-Paced discovery (decided by Steve, 2026-10-15). Up to the calibration year only discovered copper
-is minable (everything produced by 2010 came from deposits known by 2010). Afterwards, a uniform
-fraction phi of every slice's undiscovered copper becomes discovered whenever needed to keep
-discovered-but-unmined copper at least ``lead_years`` x that year's extraction; ``lead_years`` is
-the 2010 ratio unless given.
+Paced discovery (decided by Steve, 2026-10-15). Up to the calibration year only discovered
+copper is minable (everything produced by 2010 came from deposits known by 2010). Afterwards, a
+uniform fraction phi of every slice's undiscovered copper becomes discovered whenever needed to
+keep discovered-but-unmined copper at least ``lead_years`` x the demand trend (trailing mean over
+``smoothing_years``, so single-year demand steps do not trigger discovery pulses);
+``lead_years`` is the 2010 ratio unless given.
 
 The state in year t is fully described by (lam_t, phi_t): cumulative extraction
 X_t = sum_i (A_i + phi_t U_i) C_i(g_i(lam_t)) / E_i, solved for lam_t each year.
@@ -199,6 +200,7 @@ class Extraction:
         multiplier: float,
         calibration_year: int = 2010,
         lead_years: float | None = None,
+        smoothing_years: int = 1,
     ):
         self.p = profile
         self.b = b
@@ -206,6 +208,9 @@ class Extraction:
         self.multiplier = multiplier
         self.calibration_year = calibration_year
         self.lead_years = lead_years
+        if smoothing_years < 1:
+            raise ValueError("smoothing_years must be >= 1")
+        self.smoothing_years = int(smoothing_years)
         self.sigma = math.sqrt(profile.sigma2)
         self.mean_grade = math.exp(profile.mu + profile.sigma2 / 2)
 
@@ -252,12 +257,18 @@ class Extraction:
         phi, cum, lead = 0.0, 0.0, self.lead_years
         cap = 1 - EXHAUSTED * 1e-3  # never solve exactly at the endowment
 
+        # discovery responds to the trailing-mean demand trend, not single-year swings
+        k = self.smoothing_years
+        csum = np.concatenate([[0.0], np.cumsum(demand)])
+        lo_idx = np.maximum(0, np.arange(n) - k + 1)
+        trend = (csum[1:] - csum[lo_idx]) / (np.arange(n) + 1 - lo_idx)
+
         for t in range(n):
             want = cum + demand[t]
             if years[t] > self.calibration_year:
                 if lead is None:
                     raise RuntimeError("lead_years not set: calibration year not in the run")
-                need = lead * demand[t]
+                need = lead * trend[t]
                 if (A + phi * U).sum() - want < need and phi < 1:
                     phi = min(1.0, (need + want - A.sum()) / U.sum())
             avail = A + phi * U
@@ -276,7 +287,7 @@ class Extraction:
             phi_out[t] = phi
             prev_cu, prev_ore, cum = cu, o, x
             if years[t] == self.calibration_year and lead is None:
-                lead = (avail.sum() - cum) / demand[t]
+                lead = (avail.sum() - cum) / trend[t]
 
         rem = pd.DataFrame(remaining, index=pd.Index(years, name="year"), columns=self.p.layer)
         rem = rem.T.groupby(level=0, sort=False).sum().T
@@ -327,4 +338,5 @@ def extraction_for(
         prof, b, k_depth, d0, years, ore_cu, reg.value("geo.calib.produced_share_top500_2010")
     )
     log.info("%s: depth-order multiplier calibrated to %.3f", bracket, m)
-    return prof, Extraction(prof, b, k_depth, d0, m).run(years, ore_cu)
+    k = int(reg.value("geo.discovery_smoothing_years"))
+    return prof, Extraction(prof, b, k_depth, d0, m, smoothing_years=k).run(years, ore_cu)
