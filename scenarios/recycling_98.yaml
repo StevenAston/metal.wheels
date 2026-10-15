@@ -1,0 +1,13 @@
+name: recycling_98
+description: >-
+  End-of-life collection and processing both raised to 0.98 from 2026 (instant switch; history
+  1900-2025 unchanged).
+overrides: {}
+policy:
+  start_year: 2026
+  ramp_years: 0
+  collection: 0.98
+  processing: 0.98
+options:
+  end_year: 3025
+  energy_option: norgate_coarse

@@ -15,9 +15,15 @@ Every parameter carries provenance (source, locator, value, unit, range). Unsour
 
 ```bash
 uv sync
-uv run metalwheels --version
-uv run pytest
+uv run pytest                                  # full test suite
+uv run metalwheels scenarios                   # list scenarios
+uv run metalwheels run baseline                # 1900-3025 run -> runs/baseline/
+uv run metalwheels copper history              # historical stock-flow table
+uv run metalwheels copper project --collection 0.95 --processing 0.95
+uv run metalwheels params list --domain geology
 ```
+
+Outputs per run: `runs/<scenario>/timeseries.parquet` (schema in `metalwheels.export`), `summary.csv`, `meta.json` (git commit, registry hash, calibration values).
 
 ## Data note
 

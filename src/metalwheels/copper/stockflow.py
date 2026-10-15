@@ -174,6 +174,8 @@ def run(
     prm: CopperParams,
     max_age: int = 200,
     target_stock: np.ndarray | None = None,
+    collection: np.ndarray | None = None,
+    processing: np.ndarray | None = None,
 ) -> StockFlowResult:
     """Run the stock-flow model. ``mine`` in Mt Cu/yr aligned with ``years``.
 
@@ -181,6 +183,9 @@ def run(
     demand-driven: mine output is solved so that the in-use stock reaches ``target_stock``
     (Mt) that year, given end-of-life returns and the scrap loop. If recycling alone would
     overshoot the target, mine output is set to zero and the stock is allowed to exceed it.
+
+    ``collection`` / ``processing`` optionally give per-year EoL rates (policy scenarios);
+    otherwise the scalar values in ``prm`` apply to every year.
     """
     years = np.asarray(years)
     mine = np.asarray(mine, dtype=float)
@@ -201,7 +206,14 @@ def run(
     flows = np.zeros((T, len(FLOW_COLUMNS)))
     col = {name: i for i, name in enumerate(FLOW_COLUMNS)}
 
-    c, p, s, f = prm.collection, prm.processing, prm.smelting_loss, prm.semis_loss
+    T_ = len(years)
+    c_t = np.full(T_, prm.collection) if collection is None else np.asarray(collection, float)
+    p_t = np.full(T_, prm.processing) if processing is None else np.asarray(processing, float)
+    if c_t.shape != (T_,) or p_t.shape != (T_,):
+        raise ValueError("collection/processing must align with years")
+    if ((c_t < 0) | (c_t > 1) | (p_t < 0) | (p_t > 1)).any():
+        raise ValueError("collection/processing rates must lie in [0, 1]")
+    s, f = prm.smelting_loss, prm.semis_loss
     r, w, d = prm.new_scrap_capture, prm.scrap_to_smelter, prm.dissipation
     k = (1 - f) * r * (1 - prm.eta_bar)
     prev = np.zeros(G)
@@ -214,6 +226,7 @@ def run(
             eol[t] = np.einsum("ag,ga->g", past, pmf[:, :n])
         E = eol[t].sum()
         # 2. partition
+        c, p = c_t[t], p_t[t]
         old, other, notrec = c * p * E, c * (1 - p) * E, (1 - c) * E
         # 3-4. closed-form scrap pool and fabrication chain
         if demand_years[t]:

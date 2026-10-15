@@ -73,6 +73,29 @@ def fit_growth_rate(per_capita: dict[int, float], k_sat: float, window: int, end
     return mean_growth / (1 - k_mid / k_sat)
 
 
+def policy_rates(
+    years: np.ndarray, prm: sf.CopperParams, policy: dict | None
+) -> tuple[np.ndarray, np.ndarray]:
+    """Per-year collection and processing rates under an optional policy."""
+    c = np.full(len(years), prm.collection)
+    p = np.full(len(years), prm.processing)
+    if not policy:
+        return c, p
+    unknown = set(policy) - {"start_year", "ramp_years", "collection", "processing"}
+    if unknown:
+        raise ValueError(f"unknown policy keys: {sorted(unknown)}")
+    start = int(policy.get("start_year", LAST_HISTORICAL_YEAR + 1))
+    if start <= LAST_HISTORICAL_YEAR:
+        raise ValueError("policies may only change years after the historical period")
+    ramp = float(policy.get("ramp_years", 0))
+    frac = np.clip((years - start + 1) / ramp, 0, 1) if ramp > 0 else (years >= start).astype(float)
+    frac = np.where(years >= start, frac, 0.0)
+    for arr, key, base in ((c, "collection", prm.collection), (p, "processing", prm.processing)):
+        if key in policy:
+            arr[:] = base + frac * (float(policy[key]) - base)
+    return c, p
+
+
 @dataclass
 class Projection:
     result: sf.StockFlowResult
@@ -92,9 +115,15 @@ def project(
     reg: Registry | None = None,
     k_sat: float | None = None,
     growth_rate: float | None = None,
+    policy: dict | None = None,
     **overrides: float,
 ) -> Projection:
-    """Historical run 1900-2025 (supply-driven) then stock-driven demand to ``end_year``."""
+    """Historical run 1900-2025 (supply-driven) then stock-driven demand to ``end_year``.
+
+    ``policy`` optionally changes EoL collection/processing from a start year:
+    ``{"start_year": 2026, "ramp_years": 0, "collection": 0.95, "processing": 0.95}``
+    (linear ramp from the baseline values over ``ramp_years``; omitted keys keep baseline).
+    """
     from metalwheels import registry as _registry
 
     reg = reg or _registry.load()
@@ -122,5 +151,9 @@ def project(
     )
     target = k_target * pop / 1e9  # Mt
     mine = np.array([hist[y] if y <= LAST_HISTORICAL_YEAR else np.nan for y in years])
-    result = sf.run(years, mine, prm, target_stock=np.where(future, target, np.nan))
+    c_t, p_t = policy_rates(years, prm, policy)
+    result = sf.run(
+        years, mine, prm, target_stock=np.where(future, target, np.nan), collection=c_t,
+        processing=p_t,
+    )  # fmt: skip
     return Projection(result, pop, k_target, k0, k_sat, growth_rate)

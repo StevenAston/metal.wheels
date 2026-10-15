@@ -142,6 +142,30 @@ class Registry(Mapping[str, Param]):
     def domains(self) -> list[str]:
         return sorted({p.domain for p in self._params.values()})
 
+    def with_overrides(self, overrides: Mapping[str, float], label: str = "override") -> Registry:
+        """Copy with some values replaced (e.g. by a scenario or a Monte Carlo draw).
+
+        Overridden parameters become ``fixed`` with no bounds, because scenario values are
+        allowed to lie outside a parameter's sourced range (that is often the point).
+        Unknown keys raise ``KeyError``.
+        """
+        unknown = set(overrides) - set(self._params)
+        if unknown:
+            raise KeyError(f"unknown parameter(s): {sorted(unknown)}")
+        new = dict(self._params)
+        for key, value in overrides.items():
+            old = self._params[key]
+            new[key] = old.model_copy(
+                update={
+                    "value": float(value),
+                    "low": None,
+                    "high": None,
+                    "distribution": "fixed",
+                    "note": f"[{label}: {value!r}; was {old.value!r}] {old.note or ''}".strip(),
+                }
+            )
+        return Registry(new)
+
     def sources(self) -> set[str]:
         """Every bibliography key referenced (``source`` and ``range_source``)."""
         keys: set[str] = set()

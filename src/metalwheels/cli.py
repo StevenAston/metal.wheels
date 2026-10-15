@@ -208,3 +208,66 @@ def copper_project(
     Console(width=200).print(table)
     fut = f.loc[f.index > 2025, "mine"].sum()
     typer.echo(f"cumulative mine output 2026-{end_year}: {fut / 1e3:.1f} Bt Cu")
+
+
+@app.command("scenarios")
+def scenarios_list() -> None:
+    """List available scenarios."""
+    from metalwheels import scenarios
+
+    for name in scenarios.list_scenarios():
+        sc = scenarios.load_scenario(name)
+        typer.echo(f"{name:20s} {sc.description}")
+
+
+@app.command("run")
+def run_cmd(
+    scenario: str = typer.Argument(..., help="Scenario name (scenarios/<name>.yaml) or path."),
+    out: str | None = typer.Option(None, "--out", help="Output directory (default runs/<name>)."),
+) -> None:
+    """Run one scenario 1900-end year; write Parquet time series, summary CSV and metadata."""
+    from rich.console import Console
+    from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
+    from rich.table import Table
+
+    from metalwheels import export, registry, scenarios
+
+    try:
+        sc = scenarios.load_scenario(scenario)
+    except (FileNotFoundError, ValueError) as exc:
+        log.error("%s", exc)
+        raise typer.Exit(code=1) from exc
+    reg = registry.load()
+    console = Console(width=160)
+    with Progress(
+        SpinnerColumn(), TextColumn("{task.description}"), TimeElapsedColumn(), console=console
+    ) as prog:
+        task = prog.add_task(f"{sc.name}: starting", total=None)
+        result = scenarios.run_scenario(
+            sc, reg, progress=lambda m: prog.update(task, description=f"{sc.name}: {m}")
+        )
+        prog.update(task, description=f"{sc.name}: writing outputs")
+        path = export.write(result, reg.with_overrides(sc.overrides, label=sc.name), out)
+    s = result.summary
+    table = Table(title=f"{sc.name} - key results")
+    table.add_column("metric")
+    table.add_column("Harmsen", justify="right")
+    table.add_column("Kesler", justify="right")
+    for label, key, fmt in (
+        ("endowment (Mt Cu)", "endowment", "{:,.0f}"),
+        ("exhausted (year)", "exhausted_year", "{:.0f}"),
+        ("grade 2100 (wt%)", "grade_2100", "{:.3f}"),
+        ("depth 2100 (m)", "depth_2100", "{:,.0f}"),
+        ("energy 2100 (MJ/kg)", "energy_intensity_2100", "{:.0f}"),
+        ("primary energy 2100 (EJ/yr)", "primary_energy_2100", "{:.2f}"),
+        ("cumulative primary energy (EJ)", "cum_primary_energy", "{:,.0f}"),
+    ):
+        vals = [s.get(f"{b}_{key}", (float("nan"), ""))[0] for b in scenarios.BRACKETS]
+        table.add_row(label, *("-" if v != v else fmt.format(v) for v in vals))
+    console.print(table)
+    console.print(
+        f"cumulative mine output 2026-{sc.end_year}: "
+        f"{s['cum_mine_output_future'][0] / 1e3:.1f} Bt Cu; "
+        f"refined 2026 {s['refined_2026'][0]:.1f} Mt"
+    )
+    console.print(f"runtime {result.runtime_s:.1f} s; outputs in {path}")

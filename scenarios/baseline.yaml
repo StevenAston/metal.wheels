@@ -1,0 +1,8 @@
+name: baseline
+description: >-
+  Today's end-of-life collection (0.67) and processing (0.69) rates held to 3025; saturation
+  220 kg/person; UN WPP 2024 medium population held flat after 2100; Norgate coarse energy.
+overrides: {}
+options:
+  end_year: 3025
+  energy_option: norgate_coarse
