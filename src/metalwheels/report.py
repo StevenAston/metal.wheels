@@ -304,6 +304,8 @@ def build(out_dir: Path = REPORTS, mc_dir: Path | None = None) -> Path:
         else None
     )
     mc_meta = (mc_dir / "mc_meta.txt").read_text() if bands is not None else ""
+    draws_file = mc_dir / "draws.parquet"
+    mc_draws = pd.read_parquet(draws_file) if bands is not None and draws_file.is_file() else None
 
     checks = run_checks(base)
     figs = figures(base, others, bands, out_dir / "figures")
@@ -349,7 +351,19 @@ def build(out_dir: Path = REPORTS, mc_dir: Path | None = None) -> Path:
         for b in scenarios.BRACKETS:
             v = s.get(f"{b}_{key}", (float("nan"), ""))[0]
             cell = _fmt(v)
-            if mcq is not None and f"{b}_{key}" in mcq.index:
+            if key == "first_shortfall_year" and mc_draws is not None:
+                col = mc_draws[f"{b}_{key}"]
+                share = col.notna().mean()
+                if share == 0:
+                    cell += " (none in any draw)"
+                elif share < 0.95:
+                    cell += (
+                        f" (shortfall in {share:.0%} of draws, {_fmt(col.min())}–{_fmt(col.max())})"
+                    )
+                else:
+                    q5, q95 = col.quantile([0.05, 0.95])
+                    cell += f" ({_fmt(q5)}–{_fmt(q95)})"
+            elif mcq is not None and f"{b}_{key}" in mcq.index:
                 q = mcq.loc[f"{b}_{key}"]
                 cell += f" ({_fmt(q['p05'])}–{_fmt(q['p95'])})"
             vals.append(cell)
@@ -357,7 +371,10 @@ def build(out_dir: Path = REPORTS, mc_dir: Path | None = None) -> Path:
     md.append(_md_table(rows, ["Quantity", "Unit", "Harmsen 2013", "Kesler & Wilkinson 2008"]))
     if mcq is not None:
         md.append(
-            f"\nBrackets in parentheses are Monte Carlo 5–95 % ranges ({mc_meta.strip().replace(chr(10), ', ')})."
+            f"\nBrackets in parentheses are Monte Carlo 5–95 % ranges ({mc_meta.strip().replace(chr(10), ', ')}). "
+            "The central value is the sourced baseline, which need not sit at the Monte Carlo median: for "
+            "example the depth-energy term uses Harmsen's 2.9 MJ/kg per 100 m, the low end of the sampled "
+            "2.9–4.6 range, so baseline energy intensity sits at or just below the 5 % band."
         )
     else:
         md.append("\nMonte Carlo bands not found; run `metalwheels mc baseline` and regenerate.")
