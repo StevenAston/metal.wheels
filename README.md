@@ -1,0 +1,29 @@
+# metal.wheels
+
+A long-horizon (1900 → 3025) material-flow and energy model asking whether the degradation of metal supply — falling ore grades, greater mining depth, dispersal, and contamination "ratchets" — compounds across industries into a growing **maintenance energy** burden: the energy needed just to keep providing today's level of material service.
+
+The build proceeds in four phases (see [`PLAN.md`](PLAN.md), the source of truth):
+
+1. **Copper core** — sourced stock-flow model with collection and processing efficiencies, lognormal grade distribution, depth layers (Harmsen 2013 and Kesler & Wilkinson 2008 shown side by side), energy and tailings.
+2. **Steel coupling** — copper as a tramp element in steel scrap, forcing primary-iron dilution and an energy penalty.
+3. **Cascade** — a small input–output matrix; tracks the spectral radius $\rho(\mathbf{A})$ and maintenance energy.
+4. **Ratchets and design levers** — a ratchet catalogue, Metal Wheel carrier-compatibility matrix, and the "carbon-cup" scenario.
+
+Every parameter carries provenance (source, locator, value, unit, range). Unsourced values are explicitly marked as assumptions.
+
+## Quick start
+
+```bash
+uv sync
+uv run metalwheels --version
+uv run pytest
+```
+
+## Data note
+
+USGS Data Series 140 (historical mineral statistics) was degraded during the 2026 US federal appropriations lapse. The copper series used here comes from an independent mirror of the DS140 S3 bucket, cross-checked against the Wayback Machine; the raw files actually used are committed under `data/raw/` with SHA-256 hashes.
+
+## Licences
+
+- Code: MIT ([`LICENSE`](LICENSE))
+- Documentation, reports and registry text: CC BY 4.0 ([`LICENSE-docs`](LICENSE-docs))
