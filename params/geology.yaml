@@ -129,3 +129,26 @@ parameters:
     source: morales_2021
     locator: "Table 1, 'Natural dry density' (sand cone): dam zone 1.39-1.48, pond zone 1.30-1.44 t/m3"
     note: "In-situ dry density of a decades-old conventional (slurry) copper TSF in Chile; value is the midpoint of the combined in-situ range. Laboratory limits from the same table: standard-Proctor maximum 1.94 (dam) / 1.80 (pond), minimum 1.30; specific gravity 2.72-2.79. Proctor maxima are an upper bound for compacted or filtered (dry-stack) storage, not conventional ponds. Single-site evidence."
+
+  # --- Mass outputs (Task 1.7) ---
+  geo.strip_ratio:
+    value: 1.5
+    unit: "1"
+    status: derived
+    distribution: uniform
+    low: 1.0
+    high: 2.0
+    source: nassar_2022
+    locator: "Results: copper's attributable ore mined + waste rock removed = 9.4 Bt (2018)"
+    range_source: nassar_2022
+    note: "Waste rock per tonne ore = (9.4 Bt - model 2018 ore 3.8 Bt) / 3.8 Bt = 1.47. Revenue-allocated (Cu-Au and Cu-Mo mines share burdens), so a physical lower bound. High = the conventional strip ratio of 2 used in total-material-requirement studies and as Nassar's surface-mine default."
+  geo.concentrate_grade:
+    value: 0.285
+    unit: "1"
+    status: sourced
+    distribution: uniform
+    low: 0.27
+    high: 0.30
+    source: harmsen_2013
+    locator: "§2.1.3, p. 65 ('a copper concentrate with a grade between 27 % and 30 %')"
+    note: "Mass fraction of Cu in flotation concentrate; tailings mass = ore - concentrate."

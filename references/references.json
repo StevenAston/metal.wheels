@@ -623,6 +623,46 @@
     "id": "mudd_jowitt_2018"
   },
   {
+    "id": "nassar_2022",
+    "type": "article-journal",
+    "title": "Rock-to-Metal Ratio: A Foundational Metric for Understanding Mine Wastes",
+    "author": [
+      {
+        "given": "Nedal T.",
+        "family": "Nassar"
+      },
+      {
+        "given": "Graham W.",
+        "family": "Lederer"
+      },
+      {
+        "given": "Jamie L.",
+        "family": "Brainard"
+      },
+      {
+        "given": "Abraham J.",
+        "family": "Padilla"
+      },
+      {
+        "given": "Joseph D.",
+        "family": "Lessard"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "container-title": "Environmental Science &amp; Technology",
+    "volume": "56",
+    "issue": "10",
+    "page": "6710-6721",
+    "DOI": "10.1021/acs.est.1c07875",
+    "note": "Open access (PMC9118561). Copper 2018: global rock-to-metal ratio ~5.1 x 10^2; 9.4 Bt attributable ore + waste rock; 431 operations, 94 % coverage."
+  },
+  {
     "publisher": "Elsevier BV",
     "issue": "2",
     "DOI": "10.1016/j.mineng.2009.10.002",
