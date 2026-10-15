@@ -123,6 +123,27 @@ def data_cu_production() -> None:
     typer.echo(f"written to {path}")
 
 
+@data_app.command("steel-production")
+def data_steel_production() -> None:
+    """Rebuild data/processed/steel_production.csv (world crude steel and pig iron, 1900-2025)."""
+    from metalwheels.copper.production import IngestError
+    from metalwheels.steel import production
+
+    try:
+        rows = production.build()
+    except IngestError as exc:
+        log.error("%s", exc)
+        raise typer.Exit(code=1) from exc
+    path = production.write(rows)
+    total = sum(r["crude_steel_mt"] for r in rows)
+    n_rec = sum(r["status"] == "reconstructed" for r in rows)
+    typer.echo(
+        f"{len(rows)} rows ({rows[0]['year']}-{rows[-1]['year']}), {total / 1e3:.1f} Gt crude "
+        f"steel total, {n_rec} reconstructed years"
+    )
+    typer.echo(f"written to {path}")
+
+
 copper_app = typer.Typer(help="Copper model views.", no_args_is_help=True)
 app.add_typer(copper_app, name="copper")
 

@@ -1,0 +1,127 @@
+year,crude_steel_mt,pig_iron_mt,source,status,pig_iron_status
+1900,33.140,36.268,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1901,39.918,43.686,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1902,44.689,48.907,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1903,45.191,49.456,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1904,41.425,45.335,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1905,57.744,63.194,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1906,63.518,69.513,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1907,63.267,69.239,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1908,39.918,43.686,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1909,64.773,70.887,Reconstructed from USGS DS140 US and world series,reconstructed,reconstructed
+1910,60.765,66.500,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1911,58.846,64.400,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1912,67.785,73.700,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1913,73.607,79.000,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1914,53.132,56.300,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1915,48.264,50.500,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1916,71.901,74.300,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1917,70.440,71.900,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1918,64.658,65.200,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1919,51.087,50.900,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1920,62.260,61.300,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1921,37.715,36.700,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1922,72.775,70.000,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1923,72.037,68.500,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1924,81.792,76.900,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1925,82.714,76.900,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1926,85.812,78.900,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1927,95.444,86.800,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1928,98.819,88.900,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1929,110.671,98.500,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1930,91.072,80.200,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1931,63.918,55.700,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1932,46.150,39.800,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1933,57.873,49.400,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1934,74.561,63.000,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1935,88.946,74.400,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1936,110.606,91.600,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1937,126.826,104.000,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1938,102.089,82.900,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1939,126.833,102.000,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1940,138.100,110.000,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1941,139.418,110.000,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1942,131.781,103.000,Reconstructed from USGS DS140 US and world series,reconstructed,reported
+1943,172.000,105.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1944,164.000,98.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1945,101.000,71.700,USGS DS140 iron and steel (2023 rev.),reported,reported
+1946,123.000,71.700,USGS DS140 iron and steel (2023 rev.),reported,reported
+1947,123.000,90.700,USGS DS140 iron and steel (2023 rev.),reported,reported
+1948,141.000,103.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1949,145.000,105.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1950,189.000,134.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1951,211.000,151.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1952,211.000,153.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1953,235.000,169.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1954,224.000,159.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1955,269.000,193.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1956,284.000,201.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1957,293.000,212.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1958,271.000,197.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1959,305.000,224.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1960,346.000,259.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1961,352.000,256.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1962,361.000,266.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1963,387.000,281.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1964,437.000,317.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1965,459.000,335.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1966,475.000,347.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1967,494.000,350.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1968,530.000,379.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1969,574.000,411.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1970,594.000,431.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1971,581.000,430.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1972,629.000,454.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1973,698.000,501.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1974,708.000,512.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1975,644.000,479.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1976,674.000,498.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1977,673.000,488.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1978,715.000,506.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1979,745.000,532.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1980,716.000,514.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1981,707.000,502.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1982,644.000,457.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1983,663.000,463.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1984,711.000,495.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1985,718.000,499.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1986,713.000,495.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1987,734.000,509.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1988,780.000,539.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1989,784.000,546.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1990,771.000,531.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1991,737.000,509.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1992,724.000,503.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1993,730.000,507.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1994,730.000,516.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1995,752.000,536.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1996,751.000,516.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1997,797.000,540.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1998,770.000,535.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+1999,784.000,539.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2000,850.000,573.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2001,852.000,585.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2002,907.000,608.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2003,974.000,673.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2004,1060.000,720.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2005,1140.000,802.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2006,1250.000,881.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2007,1350.000,956.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2008,1330.000,931.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2009,1230.000,919.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2010,1430.000,1040.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2011,1520.000,1100.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2012,1520.000,1120.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2013,1620.000,1170.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2014,1670.000,1190.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2015,1610.000,1160.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2016,1630.000,1170.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2017,1740.000,1190.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2018,1820.000,1260.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2019,1870.000,1280.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2020,1880.000,1320.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2021,1950.000,1350.000,USGS DS140 iron and steel (2023 rev.),reported,reported
+2022,1880.000,1300.000,USGS MCS 2024,reported,reported
+2023,1890.000,1310.000,USGS MCS 2025,reported,reported
+2024,1880.000,1280.000,USGS MCS 2026,reported,reported
+2025,1900.000,1300.000,USGS MCS 2026,estimated,estimated

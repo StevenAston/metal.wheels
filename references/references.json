@@ -123,6 +123,40 @@
   },
   {
     "publisher": "American Chemical Society (ACS)",
+    "issue": "24",
+    "DOI": "10.1021/es302433p",
+    "type": "journal-article",
+    "page": "13048-13055",
+    "title": "Mapping the Global Flow of Steel: From Steelmaking to End-Use Goods",
+    "volume": "46",
+    "author": [
+      {
+        "given": "Jonathan M.",
+        "family": "Cullen"
+      },
+      {
+        "given": "Julian M.",
+        "family": "Allwood"
+      },
+      {
+        "given": "Margarita D.",
+        "family": "Bambach"
+      }
+    ],
+    "container-title": "Environmental Science & Technology",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2012
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1021/es302433p",
+    "id": "cullen_2012"
+  },
+  {
+    "publisher": "American Chemical Society (ACS)",
     "issue": "11",
     "DOI": "10.1021/acs.est.7b00997",
     "type": "journal-article",
@@ -655,7 +689,7 @@
         ]
       ]
     },
-    "container-title": "Environmental Science &amp; Technology",
+    "container-title": "Environmental Science & Technology",
     "volume": "56",
     "issue": "10",
     "page": "6710-6721",
@@ -733,6 +767,77 @@
     "URL": "http://dx.doi.org/10.1016/j.resconrec.2013.10.005",
     "id": "northey_2014",
     "note": "A corrigendum was published in 2020: doi:10.1016/j.resconrec.2019.104598 (contents not yet reviewed)."
+  },
+  {
+    "publisher": "American Chemical Society (ACS)",
+    "issue": "7",
+    "DOI": "10.1021/es303149z",
+    "type": "journal-article",
+    "page": "3448-3454",
+    "title": "The Steel Scrap Age",
+    "volume": "47",
+    "author": [
+      {
+        "given": "Stefan",
+        "family": "Pauliuk"
+      },
+      {
+        "given": "Rachel L.",
+        "family": "Milford"
+      },
+      {
+        "given": "Daniel B.",
+        "family": "Müller"
+      },
+      {
+        "given": "Julian M.",
+        "family": "Allwood"
+      }
+    ],
+    "container-title": "Environmental Science & Technology",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1021/es303149z",
+    "id": "pauliuk_2013_scrap_age"
+  },
+  {
+    "publisher": "Elsevier BV",
+    "DOI": "10.1016/j.resconrec.2012.11.008",
+    "type": "journal-article",
+    "page": "22-30",
+    "title": "Steel all over the world: Estimating in-use stocks of iron for 200 countries",
+    "volume": "71",
+    "author": [
+      {
+        "given": "Stefan",
+        "family": "Pauliuk"
+      },
+      {
+        "given": "Tao",
+        "family": "Wang"
+      },
+      {
+        "given": "Daniel B.",
+        "family": "Müller"
+      }
+    ],
+    "container-title": "Resources, Conservation and Recycling",
+    "language": "en",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "URL": "http://dx.doi.org/10.1016/j.resconrec.2012.11.008",
+    "id": "pauliuk_2013_steel_stocks"
   },
   {
     "id": "rotzer_schmidt_2020",
