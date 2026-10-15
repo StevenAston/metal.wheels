@@ -1,0 +1,386 @@
+<title>Copper to 3025</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: assay-sheet dashboard — control band, readout strip, two-column chart grid of small multiples. */
+:root {
+  --bg: #f3f5f6; --surface: #ffffff; --ink: #14202b; --ink-2: #485663; --muted: #6f7c88;
+  --rule: #d6dde2; --grid: #e6eaed; --accent: #1d7266; --accent-soft: #dcefeb; --accent-ink: #ffffff;
+  --harmsen: #2a78d6; --kesler: #eb6834; --ghost: #9aa6b0;
+  --l1: #2a78d6; --l2: #eb6834; --l3: #1baf7a; --l4: #eda100; --l5: #e87ba4;
+  --warn: #9a5b00; --warn-soft: #fbefd9;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --step--1: 0.8rem; --step-0: 0.95rem; --step-1: 1.15rem; --step-2: 1.5rem; --step-3: 2.1rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e151b; --surface: #151f27; --ink: #e6edf2; --ink-2: #aab7c2; --muted: #84919c;
+    --rule: #26333d; --grid: #1f2a33; --accent: #4cb2a2; --accent-soft: #17332f; --accent-ink: #0b1a17;
+    --harmsen: #3987e5; --kesler: #d95926; --ghost: #5d6a74;
+    --l1: #3987e5; --l2: #d95926; --l3: #199e70; --l4: #c98500; --l5: #d55181;
+    --warn: #f0b45a; --warn-soft: #33270f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e151b; --surface: #151f27; --ink: #e6edf2; --ink-2: #aab7c2; --muted: #84919c;
+  --rule: #26333d; --grid: #1f2a33; --accent: #4cb2a2; --accent-soft: #17332f; --accent-ink: #0b1a17;
+  --harmsen: #3987e5; --kesler: #d95926; --ghost: #5d6a74;
+  --l1: #3987e5; --l2: #d95926; --l3: #199e70; --l4: #c98500; --l5: #d55181;
+  --warn: #f0b45a; --warn-soft: #33270f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: var(--step-0);
+  line-height: 1.5; margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 20px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: var(--step-3); letter-spacing: -0.01em; line-height: 1.1; }
+h2 { font-size: var(--step-1); }
+.lede { color: var(--ink-2); max-width: 68ch; margin: 6px 0 0; }
+.eyebrow { font-family: var(--font-data); font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+header { display: grid; gap: 4px; }
+
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 16px; min-width: 0; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px 24px; align-items: end; }
+.presets { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.presets .label { font-family: var(--font-data); font-size: var(--step--1); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+button.preset, .seg button {
+  font: 500 var(--step--1) var(--font-body); color: var(--ink); background: transparent;
+  border: 1px solid var(--rule); border-radius: 999px; padding: 6px 12px; cursor: pointer;
+}
+button.preset[aria-pressed="true"], .seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ctl { display: grid; gap: 6px; min-width: 0; }
+.ctl label { display: flex; justify-content: space-between; gap: 8px; font-weight: 500; }
+.ctl output { font-family: var(--font-data); color: var(--accent); font-variant-numeric: tabular-nums; }
+.ctl .hint { font-size: var(--step--1); color: var(--muted); }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.ticks { display: flex; justify-content: space-between; font-family: var(--font-data); font-size: 0.72rem; color: var(--muted); }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.ro { display: grid; gap: 2px; padding: 12px 14px; border-left: 3px solid var(--rule); background: var(--surface); border-radius: 0 6px 6px 0; min-width: 0; }
+.ro.alert { border-left-color: var(--warn); background: var(--warn-soft); }
+.ro .k { font-size: var(--step--1); color: var(--ink-2); }
+.ro .v { font-family: var(--font-data); font-size: var(--step-2); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.ro .d { font-size: var(--step--1); color: var(--muted); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: var(--step--1); color: var(--ink-2); align-items: center; }
+.sw { display: inline-block; width: 18px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .charts { grid-template-columns: 1fr; } h1 { font-size: var(--step-2); } }
+.chart { position: relative; min-width: 0; }
+.chart h3 { font-size: var(--step-0); font-weight: 600; }
+.chart .unit { font-family: var(--font-data); font-size: var(--step--1); color: var(--muted); margin-left: 6px; font-weight: 400; }
+.chart svg { width: 100%; height: auto; display: block; margin-top: 6px; touch-action: pan-y; }
+.chart .tip {
+  position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--rule);
+  border-radius: 4px; padding: 6px 8px; font-family: var(--font-data); font-size: 0.75rem;
+  color: var(--ink); box-shadow: 0 2px 6px rgba(0,0,0,.12); white-space: nowrap; z-index: 2;
+}
+.tip .row { display: flex; gap: 8px; align-items: center; }
+.tip .row .sw { margin-right: 0; }
+
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 6px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; white-space: normal; }
+thead th { font-family: var(--font-display); font-weight: 600; color: var(--ink-2); }
+td { font-family: var(--font-data); font-size: var(--step--1); }
+td:first-child { font-family: var(--font-body); font-size: var(--step-0); }
+
+.notes { display: grid; gap: 8px; color: var(--ink-2); font-size: var(--step--1); max-width: 90ch; }
+.notes ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+a { color: var(--accent); }
+footer { color: var(--muted); font-size: var(--step--1); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">metal.wheels · Phase 1 copper model</span>
+    <h1>Copper to 3025</h1>
+    <p class="lede">How much copper the world must still dig up, how deep and how lean that ore gets, and what it costs in energy, depending on how much end-of-life copper is collected and processed, and on how much copper each person eventually has in use. Every run is computed in Python and shown here for two published estimates of what is in the ground.</p>
+  </header>
+
+  <section class="panel controls" aria-label="Scenario controls">
+    <div class="presets" role="group" aria-label="Presets">
+      <span class="label">Presets</span>
+      <button class="preset" id="pre-baseline" data-c="0" data-p="0" type="button">Today's recycling</button>
+      <button class="preset" id="pre-85" data-c="2" data-p="2" type="button">Recycling 85 %</button>
+      <button class="preset" id="pre-95" data-c="3" data-p="3" type="button">Recycling 95 %</button>
+      <button class="preset" id="pre-98" data-c="4" data-p="4" type="button">Recycling 98 %</button>
+    </div>
+    <div class="ctl">
+      <label for="c">End-of-life collection rate <output id="c-out" for="c"></output></label>
+      <input id="c" type="range" min="0" max="4" step="1" value="0">
+      <div class="ticks" id="c-ticks"></div>
+      <span class="hint">Share of retired copper that is collected (from 2026).</span>
+    </div>
+    <div class="ctl">
+      <label for="p">Processing rate <output id="p-out" for="p"></output></label>
+      <input id="p" type="range" min="0" max="4" step="1" value="0">
+      <div class="ticks" id="p-ticks"></div>
+      <span class="hint">Share of collected copper that becomes usable scrap (from 2026).</span>
+    </div>
+    <div class="ctl">
+      <label for="s">Saturation stock <output id="s-out" for="s"></output></label>
+      <input id="s" type="range" min="0" max="4" step="1" value="2">
+      <div class="ticks" id="s-ticks"></div>
+      <span class="hint">Copper in use per person once demand levels off (UNEP 2010: 140–300 kg in rich countries).</span>
+    </div>
+    <div class="ctl">
+      <span style="font-weight:500">Time window</span>
+      <div class="seg" role="group" aria-label="Time window">
+        <button type="button" id="win-2100" data-win="2100">1900–2100</button>
+        <button type="button" id="win-3025" data-win="3025" aria-pressed="true">1900–3025</button>
+      </div>
+      <span class="hint">Dotted line marks 2025; later years are projections.</span>
+    </div>
+  </section>
+
+  <section class="readouts" aria-label="Key results" aria-live="polite">
+    <div class="ro"><span class="k">Copper mined 2026–3025</span><span class="v" id="ro-cum-mine"></span><span class="d" id="ro-cum-mine-d"></span></div>
+    <div class="ro"><span class="k">Mine output in 2100</span><span class="v" id="ro-mine-2100"></span><span class="d">Mt Cu per year (2025: 23.0)</span></div>
+    <div class="ro" id="ro-short-box"><span class="k">Harmsen endowment: first shortfall</span><span class="v" id="ro-harmsen-short"></span><span class="d">year demand first exceeds what can be discovered</span></div>
+    <div class="ro"><span class="k">Energy per kg in 2100 (Harmsen)</span><span class="v" id="ro-energy-2100"></span><span class="d">MJ/kg primary copper (2010: ~109)</span></div>
+  </section>
+
+  <section class="panel" aria-label="Charts">
+    <div class="legend" id="legend">
+      <span><span class="sw" style="background:var(--harmsen)"></span>Harmsen 2013 endowment (24.9 Bt to 5 km)</span>
+      <span><span class="sw" style="background:var(--kesler)"></span>Kesler &amp; Wilkinson 2008 (89 Bt above 3.3 km)</span>
+      <span><span class="sw" style="background:var(--ghost)"></span>Today's recycling, for comparison</span>
+    </div>
+    <div class="charts" style="margin-top:12px">
+      <div class="chart" id="ch-mine"><h3>Primary demand: mine output<span class="unit">Mt Cu / yr</span></h3></div>
+      <div class="chart" id="ch-grade"><h3>Mined ore grade<span class="unit">wt% Cu</span></h3></div>
+      <div class="chart" id="ch-depth"><h3>Mean extraction depth<span class="unit">m</span></h3></div>
+      <div class="chart" id="ch-energy"><h3>Energy per kg of primary copper<span class="unit">MJ/kg</span></h3></div>
+      <div class="chart" id="ch-ej"><h3>Annual energy for primary copper<span class="unit">EJ / yr</span></h3></div>
+      <div class="chart" id="ch-tail"><h3>Cumulative tailings<span class="unit">km³</span></h3></div>
+      <div class="chart" id="ch-remaining"><h3>Copper left in the ground<span class="unit">Bt Cu</span></h3></div>
+      <div class="chart" id="ch-layers">
+        <h3>Left in the ground by depth layer<span class="unit">Bt Cu</span></h3>
+        <div class="seg" role="group" aria-label="Endowment for layer chart" style="margin-top:6px">
+          <button type="button" id="lay-harmsen" data-br="harmsen" aria-pressed="true">Harmsen</button>
+          <button type="button" id="lay-kesler" data-br="kesler">Kesler &amp; Wilkinson</button>
+        </div>
+        <div class="legend" id="layer-legend" style="margin-top:6px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="Key values table">
+    <h2>Key values for this setting</h2>
+    <div class="tablewrap" style="margin-top:8px">
+      <table id="kv">
+        <thead><tr><th scope="col">Quantity</th><th scope="col">Harmsen 2013</th><th scope="col">Kesler &amp; Wilkinson 2008</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="notes" aria-label="About the model">
+    <h2>What is held fixed</h2>
+    <ul>
+      <li>History (1900–2025) is replayed from USGS mine production; the sliders change collection and processing only from 2026.</li>
+      <li>Demand follows copper in use per person on an S-curve towards the saturation level, times UN WPP 2024 population (medium variant), held flat after 2100.</li>
+      <li>Ore grade follows the Gerst 2008 lognormal grade–tonnage curve in 100 m depth slices; extraction takes the cheapest copper first, and new deposits are discovered as needed, at most 1 % of what remains undiscovered each year.</li>
+      <li>Energy uses Norgate &amp; Jahanshahi 2010 (75 µm grind, smelting and refining) plus 2.9 MJ/kg per 100 m beyond 497 m (Harmsen 2013). Secondary (scrap) copper energy is not yet included.</li>
+      <li>After a first shortfall, the model still assumes demand is met; the gap is reported, not fed back.</li>
+    </ul>
+  </section>
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const DATA = /*__GRID_DATA__*/null;
+(function () {
+  "use strict";
+  const G = DATA.grid, NC = G.collection.length, NP = G.processing.length, NS = G.saturation.length;
+  const state = { c: 0, p: 0, s: Math.max(0, G.saturation.indexOf(220)), win: 3025, layerBr: "harmsen" };
+  const $ = (id) => document.getElementById(id);
+  const runAt = (ci, pi, si) => DATA.runs[(ci * NP + pi) * NS + si];
+  const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const SVGNS = "http://www.w3.org/2000/svg";
+
+  function fmt(v, digits) {
+    if (v === null || v === undefined || Number.isNaN(v)) return "–";
+    return v.toLocaleString("en-CA", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  }
+  function niceTicks(lo, hi, n) {
+    if (!(hi > lo)) { hi = lo + 1; }
+    const span = hi - lo, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => span / s <= n) || 10 * mag;
+    const t0 = Math.ceil(lo / step - 1e-9) * step, out = [];
+    for (let t = t0; t <= hi + step * 1e-9; t += step) out.push(+t.toFixed(10));
+    return { ticks: out, step };
+  }
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  // ---- line chart (small multiple). Marks: 2px lines, crosshair + tooltip on hover. ----
+  function lineChart(host, opts) {
+    let svg = host.querySelector("svg"), tip = host.querySelector(".tip");
+    if (svg) svg.remove();
+    if (!tip) { tip = document.createElement("div"); tip.className = "tip"; tip.hidden = true; host.appendChild(tip); }
+    // draw at the on-screen width so text stays 11 px on phones and desktops alike
+    const W = Math.max(260, Math.round(host.clientWidth || 640));
+    const H = Math.round(Math.max(180, Math.min(270, W * 0.42)));
+    const M = { l: 50, r: 14, t: 12, b: 28 };
+    svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": opts.label });
+    host.appendChild(svg);
+    const years = DATA.years, idx = years.map((y, i) => i).filter((i) => years[i] <= state.win);
+    const xs = idx.map((i) => years[i]);
+    let lo = Infinity, hi = -Infinity;
+    for (const s of opts.series) for (const i of idx) { const v = s.values[i]; if (v !== null) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }
+    if (opts.zero) lo = Math.min(0, lo);
+    if (!Number.isFinite(lo)) { lo = 0; hi = 1; }
+    const yt = niceTicks(lo, hi, 4);
+    const y0 = Math.min(lo, yt.ticks[0]), y1 = Math.max(hi, yt.ticks[yt.ticks.length - 1]);
+    const X = (y) => M.l + (y - xs[0]) / (xs[xs.length - 1] - xs[0]) * (W - M.l - M.r);
+    const Y = (v) => H - M.b - (v - y0) / ((y1 - y0) || 1) * (H - M.t - M.b);
+    const grid = css("--grid"), muted = css("--muted");
+    for (const t of yt.ticks) {
+      el("line", { x1: M.l, x2: W - M.r, y1: Y(t), y2: Y(t), stroke: grid, "stroke-width": 1 }, svg);
+      const tx = el("text", { x: M.l - 6, y: Y(t) + 4, "text-anchor": "end", fill: muted, "font-size": 11, "font-family": "IBM Plex Mono, monospace" }, svg);
+      tx.textContent = opts.tick ? opts.tick(t) : (+t.toFixed(4)).toLocaleString("en-CA");
+    }
+    const span = xs[xs.length - 1] - xs[0], maxTicks = Math.max(3, Math.floor((W - M.l - M.r) / 70));
+    const xstep = [25, 50, 100, 200, 250, 500].find((st) => span / st <= maxTicks) || 500;
+    for (let y = Math.ceil(xs[0] / xstep) * xstep; y <= xs[xs.length - 1]; y += xstep) {
+      const tx = el("text", { x: X(y), y: H - 8, "text-anchor": "middle", fill: muted, "font-size": 11, "font-family": "IBM Plex Mono, monospace" }, svg);
+      tx.textContent = y;
+    }
+    el("line", { x1: X(2025), x2: X(2025), y1: M.t, y2: H - M.b, stroke: muted, "stroke-width": 1, "stroke-dasharray": "2 3" }, svg);
+    for (const s of opts.series) {
+      let d = "", pen = false;
+      idx.forEach((i) => {
+        const v = s.values[i];
+        if (v === null) { pen = false; return; }
+        d += (pen ? "L" : "M") + X(years[i]).toFixed(1) + "," + Y(v).toFixed(1); pen = true;
+      });
+      el("path", { d, fill: "none", stroke: s.color, "stroke-width": s.ghost ? 1.5 : 2, "stroke-dasharray": s.ghost ? "4 3" : "none", "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
+    }
+    const cross = el("line", { x1: 0, x2: 0, y1: M.t, y2: H - M.b, stroke: muted, "stroke-width": 1, visibility: "hidden" }, svg);
+    const dots = opts.series.map((s) => el("circle", { r: 4, fill: s.color, stroke: css("--surface"), "stroke-width": 2, visibility: "hidden" }, svg));
+    const hit = el("rect", { x: M.l, y: M.t, width: W - M.l - M.r, height: H - M.t - M.b, fill: "transparent" }, svg);
+    function show(evt) {
+      const r = svg.getBoundingClientRect(), sx = (evt.clientX - r.left) / r.width * W;
+      let best = idx[0], bd = Infinity;
+      for (const i of idx) { const dd = Math.abs(X(years[i]) - sx); if (dd < bd) { bd = dd; best = i; } }
+      const x = X(years[best]);
+      cross.setAttribute("x1", x); cross.setAttribute("x2", x); cross.setAttribute("visibility", "visible");
+      let html = `<div><strong>${years[best]}</strong></div>`;
+      opts.series.forEach((s, k) => {
+        const v = s.values[best];
+        if (v === null) { dots[k].setAttribute("visibility", "hidden"); }
+        else { dots[k].setAttribute("cx", x); dots[k].setAttribute("cy", Y(v)); dots[k].setAttribute("visibility", "visible"); }
+        html += `<div class="row"><span class="sw" style="background:${s.color}"></span>${s.name}: ${v === null ? "–" : opts.fmt(v)}</div>`;
+      });
+      tip.innerHTML = html; tip.hidden = false;
+      const hr = host.getBoundingClientRect(), px = evt.clientX - hr.left, tw = tip.offsetWidth;
+      tip.style.left = Math.max(0, Math.min(hr.width - tw, px + 12 > hr.width - tw ? px - tw - 12 : px + 12)) + "px";
+      tip.style.top = (svg.offsetTop + 8) + "px";
+    }
+    function hide() { tip.hidden = true; cross.setAttribute("visibility", "hidden"); dots.forEach((d) => d.setAttribute("visibility", "hidden")); }
+    hit.addEventListener("pointermove", show);
+    hit.addEventListener("pointerdown", show);
+    hit.addEventListener("pointerleave", hide);
+  }
+
+  function pair(run, base, key, scale, label, extra) {
+    const sc = (arr) => arr.map((v) => (v === null ? null : v * (scale || 1)));
+    const H = css("--harmsen"), K = css("--kesler"), Gh = css("--ghost");
+    const series = [
+      { name: "Harmsen", color: H, values: sc(run.series["harmsen_" + key]) },
+      { name: "Kesler", color: K, values: sc(run.series["kesler_" + key]) },
+    ];
+    if (base !== run) series.push({ name: "Harmsen, today's recycling", color: Gh, ghost: true, values: sc(base.series["harmsen_" + key]) });
+    return Object.assign({ label, series }, extra || {});
+  }
+
+  function render() {
+    const run = runAt(state.c, state.p, state.s), base = runAt(0, 0, state.s), sc = run.scalars;
+    $("c").value = state.c; $("p").value = state.p; $("s").value = state.s;
+    $("c-out").textContent = fmt(G.collection[state.c], 2);
+    $("p-out").textContent = fmt(G.processing[state.p], 2);
+    $("s-out").textContent = fmt(G.saturation[state.s], 0) + " kg/person";
+    document.querySelectorAll("button.preset").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.c === state.c && +b.dataset.p === state.p)));
+    document.querySelectorAll("[data-win]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.win === state.win)));
+    document.querySelectorAll("[data-br]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.br === state.layerBr)));
+
+    $("ro-cum-mine").textContent = fmt(sc.cum_mine_output_future / 1000, 1) + " Bt";
+    $("ro-cum-mine-d").textContent = "vs Harmsen 24.9 Bt, Kesler 89 Bt in the ground";
+    $("ro-mine-2100").textContent = fmt(sc.mine_2100, 1) + " Mt";
+    const hs = sc.harmsen_first_shortfall_year;
+    $("ro-harmsen-short").textContent = hs === null ? "none by 3025" : String(Math.round(hs));
+    $("ro-short-box").classList.toggle("alert", hs !== null);
+    $("ro-energy-2100").textContent = fmt(sc.harmsen_energy_intensity_2100, 0);
+
+    const Gh = css("--ghost"), A = css("--accent");
+    const mineSeries = [{ name: "This setting", color: A, values: run.series.mine }];
+    if (base !== run) mineSeries.push({ name: "Today's recycling", color: Gh, ghost: true, values: base.series.mine });
+    lineChart($("ch-mine"), { label: "Mine output", series: mineSeries, fmt: (v) => fmt(v, 1) + " Mt", zero: true });
+    lineChart($("ch-grade"), pair(run, base, "grade_pct", 1, "Mined grade", { fmt: (v) => fmt(v, 3) + " %" }));
+    lineChart($("ch-depth"), pair(run, base, "depth_m", 1, "Mean depth", { fmt: (v) => fmt(v, 0) + " m", zero: true }));
+    lineChart($("ch-energy"), pair(run, base, "energy_intensity_mj_per_kg", 1, "Energy per kg", { fmt: (v) => fmt(v, 0) + " MJ/kg", zero: true }));
+    lineChart($("ch-ej"), pair(run, base, "primary_energy_ej", 1, "Annual primary energy", { fmt: (v) => fmt(v, 2) + " EJ", zero: true }));
+    lineChart($("ch-tail"), pair(run, base, "cum_tailings_volume_km3", 1, "Cumulative tailings", { fmt: (v) => fmt(v, 0) + " km³", zero: true }));
+    lineChart($("ch-remaining"), pair(run, base, "remaining_total", 0.001, "Copper remaining", { fmt: (v) => fmt(v, 2) + " Bt", zero: true }));
+    const layers = DATA.layers[state.layerBr], cols = ["--l1", "--l2", "--l3", "--l4", "--l5"];
+    const layerName = (L) => L.replace("_", "–").replace("km", " km");
+    $("layer-legend").innerHTML = layers.map((L, k) => `<span><span class="sw" style="background:var(${cols[k]})"></span>${layerName(L)}</span>`).join("");
+    lineChart($("ch-layers"), {
+      label: "Remaining by layer", zero: true, fmt: (v) => fmt(v, 2) + " Bt",
+      series: layers.map((L, k) => ({ name: layerName(L), color: css(cols[k]), values: run.series[`${state.layerBr}_remaining_${L}`].map((v) => (v === null ? null : v / 1000)) })),
+    });
+
+    const rows = [
+      ["First supply shortfall (year)", "first_shortfall_year", (v) => (v === null ? "none by 3025" : String(Math.round(v)))],
+      ["Mined grade 2100 (wt% Cu)", "grade_2100", (v) => fmt(v, 3)],
+      ["Mean depth 2100 (m)", "depth_2100", (v) => fmt(v, 0)],
+      ["Energy per kg 2100 (MJ/kg)", "energy_intensity_2100", (v) => fmt(v, 1)],
+      ["Primary energy 2100 (EJ/yr)", "primary_energy_2100", (v) => fmt(v, 2)],
+      ["Cumulative primary energy to 3025 (EJ)", "cum_primary_energy", (v) => fmt(v, 0)],
+      ["Cumulative tailings by 3025 (km³)", "cum_tailings_volume_end", (v) => fmt(v, 0)],
+    ];
+    $("kv").querySelector("tbody").innerHTML = rows.map(([lab, key, f]) =>
+      `<tr><td>${lab}</td><td id="kv-harmsen-${key}">${f(sc["harmsen_" + key])}</td><td id="kv-kesler-${key}">${f(sc["kesler_" + key])}</td></tr>`).join("");
+  }
+
+  function ticks(id, vals, f) { $(id).innerHTML = vals.map((v) => `<span>${f(v)}</span>`).join(""); }
+  ticks("c-ticks", G.collection, (v) => v.toFixed(2));
+  ticks("p-ticks", G.processing, (v) => v.toFixed(2));
+  ticks("s-ticks", G.saturation, (v) => v.toFixed(0));
+  for (const [id, key] of [["c", "c"], ["p", "p"], ["s", "s"]]) {
+    $(id).max = String({ c: NC, p: NP, s: NS }[key] - 1);
+    $(id).addEventListener("input", (e) => { state[key] = +e.target.value; render(); });
+  }
+  document.querySelectorAll("button.preset").forEach((b) => b.addEventListener("click", () => {
+    state.c = Math.min(+b.dataset.c, NC - 1); state.p = Math.min(+b.dataset.p, NP - 1); render();
+  }));
+  document.querySelectorAll("[data-win]").forEach((b) => b.addEventListener("click", () => { state.win = +b.dataset.win; render(); }));
+  document.querySelectorAll("[data-br]").forEach((b) => b.addEventListener("click", () => { state.layerBr = b.dataset.br; render(); }));
+  const mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  if (mq && mq.addEventListener) mq.addEventListener("change", render);
+  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  $("foot").textContent = `metalwheels ${DATA.version} · ${DATA.runs.length} precomputed runs · values every ${DATA.step} years · Sources: USGS DS140 and MCS, Glöser-Chahoud 2017, Helbig 2020, Gerst 2008, Harmsen 2013, Kesler & Wilkinson 2008, Norgate & Jahanshahi 2010, UNEP 2010, UN WPP 2024. Code: github.com/StevenAston/metal.wheels`;
+  let resizeTimer = null;
+  window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(render, 120); });
+  render();
+  document.body.dataset.ready = "1";
+})();
+</script>

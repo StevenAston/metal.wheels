@@ -27,3 +27,6 @@ Thumbs.db
 # Secrets
 .env
 *.key
+
+# Built web page (regenerate with `metalwheels export web`)
+web/dist/

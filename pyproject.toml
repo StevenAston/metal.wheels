@@ -24,6 +24,7 @@ metalwheels = "metalwheels.cli:app"
 
 [dependency-groups]
 dev = [
+    "playwright==1.56.0",
     "pytest>=8",
     "pytest-cov>=5",
     "ruff>=0.6",

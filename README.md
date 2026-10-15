@@ -21,7 +21,12 @@ uv run metalwheels run baseline                # 1900-3025 run -> runs/baseline/
 uv run metalwheels copper history              # historical stock-flow table
 uv run metalwheels copper project --collection 0.95 --processing 0.95
 uv run metalwheels params list --domain geology
+uv run metalwheels export web                   # interactive page -> web/dist/index.html (open in a browser)
+uv run metalwheels mc baseline                  # Monte Carlo (capped workers) -> runs/baseline/mc/
+uv run metalwheels report phase1                # validation report -> reports/phase1_validation.md
 ```
+
+The browser tests need Chromium once: `uv run playwright install chromium`.
 
 Outputs per run: `runs/<scenario>/timeseries.parquet` (schema in `metalwheels.export`), `summary.csv`, `meta.json` (git commit, registry hash, calibration values).
 

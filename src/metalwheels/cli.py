@@ -339,3 +339,31 @@ def report_phase1(
     line = next(ln for ln in text.splitlines() if ln.startswith("**Result:"))
     typer.echo(line.strip("*"))
     typer.echo(f"written to {path}")
+
+
+export_app = typer.Typer(help="Export model results.", no_args_is_help=True)
+app.add_typer(export_app, name="export")
+
+
+@export_app.command("web")
+def export_web(
+    small: bool = typer.Option(False, "--small", help="2 x 2 x 1 grid (fast; for tests)."),
+    out: str | None = typer.Option(None, "--out", help="Output dir (default web/dist)."),
+) -> None:
+    """Run the scenario grid and build the interactive page (web/dist/index.html)."""
+    from pathlib import Path
+
+    from rich.progress import BarColumn, MofNCompleteColumn, Progress, TimeRemainingColumn
+
+    from metalwheels import webexport
+
+    grid = webexport.GRID_SMALL if small else webexport.GRID_FULL
+    n = len(grid["collection"]) * len(grid["processing"]) * len(grid["saturation"])
+    with Progress(
+        "[progress.description]{task.description}", BarColumn(), MofNCompleteColumn(),
+        TimeRemainingColumn(),
+    ) as prog:  # fmt: skip
+        task = prog.add_task("grid runs", total=n)
+        data = webexport.build_grid(grid, progress=lambda: prog.advance(task))
+    local, _art = webexport.write_pages(data, Path(out) if out else None)
+    typer.echo(f"{n} runs; page: {local} ({local.stat().st_size / 1e6:.1f} MB)")
