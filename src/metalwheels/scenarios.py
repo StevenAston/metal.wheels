@@ -13,6 +13,7 @@ A scenario file::
     options:
       end_year: 3025
       energy_option: norgate_coarse
+      steel: true                               # Phase 2 steel coupling (default on)
 
 Every run produces both endowment brackets (Harmsen 2013 and Kesler & Wilkinson 2008) side by
 side; neither is a default.
@@ -38,7 +39,31 @@ log = get_logger(__name__)
 
 SCENARIO_DIR = Path(__file__).resolve().parents[2] / "scenarios"
 BRACKETS = ("harmsen", "kesler")
-_OPTION_KEYS = {"end_year", "energy_option"}
+_OPTION_KEYS = {"end_year", "energy_option", "steel"}
+
+#: Steel flow columns copied into the run time series with an ``st_`` prefix.
+STEEL_COLUMNS = (
+    "products",
+    "iron_sources",
+    "primary_iron",
+    "copper_induced_primary",
+    "eol",
+    "scrap_recovered",
+    "scrap_used",
+    "unusable_scrap",
+    "stock",
+    "stockpile",
+    "cu_attached",
+    "cu_eol_bulk",
+    "cu_scrap",
+    "cu_products",
+    "cu_stock",
+    "cu_supply_aggregate",
+    "cu_tolerable_aggregate",
+    "scrap_cu_mean",
+    "secondary_cu",
+    "product_cu_mean",
+)
 
 
 @dataclass(frozen=True)
@@ -49,6 +74,7 @@ class Scenario:
     policy: dict | None = None
     end_year: int = 3025
     energy_option: str = "norgate_coarse"
+    steel: bool = True
 
     @classmethod
     def from_dict(cls, d: dict) -> Scenario:
@@ -68,6 +94,7 @@ class Scenario:
             policy=d.get("policy") or None,
             end_year=int(opts.get("end_year", 3025)),
             energy_option=opts.get("energy_option", "norgate_coarse"),
+            steel=bool(opts.get("steel", True)),
         )
 
 
@@ -101,7 +128,8 @@ class RunOutput:
 def run_scenario(
     sc: Scenario, reg: Registry | None = None, progress: Callable[[str], None] | None = None
 ) -> RunOutput:
-    """Run the full Phase 1 chain for one scenario."""
+    """Run the Phase 1 copper chain and, unless ``sc.steel`` is false, the Phase 2 steel
+    coupling for one scenario."""
     t0 = time.perf_counter()
     step = progress or (lambda _msg: None)
     reg = (reg or _registry.load()).with_overrides(sc.overrides, label=sc.name)
@@ -194,6 +222,42 @@ def run_scenario(
         float(ts["old_scrap"].iloc[-1] / ts["eol"].iloc[-1]),
         "1",
     )
+    if sc.steel:
+        step("steel coupling")
+        _steel(ts, summary, calib, pj.result, reg)
     for k, v in calib.items():
         summary[f"calib_{k}"] = (float(v), "")
     return RunOutput(sc, ts, summary, time.perf_counter() - t0, calib)
+
+
+def _steel(ts: pd.DataFrame, summary: dict, calib: dict, cu_result, reg: Registry) -> None:
+    """Phase 2: copper -> steel link, steel stock model, tolerances and energy penalty."""
+    from metalwheels.steel import demand as st_demand
+    from metalwheels.steel import energy as st_energy
+    from metalwheels.steel import link
+
+    lk = link.route(cu_result, link.link_shares(reg))
+    sp = st_demand.project(ts.index.to_numpy(), reg, lk.to_steel.to_numpy())
+    sf = sp.result.flows
+    en = st_energy.SteelEnergy.from_registry(reg)
+    for c in STEEL_COLUMNS:
+        ts["st_" + c] = sf[c].to_numpy()
+    ts["st_stock_per_capita"] = sp.per_capita_stock
+    ts["st_cu_to_other_sinks"] = lk.to_other_sinks.to_numpy()
+    ts["st_energy_ej"] = st_energy.steel_energy_ej(sf["primary_iron"], sf["scrap_used"], en)
+    ts["st_cu_penalty_ej"] = st_energy.penalty_ej(sf["copper_induced_primary"], en)
+    calib["steel_growth_rate"] = sp.growth_rate
+    calib["steel_k0"] = sp.k0
+    for kind in ("lp", "aggregate"):
+        y = sp.result.crossover_year(kind)
+        summary[f"st_crossover_year_{kind}"] = (float(y) if y else float("nan"), "year")
+    summary["st_cum_cu_penalty_ej"] = (float(ts["st_cu_penalty_ej"].sum()), "EJ")
+    summary["st_stockpile_end"] = (float(ts["st_stockpile"].iloc[-1]), "Mt")
+    for y in (2008, 2050, 2100, 2200, 2500, int(ts.index[-1])):
+        if y in ts.index:
+            summary[f"st_scrap_cu_{y}"] = (float(ts.loc[y, "st_scrap_cu_mean"]), "1")
+            summary[f"st_cu_penalty_{y}"] = (float(ts.loc[y, "st_cu_penalty_ej"]), "EJ/yr")
+            summary[f"st_copper_induced_primary_{y}"] = (
+                float(ts.loc[y, "st_copper_induced_primary"]),
+                "Mt/yr",
+            )

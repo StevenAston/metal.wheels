@@ -17,7 +17,7 @@ import pandas as pd
 from metalwheels import __version__
 from metalwheels.copper.stockflow import FLOW_COLUMNS
 from metalwheels.registry import Registry
-from metalwheels.scenarios import BRACKETS, RunOutput
+from metalwheels.scenarios import BRACKETS, STEEL_COLUMNS, RunOutput
 
 REPO = Path(__file__).resolve().parents[2]
 RUNS_DIR = REPO / "runs"
@@ -62,8 +62,12 @@ _LAYERS = {
 }
 
 
-def schema() -> dict[str, str]:
-    """Declared time-series columns and dtypes (index ``year``, int64)."""
+_STEEL_EXTRA = ("stock_per_capita", "cu_to_other_sinks", "energy_ej", "cu_penalty_ej")
+
+
+def schema(steel: bool = True) -> dict[str, str]:
+    """Declared time-series columns and dtypes (index ``year``, int64). ``steel`` adds the
+    Phase 2 ``st_*`` columns."""
     cols = {c: "float64" for c in FLOW_COLUMNS if c not in ("target_stock", "demand_driven")}
     cols["demand_driven"] = "bool"
     cols["target_stock"] = "float64"
@@ -74,12 +78,15 @@ def schema() -> dict[str, str]:
     for br in BRACKETS:
         cols.update({f"{br}_{c}": "float64" for c in _BRACKET})
         cols.update({f"{br}_remaining_{layer}": "float64" for layer in _LAYERS[br]})
+    if steel:
+        cols.update({f"st_{c}": "float64" for c in (*STEEL_COLUMNS, *_STEEL_EXTRA)})
     return cols
 
 
 def validate(ts: pd.DataFrame) -> None:
-    """Raise ``ValueError`` unless ``ts`` matches :func:`schema` exactly."""
-    want = schema()
+    """Raise ``ValueError`` unless ``ts`` matches :func:`schema` exactly (with or without the
+    steel columns, inferred from their presence)."""
+    want = schema(steel=any(c.startswith("st_") for c in ts.columns))
     missing, extra = set(want) - set(ts.columns), set(ts.columns) - set(want)
     if missing or extra:
         raise ValueError(f"schema mismatch: missing {sorted(missing)}, unexpected {sorted(extra)}")
@@ -133,6 +140,7 @@ def write(run: RunOutput, reg: Registry, out_dir: Path | None = None) -> Path:
         "policy": run.scenario.policy,
         "end_year": run.scenario.end_year,
         "energy_option": run.scenario.energy_option,
+        "steel": run.scenario.steel,
         "metalwheels_version": __version__,
         "git_commit": git_commit(),
         "registry_sha256": registry_hash(reg),

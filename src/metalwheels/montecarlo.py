@@ -48,6 +48,14 @@ BAND_SERIES = (
     "harmsen_remaining_total",
     "kesler_remaining_total",
 )
+#: Added when the scenario includes the steel coupling.
+STEEL_BAND_SERIES = (
+    "st_scrap_cu_mean",
+    "st_product_cu_mean",
+    "st_copper_induced_primary",
+    "st_unusable_scrap",
+    "st_cu_penalty_ej",
+)
 QUANTILES = (0.05, 0.50, 0.95)
 _THREAD_VARS = ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS")
 
@@ -102,7 +110,8 @@ def _draw(args: tuple) -> tuple[int, dict[str, float], dict[str, float], dict[st
     values = sample(reg, rng)
     run = run_scenario(sc, reg.with_overrides(values, label=f"mc{i}"))
     summary = {k: v for k, (v, _unit) in run.summary.items()}
-    series = {c: run.timeseries[c].to_numpy(dtype=float) for c in BAND_SERIES}
+    cols = BAND_SERIES + (STEEL_BAND_SERIES if sc.steel else ())
+    series = {c: run.timeseries[c].to_numpy(dtype=float) for c in cols}
     return i, values, summary, series
 
 
@@ -172,7 +181,7 @@ def run(
     draws = pd.DataFrame(rows).set_index("draw")
 
     band_cols = {}
-    for name in BAND_SERIES:
+    for name in results[0][3]:
         arr = np.vstack([r[3][name] for r in results])
         with warnings.catch_warnings():  # years after exhaustion are NaN in every draw
             warnings.simplefilter("ignore", RuntimeWarning)

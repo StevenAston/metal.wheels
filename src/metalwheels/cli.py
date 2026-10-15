@@ -291,6 +291,18 @@ def run_cmd(
         f"{s['cum_mine_output_future'][0] / 1e3:.1f} Bt Cu; "
         f"refined 2026 {s['refined_2026'][0]:.1f} Mt"
     )
+    if sc.steel:
+
+        def yr(k):
+            v = s[k][0]
+            return "none" if v != v else f"{v:.0f}"
+
+        console.print(
+            f"steel: scrap Cu 2008 {100 * s['st_scrap_cu_2008'][0]:.3f} wt%; copper crossover "
+            f"{yr('st_crossover_year_lp')} (LP) / {yr('st_crossover_year_aggregate')} "
+            f"(aggregate); copper-induced steel energy {s['st_cum_cu_penalty_ej'][0]:,.0f} EJ "
+            "cumulative [placeholder parameters pending sources]"
+        )
     console.print(f"runtime {result.runtime_s:.1f} s; outputs in {path}")
 
 
@@ -303,8 +315,12 @@ def mc_cmd(
         None, "--workers", "-w", help="Worker processes (default max(1, n_cpu - 2))."
     ),
     out: str | None = typer.Option(None, "--out", help="Output dir (default runs/<name>/mc)."),
+    steel: bool = typer.Option(
+        True, "--steel/--no-steel", help="Include the Phase 2 steel coupling (about 3x slower)."
+    ),
 ) -> None:
     """Monte Carlo over registry parameter ranges; writes 5/50/95 % bands."""
+    import dataclasses
     from pathlib import Path
 
     from rich.progress import BarColumn, MofNCompleteColumn, Progress, TimeRemainingColumn
@@ -312,6 +328,8 @@ def mc_cmd(
     from metalwheels import export, montecarlo, scenarios
 
     sc = scenarios.load_scenario(scenario)
+    if not steel:
+        sc = dataclasses.replace(sc, steel=False)
     n_workers = montecarlo.resolve_workers(workers)
     typer.echo(f"{sc.name}: {draws} draws on {n_workers} worker(s), seed {seed}")
     with Progress(

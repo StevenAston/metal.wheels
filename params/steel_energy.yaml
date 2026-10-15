@@ -1,0 +1,38 @@
+# Steel route energies (Task 2.4), primary-energy basis (MJ per kg crude steel = GJ/t).
+# Worrell et al. 2008 world best practice; primary energy counts electricity generation,
+# transmission and distribution losses of 67 %. Best-practice values are lower bounds on the
+# world average, but the copper penalty uses the difference between routes, which is less
+# sensitive than either level.
+domain: steel_energy
+parameters:
+  st.energy.bf_bof:
+    value: 20.6
+    unit: MJ/kg
+    status: sourced
+    low: 16.3
+    high: 20.6
+    source: worrell_2008
+    locator: "Table 2.1.2, p. 7: BF-BOF integrated steel, total primary energy (low = thin-slab casting alternative)"
+  st.energy.dri_eaf:
+    value: 20.6
+    unit: MJ/kg
+    status: sourced
+    low: 18.6
+    high: 20.6
+    source: worrell_2008
+    locator: "Table 2.1.2, p. 7: DRI-EAF, total primary energy (low = thin-slab casting alternative; best-practice DRI is coal-based SL/RN, Section 2.1.3)"
+  st.energy.scrap_eaf:
+    value: 8.0
+    unit: MJ/kg
+    status: sourced
+    low: 6.0
+    high: 8.0
+    source: worrell_2008
+    locator: "Table 2.1.2, p. 7: scrap-based EAF, total primary energy (low = thin-slab casting alternative)"
+  st.dri_share_of_primary:
+    value: 0.066
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 (2008): direct reduction DRI 66 Mt of pig iron 928 + DRI 66 Mt"
+    note: "Share of primary iron made by direct reduction; held constant (assumption)."

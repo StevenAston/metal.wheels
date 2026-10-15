@@ -92,6 +92,7 @@ def grid_scenario(c: float, p: float, sat: float, end_year: int = 3025) -> scena
         overrides={"dem.saturation_stock_per_capita": sat},
         policy=policy,
         end_year=end_year,
+        steel=False,  # the Phase 1 page shows copper only; steel adds ~3 s per grid point
     )
 
 

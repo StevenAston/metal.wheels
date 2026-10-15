@@ -1234,5 +1234,41 @@
     "ISBN": "978-981-4273-93-0",
     "URL": "https://doi.org/10.1142/9789814273947_0010",
     "note": "URL is the DOI of the chapter 'Thanatia and the Crepuscular Earth Model'; no book-level DOI found in Crossref."
+  },
+  {
+    "id": "worrell_2008",
+    "type": "report",
+    "title": "World Best Practice Energy Intensity Values for Selected Industrial Sectors",
+    "author": [
+      {
+        "given": "Ernst",
+        "family": "Worrell"
+      },
+      {
+        "given": "Lynn K.",
+        "family": "Price"
+      },
+      {
+        "given": "Maarten",
+        "family": "Neelis"
+      },
+      {
+        "given": "Christina",
+        "family": "Galitsky"
+      },
+      {
+        "given": "Nan",
+        "family": "Zhou"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "publisher": "Lawrence Berkeley National Laboratory",
+    "URL": "https://eta-publications.lbl.gov/bibcite/reference/25985"
   }
 ]
