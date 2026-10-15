@@ -38,6 +38,25 @@ parameters:
   geo.endow.harmsen.layer_2_3km: {value: 5740, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Originally in ground'", note: "2-3 km"}
   geo.endow.harmsen.layer_3_4km: {value: 5740, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Originally in ground'", note: "3-4 km"}
   geo.endow.harmsen.layer_4_5km: {value: 5270, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Originally in ground'", note: "4-5 km. Layers sum to the table total of 2.49E+04 Mt."}
+  geo.endow.harmsen.analysed_0_1km: {value: 1080, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Analysed'", note: "Discovered deposits with known grade and tonnage; includes copper already produced."}
+  geo.endow.harmsen.analysed_1_2km: {value: 514, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Analysed'"}
+  geo.endow.harmsen.analysed_2_3km: {value: 247, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Analysed'"}
+  geo.endow.harmsen.analysed_3_4km: {value: 173, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Analysed'"}
+  geo.endow.harmsen.analysed_4_5km: {value: 90.4, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Analysed'", note: "Table total 2.10E+03 Mt."}
+  geo.discovered_top500_share_first_km:
+    value: 0.85
+    unit: "1"
+    status: sourced
+    source: harmsen_2013
+    locator: "§2.1.2, p. 64 ('85 % of the reported depth to top ore is within 500 m', from Long 2011)"
+    note: "Used as the share of discovered copper in the first km that lies above 500 m (interpretation: an assumption that depth-to-top-of-ore tracks where the copper is)."
+  geo.calib.produced_share_top500_2010:
+    value: 0.771
+    unit: "1"
+    status: derived
+    source: harmsen_2013
+    locator: "§2.1.2 and Table 1, p. 64"
+    note: "Calibration target for the depth-order multiplier: 85 % of first-km production (526 Mt) from the top 500 m, as a share of total production to ~2010 (580 Mt): 0.85 x 526 / 580."
   geo.endow.harmsen.produced_0_1km: {value: 526, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Produced'", note: "Cumulative production to about 2010 from the first km."}
   geo.endow.harmsen.produced_1_2km: {value: 54.1, unit: Mt, status: sourced, source: harmsen_2013, locator: "Table 1, p. 64, 'Produced'"}
   geo.endow.harmsen.produced_share_top_500m:
@@ -56,6 +75,13 @@ parameters:
     source: kesler_wilkinson_2008
     locator: "p. 257 ('recoverable resource of ~8.9 x 10^10 t of copper')"
     note: "All deposit types above 3.3 km, taken as the likely limit of mining. Enough for ~5,500 years of 2008 mine production."
+  geo.endow.kesler.depth_limit:
+    value: 3300
+    unit: m
+    status: sourced
+    source: kesler_wilkinson_2008
+    locator: "p. 257 ('assuming ~3.3 km as the likely limit of mining')"
+    note: "Kesler bracket uses Harmsen's depth profile, truncated here and scaled to 89 Bt (assumption: Kesler & Wilkinson give no depth distribution)."
   geo.endow.kesler.porphyry_all_depths:
     value: 170000
     unit: Mt
