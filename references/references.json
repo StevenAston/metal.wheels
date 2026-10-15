@@ -723,6 +723,84 @@
     "note": "Cumulative energy demand (CED) of global copper; quoted by Michaux 2021: CED rises ~30 % to 89 GJ-eq/t cathode if grade falls to 0.5 %. Candidate cross-check for Task 1.6."
   },
   {
+    "id": "un_wpp_2024",
+    "type": "dataset",
+    "title": "World Population Prospects 2024",
+    "author": [
+      {
+        "literal": "United Nations, Department of Economic and Social Affairs, Population Division"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "publisher": "United Nations",
+    "URL": "https://population.un.org/wpp/",
+    "note": "Demographic Indicators, Medium variant (WPP2024_Demographic_Indicators_Medium.csv.gz); World, TPopulation1July (thousands), 1950-2100."
+  },
+  {
+    "id": "unep_2010_metal_stocks",
+    "type": "report",
+    "title": "Metal Stocks in Society: Scientific Synthesis",
+    "author": [
+      {
+        "family": "Graedel",
+        "given": "T. E."
+      },
+      {
+        "family": "Dubreuil",
+        "given": "A."
+      },
+      {
+        "family": "Gerst",
+        "given": "M."
+      },
+      {
+        "family": "Hashimoto",
+        "given": "S."
+      },
+      {
+        "family": "Moriguchi",
+        "given": "Y."
+      },
+      {
+        "family": "Müller",
+        "given": "D."
+      },
+      {
+        "family": "Pena",
+        "given": "C."
+      },
+      {
+        "family": "Rauch",
+        "given": "J."
+      },
+      {
+        "family": "Sinkala",
+        "given": "T."
+      },
+      {
+        "family": "Sonnemann",
+        "given": "G."
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "publisher": "UNEP International Panel for Sustainable Resource Management, Working Group on Global Metal Flows",
+    "publisher-place": "Paris",
+    "URL": "https://www.resourcepanel.org/reports/metal-stocks-society",
+    "note": "Table 1 (pp. 16-17): per-capita in-use stocks of major engineering metals."
+  },
+  {
     "id": "unep_2013_metal_recycling",
     "type": "report",
     "title": "Metal Recycling: Opportunities, Limits, Infrastructure",

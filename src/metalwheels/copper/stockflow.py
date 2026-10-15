@@ -55,6 +55,10 @@ FLOW_COLUMNS = (
     "other_scrap_markets",
     "not_recycled",
     "stock",
+    "primary_refined",
+    "secondary_supply",
+    "target_stock",
+    "demand_driven",
 )
 
 
@@ -140,7 +144,10 @@ class StockFlowResult:
 
     def balance_residual(self) -> pd.Series:
         """Whole-system relative mass-balance residual per year:
-        mine - (losses + Δstock), divided by mine."""
+        mine - (losses + Δstock), divided by throughput (mine + EoL).
+
+        Throughput rather than mine output is the denominator so the check stays meaningful in
+        years when recycling alone supplies demand and mine output is zero."""
         f = self.flows
         d_stock = f["stock"].diff().fillna(f["stock"].iloc[0])
         out = (
@@ -152,7 +159,7 @@ class StockFlowResult:
             + f["not_recycled"]
             + d_stock
         )
-        return (f["mine"] - out) / f["mine"]
+        return (f["mine"] - out) / (f["mine"] + f["eol"])
 
     def stock_residual(self) -> pd.Series:
         """In-use stock balance (inflow - outflow - Δstock) relative to inflow, per year."""
@@ -162,11 +169,28 @@ class StockFlowResult:
 
 
 def run(
-    years: np.ndarray, mine: np.ndarray, prm: CopperParams, max_age: int = 200
+    years: np.ndarray,
+    mine: np.ndarray,
+    prm: CopperParams,
+    max_age: int = 200,
+    target_stock: np.ndarray | None = None,
 ) -> StockFlowResult:
-    """Supply-driven historical run. ``mine`` in Mt Cu/yr aligned with ``years``."""
+    """Run the stock-flow model. ``mine`` in Mt Cu/yr aligned with ``years``.
+
+    Years where ``mine`` is finite are supply-driven. Years where ``mine`` is NaN are
+    demand-driven: mine output is solved so that the in-use stock reaches ``target_stock``
+    (Mt) that year, given end-of-life returns and the scrap loop. If recycling alone would
+    overshoot the target, mine output is set to zero and the stock is allowed to exceed it.
+    """
     years = np.asarray(years)
     mine = np.asarray(mine, dtype=float)
+    if target_stock is not None:
+        target_stock = np.asarray(target_stock, dtype=float)
+        if target_stock.shape != mine.shape:
+            raise ValueError("target_stock must align with mine")
+    demand_years = np.isnan(mine)
+    if demand_years.any() and target_stock is None:
+        raise ValueError("NaN mine values require target_stock")
     T, G = len(years), len(prm.groups)
     pmf = lifetime_pmf(prm.lifetime, prm.sigma_frac, max_age)  # (G, A)
     A = pmf.shape[1]
@@ -192,7 +216,10 @@ def run(
         # 2. partition
         old, other, notrec = c * p * E, c * (1 - p) * E, (1 - c) * E
         # 3-4. closed-form scrap pool and fabrication chain
-        M = mine[t]
+        if demand_years[t]:
+            M = _required_mine(target_stock[t] - prev.sum() + E, old, prm)
+        else:
+            M = mine[t]
         W = (old + k * M * (1 - s)) / (1 - k * (1 - w * s))
         smelter_in = M + w * W
         refined = smelter_in * (1 - s)
@@ -227,6 +254,10 @@ def run(
         row[col["other_scrap_markets"]] = other
         row[col["not_recycled"]] = notrec
         row[col["stock"]] = stock[t].sum()
+        row[col["primary_refined"]] = M * (1 - s)
+        row[col["secondary_supply"]] = w * W * (1 - s) + (1 - w) * W
+        row[col["target_stock"]] = target_stock[t] if target_stock is not None else np.nan
+        row[col["demand_driven"]] = float(demand_years[t])
 
         if not np.isclose(W, old + new, rtol=1e-12, atol=1e-15):
             raise AssertionError(f"scrap pool closure failed in {years[t]}: {W} vs {old + new}")
@@ -239,6 +270,21 @@ def run(
         eol_by_group=pd.DataFrame(eol, index=idx, columns=list(prm.groups)),
         inflow_by_group=pd.DataFrame(inflow, index=idx, columns=list(prm.groups)),
     )
+
+
+def _required_mine(required_inflow: float, old_scrap: float, prm: CopperParams) -> float:
+    """Mine output (Mt) that delivers ``required_inflow`` to use, given this year's old scrap.
+
+    Inverts steps 3-5: goods = I / (1 - d); semis = goods / eta_bar; N = r (semis - goods);
+    W = O + N; F = semis / (1 - f); R = F - (1 - w) W; M = R / (1 - s) - w W. Clamped at 0.
+    """
+    inflow = max(required_inflow, 0.0)
+    goods = inflow / (1 - prm.dissipation)
+    semis = goods / prm.eta_bar
+    W = old_scrap + prm.new_scrap_capture * (semis - goods)
+    refined = semis / (1 - prm.semis_loss) - (1 - prm.scrap_to_smelter) * W
+    M = refined / (1 - prm.smelting_loss) - prm.scrap_to_smelter * W
+    return max(M, 0.0)
 
 
 def run_historical(reg: Registry | None = None, **overrides: float) -> StockFlowResult:

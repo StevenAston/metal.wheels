@@ -160,3 +160,51 @@ def copper_history(
         table.add_row(name, *(f"{f.loc[y, name]:.2f}" for y in years))
     Console(width=200).print(table)
     typer.echo(f"max relative mass-balance residual: {res.balance_residual().abs().max():.1e}")
+
+
+@copper_app.command("project")
+def copper_project(
+    end_year: int = typer.Option(3025, "--end", help="Last year of the projection."),
+    years: list[int] = typer.Option(  # noqa: B008
+        [2025, 2026, 2050, 2100, 2200, 2500, 3025], "--year", "-y", help="Years to show."
+    ),
+    saturation: float | None = typer.Option(None, "--saturation", help="k_sat, kg/person."),
+    collection: float | None = typer.Option(None, help="Override EoL collection rate c."),
+    processing: float | None = typer.Option(None, help="Override EoL processing rate p."),
+) -> None:
+    """Historical run then stock-driven demand to --end (Mt Cu unless noted)."""
+    from rich.console import Console
+    from rich.table import Table
+
+    from metalwheels.copper import demand
+
+    overrides = {
+        k: v
+        for k, v in {"collection": collection, "processing": processing}.items()
+        if v is not None
+    }
+    pj = demand.project(end_year=end_year, k_sat=saturation, **overrides)
+    f = pj.result.flows
+    years = [y for y in years if y in f.index]
+    table = Table(
+        title=f"Copper projection (k_sat {pj.k_sat:.0f} kg/person, g {pj.growth_rate:.4f}/yr)"
+    )
+    table.add_column("quantity")
+    for y in years:
+        table.add_column(str(y), justify="right")
+    pc = dict(zip(f.index, pj.per_capita_stock, strict=True))
+    table.add_row("population (bn)", *(f"{pj.population[y - f.index[0]] / 1e9:.2f}" for y in years))
+    table.add_row("stock per person (kg)", *(f"{pc[y]:.1f}" for y in years))
+    for name in (
+        "stock",
+        "refined",
+        "mine",
+        "secondary_supply",
+        "eol",
+        "old_scrap",
+        "not_recycled",
+    ):
+        table.add_row(name, *(f"{f.loc[y, name]:.2f}" for y in years))
+    Console(width=200).print(table)
+    fut = f.loc[f.index > 2025, "mine"].sum()
+    typer.echo(f"cumulative mine output 2026-{end_year}: {fut / 1e3:.1f} Bt Cu")
