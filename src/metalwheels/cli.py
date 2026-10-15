@@ -121,3 +121,42 @@ def data_cu_production() -> None:
     total = sum(r["mine_production_mt"] for r in rows)
     typer.echo(f"{len(rows)} rows ({rows[0]['year']}-{rows[-1]['year']}), {total:.1f} Mt total")
     typer.echo(f"written to {path}")
+
+
+copper_app = typer.Typer(help="Copper model views.", no_args_is_help=True)
+app.add_typer(copper_app, name="copper")
+
+
+@copper_app.command("history")
+def copper_history(
+    years: list[int] = typer.Option(  # noqa: B008
+        [1950, 1980, 2000, 2010, 2011, 2025], "--year", "-y", help="Years to show (repeatable)."
+    ),
+    collection: float | None = typer.Option(None, help="Override EoL collection rate c."),
+    processing: float | None = typer.Option(None, help="Override EoL processing rate p."),
+) -> None:
+    """Historical (1900-2025) supply-driven stock-flow run: key flows in Mt Cu."""
+    from rich.console import Console
+    from rich.table import Table
+
+    from metalwheels.copper import stockflow as sf
+
+    overrides = {
+        k: v
+        for k, v in {"collection": collection, "processing": processing}.items()
+        if v is not None
+    }
+    res = sf.run_historical(**overrides)
+    f = res.flows
+    missing = [y for y in years if y not in f.index]
+    if missing:
+        log.error("years outside 1900-2025: %s", missing)
+        raise typer.Exit(code=1)
+    table = Table(title="Copper stock-flow, historical (Mt Cu)")
+    table.add_column("flow")
+    for y in years:
+        table.add_column(str(y), justify="right")
+    for name in sf.FLOW_COLUMNS:
+        table.add_row(name, *(f"{f.loc[y, name]:.2f}" for y in years))
+    Console(width=200).print(table)
+    typer.echo(f"max relative mass-balance residual: {res.balance_residual().abs().max():.1e}")

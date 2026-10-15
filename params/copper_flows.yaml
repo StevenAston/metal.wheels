@@ -90,3 +90,26 @@ parameters:
     source: helbig_2020
     locator: "SI Figure S11, p. S8"
     note: "In-use dissipation / final goods = 450 / 20,850 kt. Applied to inflow; Charpentier Poncelet assign it by sector (chemicals 100 %, transport 0.4 %, construction 0.2 %)."
+
+  # --- Fractions used by the Task 1.2 stock-flow engine (derived from Helbig 2020 SI Fig. S11, 2011) ---
+  cu.semis_loss_fraction:
+    value: 0.0059
+    unit: "1"
+    status: derived
+    source: helbig_2020
+    locator: "SI Figure S11, p. S8"
+    note: "Fabrication losses at semis production / semis = 150 / 25,250 kt."
+  cu.new_scrap_capture:
+    value: 0.9545
+    unit: "1"
+    status: derived
+    source: helbig_2020
+    locator: "SI Figure S11, p. S8"
+    note: "Share of manufacturing residue (semis - final goods) recovered as new scrap = 4,200 / (25,250 - 20,850) kt; the rest (200 kt) is manufacturing loss. Product-group residue comes from cu.fab_efficiency.*."
+  cu.scrap_to_smelter_share:
+    value: 0.4043
+    unit: "1"
+    status: derived
+    source: helbig_2020
+    locator: "SI Figure S11, p. S8"
+    note: "Share of the scrap pool (old + new) that is low quality and goes back through smelting/refining = 3,800 / 9,400 kt; the remainder (5,600 kt) is high-quality scrap melted directly by semis makers."

@@ -1,0 +1,41 @@
+# Global end-use shares of copper (ICA / IWCC, 2019), mapped onto Glöser-Chahoud's five
+# application areas (Anwendungsbereiche). Within each area the share is split EQUALLY among
+# the Tabelle 5.1 product groups (an assumption; the ICA group-level data are proprietary).
+# Shares are held constant over 1900-2025 (assumption; see PLAN change log).
+domain: copper_enduse
+parameters:
+  cu.share.construction:
+    value: 0.28
+    unit: "1"
+    status: sourced
+    source: icsg_2020_factbook
+    locator: "p. 47, 'Major Uses of Copper, 2019', End-Use: Building Construction"
+    note: "-> Bauwesen (5 groups)."
+  cu.share.infrastructure:
+    value: 0.16
+    unit: "1"
+    status: sourced
+    source: icsg_2020_factbook
+    locator: "p. 47, End-Use: Infrastructure"
+    note: "-> Infrastruktur (2 groups)."
+  cu.share.industry:
+    value: 0.12
+    unit: "1"
+    status: sourced
+    source: icsg_2020_factbook
+    locator: "p. 47, End-Use: Industrial"
+    note: "-> Industrie (2 groups)."
+  cu.share.transport:
+    value: 0.13
+    unit: "1"
+    status: sourced
+    source: icsg_2020_factbook
+    locator: "p. 47, End-Use: Transport"
+    note: "-> Transport (3 groups)."
+  cu.share.consumer:
+    value: 0.31
+    unit: "1"
+    status: sourced
+    source: icsg_2020_factbook
+    locator: "p. 47, End-Use: Equipment"
+    note: "-> Konsum & Elektronik (4 groups). ICA 'Equipment' is the closest match; the mapping is approximate."

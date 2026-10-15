@@ -375,6 +375,27 @@
     "id": "helbig_2020"
   },
   {
+    "id": "icsg_2020_factbook",
+    "type": "report",
+    "title": "The World Copper Factbook 2020",
+    "author": [
+      {
+        "literal": "International Copper Study Group"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "publisher": "ICSG",
+    "publisher-place": "Lisbon",
+    "URL": "https://internationalcopper.org/wp-content/uploads/2021/01/2020_10_13_ICSG_Factbook_2020.pdf",
+    "note": "p. 47: ICA/IWCC 2019 end-use shares; p. 59: world mine production, refined production and refined usage 1960-2019 (kt Cu)."
+  },
+  {
     "id": "iea_2020_steel_roadmap",
     "type": "report",
     "title": "Iron and Steel Technology Roadmap: Towards more sustainable steelmaking",
