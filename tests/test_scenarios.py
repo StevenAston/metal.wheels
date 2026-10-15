@@ -40,7 +40,7 @@ def test_summary_and_meta_written(baseline_dir):
     out, _ = baseline_dir
     summary = pd.read_csv(out / "summary.csv")
     assert {"metric", "value", "unit"} == set(summary.columns)
-    assert "harmsen_exhausted_year" in set(summary["metric"])
+    assert "harmsen_first_shortfall_year" in set(summary["metric"])
     meta = json.loads((out / "meta.json").read_text())
     assert meta["scenario"] == "baseline"
     assert len(meta["registry_sha256"]) == 64

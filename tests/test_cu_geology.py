@@ -121,7 +121,7 @@ def test_conservation_and_shortfall(reg, history):
     np.testing.assert_allclose(
         total_extracted + r.remaining_by_layer.iloc[-1].sum(), prof.endowment, rtol=1e-9
     )
-    assert r.exhausted_year is not None
+    assert r.first_shortfall_year is not None
     np.testing.assert_allclose(r.extracted + r.shortfall, demand, rtol=1e-9, atol=1e-9)
 
 

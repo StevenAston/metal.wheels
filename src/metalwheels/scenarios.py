@@ -156,9 +156,9 @@ def run_scenario(
             ts[f"{p}remaining_{layer}"] = ex.remaining_by_layer[layer]
         ts[p + "remaining_total"] = ex.remaining_by_layer.sum(axis=1)
 
-        ey = ex.exhausted_year
+        ey = ex.first_shortfall_year
         summary[p + "endowment"] = (prof.endowment, "Mt Cu")
-        summary[p + "exhausted_year"] = (float(ey) if ey else float("nan"), "year")
+        summary[p + "first_shortfall_year"] = (float(ey) if ey else float("nan"), "year")
         for layer, yr in ex.layer_exhaustion_years(prof.layer_totals()).items():
             summary[f"{p}layer_{layer}_exhausted_year"] = (
                 float(yr) if yr else float("nan"),

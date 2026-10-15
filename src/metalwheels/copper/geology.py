@@ -25,7 +25,10 @@ copper is minable (everything produced by 2010 came from deposits known by 2010)
 uniform fraction phi of every slice's undiscovered copper becomes discovered whenever needed to
 keep discovered-but-unmined copper at least ``lead_years`` x the demand trend (trailing mean over
 ``smoothing_years``, so single-year demand steps do not trigger discovery pulses);
-``lead_years`` is the 2010 ratio unless given.
+``lead_years`` is the 2010 ratio unless given. Discovery in any year is also capped at
+``max_discovery_rate`` x the copper still undiscovered (diminishing discovery, decided by Steve
+2026-10-15): the last deposits are the hardest to find, so discovered reserves run down
+gradually instead of discovery stopping abruptly when everything has been found.
 
 The state in year t is fully described by (lam_t, phi_t): cumulative extraction
 X_t = sum_i (A_i + phi_t U_i) C_i(g_i(lam_t)) / E_i, solved for lam_t each year.
@@ -175,7 +178,7 @@ class ExtractionResult:
     lead_years: float
 
     @property
-    def exhausted_year(self) -> int | None:
+    def first_shortfall_year(self) -> int | None:
         idx = np.flatnonzero(self.shortfall > 1e-9)
         return int(self.years[idx[0]]) if idx.size else None
 
@@ -201,6 +204,7 @@ class Extraction:
         calibration_year: int = 2010,
         lead_years: float | None = None,
         smoothing_years: int = 1,
+        max_discovery_rate: float = 1.0,
     ):
         self.p = profile
         self.b = b
@@ -211,6 +215,9 @@ class Extraction:
         if smoothing_years < 1:
             raise ValueError("smoothing_years must be >= 1")
         self.smoothing_years = int(smoothing_years)
+        if not 0 < max_discovery_rate <= 1:
+            raise ValueError("max_discovery_rate must be in (0, 1]")
+        self.max_discovery_rate = float(max_discovery_rate)
         self.sigma = math.sqrt(profile.sigma2)
         self.mean_grade = math.exp(profile.mu + profile.sigma2 / 2)
 
@@ -270,7 +277,9 @@ class Extraction:
                     raise RuntimeError("lead_years not set: calibration year not in the run")
                 need = lead * trend[t]
                 if (A + phi * U).sum() - want < need and phi < 1:
-                    phi = min(1.0, (need + want - A.sum()) / U.sum())
+                    wanted = min(1.0, (need + want - A.sum()) / U.sum())
+                    # diminishing discovery: at most a fixed share of what remains undiscovered
+                    phi = min(wanted, phi + self.max_discovery_rate * (1 - phi))
             avail = A + phi * U
             x = min(want, avail.sum() * cap)
             shortfall[t] = want - x
@@ -338,5 +347,9 @@ def extraction_for(
         prof, b, k_depth, d0, years, ore_cu, reg.value("geo.calib.produced_share_top500_2010")
     )
     log.info("%s: depth-order multiplier calibrated to %.3f", bracket, m)
-    k = int(reg.value("geo.discovery_smoothing_years"))
-    return prof, Extraction(prof, b, k_depth, d0, m, smoothing_years=k).run(years, ore_cu)
+    ex = Extraction(
+        prof, b, k_depth, d0, m,
+        smoothing_years=int(reg.value("geo.discovery_smoothing_years")),
+        max_discovery_rate=reg.value("geo.max_discovery_rate"),
+    )  # fmt: skip
+    return prof, ex.run(years, ore_cu)

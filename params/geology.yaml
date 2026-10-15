@@ -159,3 +159,11 @@ parameters:
     low: 1
     high: 30
     note: "Paced discovery keeps discovered-unmined copper >= lead x the trailing mean of annual extraction over this many years (exploration responds to demand trends, not single years). Introduced to remove a discovery pulse when population is held flat after 2100."
+  geo.max_discovery_rate:
+    value: 0.01
+    unit: "1"
+    status: assumption
+    distribution: uniform
+    low: 0.005
+    high: 0.03
+    note: "Diminishing discovery (Steve, 2026-10-15): annual discovery capped at this share of the copper still undiscovered (exploration 'creaming'). At 0.01 the cap binds only once roughly 70 % of the Harmsen endowment has been discovered. Unsourced assumption."

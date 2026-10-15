@@ -36,7 +36,8 @@ DEVIATIONS = {
         "model low in the 1960s (about -9 %), high in the 2000s (about +6 %) - is what constant "
         "collection/processing rates over 1900-2025 produce if real recycling was higher than "
         "0.67 x 0.69 in the 1960s and lower during the 2000s China boom. Decadal means stay within "
-        "10 %. **Status: awaiting Steve's acceptance.**"
+        "10 %. **Status: accepted by Steve, 2026-10-15** (time-varying historical recycling rates "
+        "left as a possible refinement)."
     ),
 }
 
@@ -314,7 +315,10 @@ def build(out_dir: Path = REPORTS, mc_dir: Path | None = None) -> Path:
           f"`{export.git_commit()}`). Do not edit by hand; regenerate instead.*\n",
           f"**Result: {n_pass} of {len(checks)} checks pass.**"]  # fmt: skip
     failed = [c for c in checks if not c.passed]
-    if failed:
+    accepted = [c for c in failed if "accepted by Steve" in DEVIATIONS.get(c.name, "")]
+    if accepted:
+        md[-1] += f" {len(accepted)} failing cross-check explained and accepted (see *Deviations*)."
+    if len(failed) > len(accepted):
         md.append(
             "Failing checks need an explanation accepted by Steve before Phase 2 (PLAN Task 1.10); see *Deviations* below."
         )
@@ -332,7 +336,7 @@ def build(out_dir: Path = REPORTS, mc_dir: Path | None = None) -> Path:
     md.append("\n## Baseline results (both endowment brackets, side by side)\n")
     rows = []
     for label, key, unit in (
-        ("Endowment", "endowment", "Mt Cu"), ("Endowment exhausted", "exhausted_year", "year"),
+        ("Endowment", "endowment", "Mt Cu"), ("First supply shortfall", "first_shortfall_year", "year"),
         ("Mined grade 2050", "grade_2050", "wt%"), ("Mined grade 2100", "grade_2100", "wt%"),
         ("Mean depth 2050", "depth_2050", "m"), ("Mean depth 2100", "depth_2100", "m"),
         ("Energy intensity 2050", "energy_intensity_2050", "MJ/kg"),
@@ -362,12 +366,12 @@ def build(out_dir: Path = REPORTS, mc_dir: Path | None = None) -> Path:
     rows = []
     for name, run in {"baseline": base, **others}.items():
         r = run.summary
-        hy = r["harmsen_exhausted_year"][0]
+        hy = r["harmsen_first_shortfall_year"][0]
         rows.append([name, _fmt(r["cum_mine_output_future"][0] / 1e3), _fmt(r["mine_2100"][0]),
                      "-" if math.isnan(hy) else f"{hy:.0f}", _fmt(r["harmsen_primary_energy_2100"][0]),
                      _fmt(r["kesler_cum_primary_energy"][0])])  # fmt: skip
     md.append(_md_table(rows, ["Scenario", "Mine output 2026–3025 (Bt Cu)", "Mine output 2100 (Mt/yr)",
-                               "Harmsen exhausted", "Primary energy 2100, Harmsen (EJ/yr)",
+                               "Harmsen first shortfall", "Primary energy 2100, Harmsen (EJ/yr)",
                                "Cumulative primary energy, Kesler (EJ)"]))  # fmt: skip
 
     md.append("\n## Framing against the literature\n")
@@ -380,9 +384,9 @@ def build(out_dir: Path = REPORTS, mc_dir: Path | None = None) -> Path:
         "Northey's two framings because recycling supplies a growing share of demand.\n"
         "- **Harmsen et al. 2013** frame scarcity as rising energy along a depth-layered supply curve. "
         "Here grade stabilises near 0.55–0.65 % once paced discovery opens the undiscovered pool, and "
-        "**depth becomes the main escalator**; at today's recycling rates the Harmsen endowment "
-        f"(24.9 Bt to 5 km) is exhausted in {_fmt(s['harmsen_exhausted_year'][0])}, all layers within ~10 years "
-        "of each other, because cost-ordered extraction draws on every layer at once.\n"
+        "**depth becomes the main escalator**. At today's recycling rates, demand on the Harmsen "
+        f"endowment (24.9 Bt to 5 km) first outruns discovery in {_fmt(s['harmsen_first_shortfall_year'][0])}; "
+        "from then on supply is limited to each year's (diminishing) new discoveries.\n"
         "- **Kesler & Wilkinson 2008**: 89 Bt above 3.3 km is not exhausted by 3025 in any scenario, "
         "but extraction settles near ~1.9 km depth."
     )
@@ -394,7 +398,8 @@ def build(out_dir: Path = REPORTS, mc_dir: Path | None = None) -> Path:
         "3. Tailings share 18 % in all years (early-century concentrator losses were probably higher).\n"
         "4. ICA 'Equipment' mapped to Glöser-Chahoud's consumer & electronics group; equal split within categories.\n"
         "5. Saturation = midpoint of today's more-developed-country per-capita stock (140–300 kg).\n"
-        "6. Discovery is uniform across depth; the depth-order multiplier is calibrated, not physical.\n"
+        "6. Discovery is uniform across depth, follows a 10-year demand trend and is capped at 1 %/yr of "
+        "what remains undiscovered (both assumptions); the depth-order multiplier is calibrated, not physical.\n"
         "7. Energy covers primary copper only; secondary (scrap) energy still needs a source.\n"
         "8. When an endowment is exhausted, demand is still assumed met by the stock-flow model "
         "(shortfall reported; no feedback in Phase 1).\n"

@@ -255,7 +255,7 @@ def run_cmd(
     table.add_column("Kesler", justify="right")
     for label, key, fmt in (
         ("endowment (Mt Cu)", "endowment", "{:,.0f}"),
-        ("exhausted (year)", "exhausted_year", "{:.0f}"),
+        ("first supply shortfall (year)", "first_shortfall_year", "{:.0f}"),
         ("grade 2100 (wt%)", "grade_2100", "{:.3f}"),
         ("depth 2100 (m)", "depth_2100", "{:,.0f}"),
         ("energy 2100 (MJ/kg)", "energy_intensity_2100", "{:.0f}"),
@@ -304,7 +304,7 @@ def mc_cmd(
     q = res.summary_quantiles
     for key in (
         "cum_mine_output_future",
-        "harmsen_exhausted_year",
+        "harmsen_first_shortfall_year",
         "kesler_grade_2100",
         "harmsen_primary_energy_2100",
         "kesler_primary_energy_2100",
