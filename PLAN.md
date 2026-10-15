@@ -76,6 +76,7 @@ metal.wheels/
 │   ├── logging_setup.py
 │   ├── registry.py             # load/validate parameters with provenance (pydantic)
 │   ├── copper/
+│   │   ├── production.py       # Task 1.1 world mine production ingest
 │   │   ├── stockflow.py        # dynamic stock model
 │   │   ├── fates.py            # EoL partition + production losses
 │   │   ├── demand.py           # stock-driven future demand (saturation × population)
@@ -395,3 +396,4 @@ metal.wheels/
 - **2026-10-15** — Task 0.2: Glöser-Chahoud Tabelle 5.1 has 16 product groups, not 15 (corrected above). Added `params/demand.yaml` (saturation stock, Task 1.4) to the structure; mass parameters (tailings density) live in `geology.yaml`. Registry convention: grades are mass fractions, never percent (Gerst's ln-wt% parameters stored as published and converted in code). Added optional `range_source` field so bounds can cite a different source from the central value.
 - **2026-10-15** — Task 0.3: bibliography built from doi.org/Crossref/DataCite records (22 entries), adding USGS DS140/DS896 (data sources for Task 1.1) and Morales et al. 2021 (tailings density, supplied by Steve). Tailings dry density default changed 1.6 → 1.40 t/m³ (in-situ range 1.30–1.48). CEEC 2021 and IEA entries deferred until the specific documents are identified.
 - **2026-10-15** — Bibliography: added CEEC 2021 (Allen/engeco), IEA 2020 steel roadmap, IEA 2021 heavy-industry article, Michaux 2021 (GTK 16/2021) and Rötzer & Schmidt 2020. Noted for later tasks (no done conditions changed): (a) IEA sources disagree on scrap-vs-ore steel energy (1/8 vs 60–70 % less) — reconcile on a common primary-energy basis in Task 2.4; (b) Rötzer & Schmidt 2020 CED (~89 GJ/t at 0.5 % Cu) as a cross-check against Norgate (131 MJ/kg at 0.5 %) in Task 1.6; (c) ore texture (grind size) and ore hardness as candidate ratchets for Task 4.1, after Michaux 2021 §9–10.
+- **2026-10-15** — Task 1.1: DS896 (global) only covers 1990 onward, so the series uses the DS140 copper workbook's 'World production' column for 1900–2020 and MCS 2022–2026 for 2021–2025 (splice year 2020 agrees exactly at 20.6 Mt). MCS PDFs were reachable live and are committed with hashes. Cumulative 1900–2015 = 647.9 Mt (+8 % vs USGS's rounded 600 Mt past production). Added `geo.usgs.identified_unextracted` (1.5 Bt) after MCS 2026 clarified that the 2.1 Bt identified figure includes past production.

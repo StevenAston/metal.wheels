@@ -76,7 +76,14 @@ parameters:
     status: sourced
     source: usgs_fs_2014_3004
     locator: "p. 1, summary"
-    note: "Identified resources (reserves plus other identified resources) at the 2013 assessment."
+    note: "Identified resources at the 2013 assessment. MCS 2026 (citing the 2015 assessment, Hammarstrom et al. 2019) states the 2.1 Bt INCLUDES ~600 Mt of past production, i.e. ~1.5 Bt unextracted; see geo.usgs.identified_unextracted."
+  geo.usgs.identified_unextracted:
+    value: 1500
+    unit: Mt
+    status: sourced
+    source: usgs_mcs_2026
+    locator: "Copper chapter, 'World Resources' paragraph"
+    note: "Identified resources excluding ~600 Mt past production (2015 assessment, Hammarstrom et al. 2019)."
   geo.usgs.undiscovered_mean:
     value: 3500
     unit: Mt

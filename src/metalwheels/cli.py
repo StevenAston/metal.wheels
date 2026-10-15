@@ -101,3 +101,23 @@ def params_list(
             row.append(p.note or "")
         table.add_row(*row)
     Console(width=200).print(table)
+
+
+data_app = typer.Typer(help="Build processed data series from data/raw.", no_args_is_help=True)
+app.add_typer(data_app, name="data")
+
+
+@data_app.command("cu-production")
+def data_cu_production() -> None:
+    """Rebuild data/processed/cu_mine_production.csv (world mine copper, 1900-2025)."""
+    from metalwheels.copper import production
+
+    try:
+        rows = production.build()
+    except production.IngestError as exc:
+        log.error("%s", exc)
+        raise typer.Exit(code=1) from exc
+    path = production.write(rows)
+    total = sum(r["mine_production_mt"] for r in rows)
+    typer.echo(f"{len(rows)} rows ({rows[0]['year']}-{rows[-1]['year']}), {total:.1f} Mt total")
+    typer.echo(f"written to {path}")

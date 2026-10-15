@@ -272,6 +272,42 @@
     "id": "gloser_chahoud_2017"
   },
   {
+    "id": "hammarstrom_2019",
+    "type": "report",
+    "title": "Assessment of undiscovered copper resources of the world, 2015",
+    "author": [
+      {
+        "given": "Jane M.",
+        "family": "Hammarstrom"
+      },
+      {
+        "given": "Michael L.",
+        "family": "Zientek"
+      },
+      {
+        "given": "Heather L.",
+        "family": "Parks"
+      },
+      {
+        "given": "Connie L.",
+        "family": "Dicken"
+      },
+      {}
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "publisher": "U.S. Geological Survey",
+    "DOI": "10.3133/sir20185160",
+    "collection-title": "Scientific Investigations Report",
+    "number": "2018-5160",
+    "note": "2015 global assessment; source of MCS 2026's 'identified resources 1.5 Bt unextracted (2.1 Bt incl. 600 Mt past production); undiscovered 3.5 Bt'."
+  },
+  {
     "publisher": "Elsevier BV",
     "DOI": "10.1016/j.energy.2012.12.006",
     "type": "journal-article",
@@ -834,6 +870,84 @@
     "number": "2014-3004"
   },
   {
+    "id": "usgs_mcs_2022",
+    "type": "report",
+    "title": "Mineral commodity summaries 2022",
+    "author": [
+      {
+        "literal": "U.S. Geological Survey"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "publisher": "U.S. Geological Survey",
+    "DOI": "10.3133/mcs2022",
+    "note": "Copper chapter used for world mine production (World total, rounded)."
+  },
+  {
+    "id": "usgs_mcs_2023",
+    "type": "report",
+    "title": "Mineral commodity summaries 2023",
+    "author": [
+      {
+        "literal": "U.S. Geological Survey"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "publisher": "U.S. Geological Survey",
+    "DOI": "10.3133/mcs2023",
+    "note": "Copper chapter used for world mine production (World total, rounded)."
+  },
+  {
+    "id": "usgs_mcs_2024",
+    "type": "report",
+    "title": "Mineral commodity summaries 2024",
+    "author": [
+      {
+        "literal": "U.S. Geological Survey"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "publisher": "U.S. Geological Survey",
+    "DOI": "10.3133/mcs2024",
+    "note": "Copper chapter used for world mine production (World total, rounded)."
+  },
+  {
+    "id": "usgs_mcs_2025",
+    "type": "report",
+    "title": "Mineral commodity summaries 2025",
+    "author": [
+      {}
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2025
+        ]
+      ]
+    },
+    "publisher": "U.S. Geological Survey",
+    "DOI": "10.3133/mcs2025",
+    "note": "Copper chapter used for world mine production (World total, rounded)."
+  },
+  {
     "publisher": "US Geological Survey",
     "DOI": "10.3133/mcs2026",
     "type": "report",
@@ -847,7 +961,8 @@
       ]
     },
     "URL": "http://dx.doi.org/10.3133/mcs2026",
-    "id": "usgs_mcs_2026"
+    "id": "usgs_mcs_2026",
+    "note": "Copper chapter: world mine production 2024 (23,000 kt) and 2025e (23,000 kt); identified resources statement citing Hammarstrom et al. 2019."
   },
   {
     "id": "valero_valero_2014",
