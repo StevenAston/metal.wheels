@@ -64,7 +64,8 @@ metal.wheels/
 │   ├── energy.yaml             # Norgate & Jahanshahi, Koppelaar 2016, Harmsen 2013
 │   ├── steel.yaml              # Daehn et al. 2017/2019, steel route energies
 │   ├── cascade.yaml            # inter-sector coefficients (Phase 3)
-│   └── ratchets.yaml           # ratchet catalogue (Phase 4)
+│   ├── ratchets.yaml           # ratchet catalogue (Phase 4)
+│   └── demand.yaml             # saturation stock per capita (Task 1.4)
 ├── data/
 │   ├── raw/                    # source files actually used, with SHA-256 manifest
 │   └── processed/              # cleaned series (historical production, population)
