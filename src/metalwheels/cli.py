@@ -381,6 +381,18 @@ def report_phase1(
     typer.echo(f"written to {path}")
 
 
+@report_app.command("phase23")
+def report_phase23() -> None:
+    """Regenerate reports/phase2_3.md (steel coupling and cascade) and its figures."""
+    from metalwheels import report_phase23
+
+    path = report_phase23.build()
+    text = path.read_text(encoding="utf-8")
+    line = next(ln for ln in text.splitlines() if ln.startswith("**Result:"))
+    typer.echo(line.strip("*"))
+    typer.echo(f"written to {path}")
+
+
 export_app = typer.Typer(help="Export model results.", no_args_is_help=True)
 app.add_typer(export_app, name="export")
 
@@ -407,3 +419,76 @@ def export_web(
         data = webexport.build_grid(grid, progress=lambda: prog.advance(task))
     local, _art = webexport.write_pages(data, Path(out) if out else None)
     typer.echo(f"{n} runs; page: {local} ({local.stat().st_size / 1e6:.1f} MB)")
+
+
+cascade_app = typer.Typer(help="Phase 3 cascade (input-output) views.", no_args_is_help=True)
+app.add_typer(cascade_app, name="cascade")
+
+
+def _cascade_result(scenario: str, bracket: str):
+    import logging
+
+    from metalwheels import registry, scenarios
+    from metalwheels.cascade import matrix as cascade
+
+    logging.getLogger("metalwheels").setLevel(logging.ERROR)
+    if bracket not in scenarios.BRACKETS:
+        log.error("bracket must be one of %s", ", ".join(scenarios.BRACKETS))
+        raise typer.Exit(code=1)
+    reg = registry.load()
+    run = scenarios.run_scenario(scenarios.load_scenario(scenario), reg)
+    return cascade.run(run.timeseries, reg, bracket), reg
+
+
+@cascade_app.command("sensitivity")
+def cascade_sensitivity(
+    scenario: str = typer.Option("baseline", "--scenario", "-s"),
+    year: int = typer.Option(2100, "--year", "-y"),
+    bracket: str = typer.Option("harmsen", "--bracket", "-b"),
+    top: int = typer.Option(5, "--top", help="Drivers to highlight."),
+) -> None:
+    """Elasticities of rho(A) and maintenance energy to every non-zero coefficient (Task 3.4)."""
+    from rich.console import Console
+    from rich.table import Table
+
+    from metalwheels.cascade import matrix as cascade
+
+    res, _ = _cascade_result(scenario, bracket)
+    if year not in res.years:
+        log.error("year %d not in the run", year)
+        raise typer.Exit(code=1)
+    df = cascade.sensitivity_table(res, year)
+    k = int((res.years == year).nonzero()[0][0])
+    table = Table(
+        title=f"Cascade sensitivity, {scenario} / {bracket} / {year} "
+        f"(rho {res.rho[k]:.4f}, maintenance energy {res.maintenance_energy_ej[k]:.1f} EJ/yr)"
+    )
+    for c in ("rank", "input -> output", "a_ij", "elasticity of E", "elasticity of rho"):
+        table.add_column(c, justify="right" if c != "input -> output" else "left")
+    for r in df.itertuples():
+        style = "bold" if r.rank <= top else None
+        table.add_row(
+            str(r.rank), f"{r.input} -> {r.output}", f"{r.a_ij:.4g}",
+            f"{r.energy_elasticity:.4f}", f"{r.rho_elasticity:.4f}", style=style,
+        )  # fmt: skip
+    Console(width=140).print(table)
+    top_e = ", ".join(f"{r.input}->{r.output}" for r in df.head(top).itertuples())
+    by_rho = df.reindex(df["rho_elasticity"].abs().sort_values(ascending=False).index).head(top)
+    top_r = ", ".join(f"{r.input}->{r.output}" for r in by_rho.itertuples())
+    typer.echo(f"top {top} drivers of maintenance energy: {top_e}")
+    typer.echo(f"top {top} drivers of rho: {top_r}")
+
+
+@cascade_app.command("gaps")
+def cascade_gaps() -> None:
+    """Non-zero cascade cells resting on unsourced assumptions or parameters without ranges."""
+    from metalwheels import registry
+    from metalwheels.cascade import matrix as cascade
+
+    reg = registry.load()
+    gaps = cascade.provenance_gaps(reg)
+    n_cells = len(cascade.CELL_PARAMS)
+    typer.echo(f"{n_cells - len(gaps)} of {n_cells} non-zero cells fully sourced with ranges")
+    for (i, o), items in gaps.items():
+        typer.echo(f"  {i} -> {o}: {'; '.join(items)}")
+    typer.echo(f"{len(cascade.ZERO_NOTES)} zero cells, each with a justification note")

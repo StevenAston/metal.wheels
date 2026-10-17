@@ -225,6 +225,8 @@ def run_scenario(
     if sc.steel:
         step("steel coupling")
         _steel(ts, summary, calib, pj.result, reg)
+        step("cascade")
+        _cascade(ts, summary, reg)
     for k, v in calib.items():
         summary[f"calib_{k}"] = (float(v), "")
     return RunOutput(sc, ts, summary, time.perf_counter() - t0, calib)
@@ -264,3 +266,41 @@ def _steel(ts: pd.DataFrame, summary: dict, calib: dict, cu_result, reg: Registr
                 float(ts.loc[y, "st_copper_induced_primary"]),
                 "Mt/yr",
             )
+
+
+#: Cascade columns per bracket (prefix ``cas_<bracket>_``).
+CASCADE_COLUMNS = (
+    "rho",
+    "maintenance_energy_ej",
+    "copper_energy_multiplier_gj_per_t",
+    "copper_direct_energy_ej",
+    "steel_direct_energy_ej",
+)
+
+
+def _cascade(ts: pd.DataFrame, summary: dict, reg: Registry) -> None:
+    """Phase 3: A(t), rho and maintenance energy for each endowment bracket."""
+    from metalwheels.cascade import matrix as cascade
+
+    for br in BRACKETS:
+        res = cascade.run(ts, reg, br)
+        frame = res.frame(f"cas_{br}_")
+        # After the bracket's first supply shortfall, 2025 final demand can no longer be met
+        # from mines, so maintenance energy (and the multipliers behind it) is undefined.
+        sy = summary.get(f"{br}_first_shortfall_year", (float("nan"), ""))[0]
+        if sy == sy:
+            frame.loc[frame.index >= sy, [c for c in frame.columns if not c.endswith("rho")]] = (
+                np.nan
+            )
+        for c in frame.columns:
+            ts[c] = frame[c].to_numpy()
+        p = f"cas_{br}_"
+        for y in (2025, 2050, 2100, 2200, 2500, int(ts.index[-1])):
+            if y in ts.index:
+                summary[f"{p}rho_{y}"] = (float(ts.loc[y, p + "rho"]), "1")
+                summary[f"{p}maintenance_energy_{y}"] = (
+                    float(ts.loc[y, p + "maintenance_energy_ej"]),
+                    "EJ/yr",
+                )
+        summary[f"{p}rho_max"] = (float(ts[p + "rho"].max()), "1")
+        summary[f"{p}valid_until"] = (float(sy - 1) if sy == sy else float(ts.index[-1]), "year")

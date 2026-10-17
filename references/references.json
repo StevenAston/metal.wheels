@@ -122,6 +122,47 @@
     "id": "ciacci_2015"
   },
   {
+    "id": "cki_2024_cement",
+    "type": "report",
+    "title": "Cement: decarbonisation primer (Carbon Knowledge Initiative)",
+    "author": [
+      {
+        "literal": "Columbia Business School, Carbon Knowledge Initiative"
+      }
+    ],
+    "publisher": "Columbia University",
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "URL": "https://business.columbia.edu/sites/default/files-efs/imce-uploads/CKI/CKI%20Cement-241017.pdf",
+    "note": "Electricity intensity chart p. 15 citing IEA Technology Roadmap: Low-Carbon Transition in the Cement Industry (2018)."
+  },
+  {
+    "id": "cochilco_2018_water",
+    "type": "report",
+    "title": "Consumo de agua en la minería del cobre al 2017",
+    "author": [
+      {
+        "literal": "Comisión Chilena del Cobre (COCHILCO)"
+      }
+    ],
+    "publisher": "COCHILCO",
+    "publisher-place": "Santiago",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "URL": "https://www.cochilco.cl/web/download/822/2018/7844/consumo-de-agua-en-la-mineria-del-cobre-ano-2017.pdf",
+    "language": "es"
+  },
+  {
     "publisher": "American Chemical Society (ACS)",
     "issue": "24",
     "DOI": "10.1021/es302433p",
@@ -154,6 +195,34 @@
     },
     "URL": "http://dx.doi.org/10.1021/es302433p",
     "id": "cullen_2012"
+  },
+  {
+    "id": "cullen_allwood_2013_al",
+    "type": "article-journal",
+    "title": "Mapping the global flow of aluminum: from liquid aluminum to end-use goods",
+    "author": [
+      {
+        "given": "Jonathan M.",
+        "family": "Cullen"
+      },
+      {
+        "given": "Julian M.",
+        "family": "Allwood"
+      }
+    ],
+    "container-title": "Environmental Science & Technology",
+    "volume": "47",
+    "issue": "7",
+    "page": "3057-3064",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "DOI": "10.1021/es304256s",
+    "URL": "https://www.repository.cam.ac.uk/bitstream/1810/293211/3/acs.pdf"
   },
   {
     "publisher": "American Chemical Society (ACS)",
@@ -222,6 +291,45 @@
     },
     "URL": "http://dx.doi.org/10.1007/s11663-019-01537-9",
     "id": "daehn_2019"
+  },
+  {
+    "id": "ei_2025_statistical_review",
+    "type": "webpage",
+    "title": "Record absolu de la consommation énergétique mondiale (+1,7 %) — Statistical Review of World Energy 2025",
+    "author": [
+      {
+        "literal": "KPMG France / Energy Institute"
+      }
+    ],
+    "publisher": "KPMG",
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "URL": "https://kpmg.com/fr/fr/media/press-releases/2026/07/record-absolu-consommation-energetique-mondiale-energies-decarbonees.html",
+    "note": "Press release on the Energy Institute Statistical Review of World Energy published 2 July 2026: global primary energy just over 600 EJ in 2025."
+  },
+  {
+    "id": "eia_2019_coal",
+    "type": "webpage",
+    "title": "In 2018, U.S. coal production declined as exports and Appalachian region prices rose",
+    "author": [
+      {
+        "literal": "U.S. Energy Information Administration"
+      }
+    ],
+    "publisher": "EIA, Today in Energy",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "URL": "https://www.eia.gov/todayinenergy/detail.php?id=38132"
   },
   {
     "publisher": "Society of Economic Geologists, Inc.",
@@ -409,6 +517,26 @@
     "id": "helbig_2020"
   },
   {
+    "id": "iai_2022_lci",
+    "type": "report",
+    "title": "Life Cycle Inventory (LCI) Data and Environmental Metrics for the Primary Aluminium Industry: 2019 data",
+    "author": [
+      {
+        "literal": "International Aluminium Institute"
+      }
+    ],
+    "publisher": "International Aluminium Institute",
+    "publisher-place": "London",
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "URL": "https://international-aluminium.org/wp-content/uploads/2022/11/LCA-Report-2019-final-1.docx"
+  },
+  {
     "id": "icsg_2020_factbook",
     "type": "report",
     "title": "The World Copper Factbook 2020",
@@ -428,6 +556,26 @@
     "publisher-place": "Lisbon",
     "URL": "https://internationalcopper.org/wp-content/uploads/2021/01/2020_10_13_ICSG_Factbook_2020.pdf",
     "note": "p. 47: ICA/IWCC 2019 end-use shares; p. 59: world mine production, refined production and refined usage 1960-2019 (kt Cu)."
+  },
+  {
+    "id": "iea_2016_water_energy",
+    "type": "report",
+    "title": "Water-Energy Nexus: Excerpt from the World Energy Outlook 2016",
+    "author": [
+      {
+        "literal": "International Energy Agency"
+      }
+    ],
+    "publisher": "IEA",
+    "publisher-place": "Paris",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "URL": "https://iea.blob.core.windows.net/assets/e4a7e1a5-b6ed-4f36-911f-b0111e49aab9/WorldEnergyOutlook2016ExcerptWaterEnergyNexus.pdf"
   },
   {
     "id": "iea_2020_steel_roadmap",
@@ -451,6 +599,26 @@
     "note": "Published 8 October 2020. Steel ~8 % of global final energy demand; steel from scrap needs roughly one-eighth of the energy of steel from ore."
   },
   {
+    "id": "iea_2021_ammonia",
+    "type": "report",
+    "title": "Ammonia Technology Roadmap: Towards more sustainable nitrogen fertiliser production",
+    "author": [
+      {
+        "literal": "International Energy Agency"
+      }
+    ],
+    "publisher": "IEA",
+    "publisher-place": "Paris",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "URL": "https://www.fertilizer.org/wp-content/uploads/2023/03/2021_IEA_Ammonia-Technology-Roadmap.pdf"
+  },
+  {
     "id": "iea_2021_heavy_industry_efficiency",
     "type": "webpage",
     "title": "Driving Energy Efficiency in Heavy Industries",
@@ -469,6 +637,45 @@
     "publisher": "IEA",
     "URL": "https://www.iea.org/articles/driving-energy-efficiency-in-heavy-industries",
     "note": "Published 17 March 2021. Industry >30 % of global total primary energy demand. States scrap-EAF steel is 60-70 % less energy-intensive than primary, which conflicts with the 1/8 ratio in iea_2020_steel_roadmap; resolve on a common energy basis in Task 2.4."
+  },
+  {
+    "id": "iea_2021_kwes",
+    "type": "report",
+    "title": "Key World Energy Statistics 2021: Energy balances",
+    "author": [
+      {
+        "literal": "International Energy Agency"
+      }
+    ],
+    "publisher": "IEA",
+    "publisher-place": "Paris",
+    "issued": {
+      "date-parts": [
+        [
+          2021
+        ]
+      ]
+    },
+    "URL": "https://www.iea.org/reports/key-world-energy-statistics-2021/energy-balances"
+  },
+  {
+    "id": "iea_2023_cement",
+    "type": "webpage",
+    "title": "Cement (Tracking report)",
+    "author": [
+      {
+        "literal": "International Energy Agency"
+      }
+    ],
+    "publisher": "IEA",
+    "issued": {
+      "date-parts": [
+        [
+          2023
+        ]
+      ]
+    },
+    "URL": "https://www.iea.org/reports/cement-3"
   },
   {
     "publisher": "Geological Society of America",
@@ -529,6 +736,26 @@
     "URL": "http://dx.doi.org/10.1007/s41247-016-0012-x",
     "article-number": "11",
     "id": "koppelaar_2016"
+  },
+  {
+    "id": "ksm_2012_blasting",
+    "type": "report",
+    "title": "KSM – Drilling and Blasting Operations (Appendix E6, KSM 2012 Prefeasibility Study)",
+    "author": [
+      {
+        "literal": "Seabridge Gold / Orica"
+      }
+    ],
+    "publisher": "Impact Assessment Agency of Canada registry",
+    "issued": {
+      "date-parts": [
+        [
+          2012
+        ]
+      ]
+    },
+    "URL": "https://aeic-iaac.gc.ca/050/documents_staticpost/49262/89282/Chapter_4_Appendices/Appendix_4-C_2012_KSM_Prefeasibility_Study/Appendices_of_Appendix_4-C/Appendix_E/Appendix_E6_-_OP_Drilling,_Blasting,_and_Orica.pdf",
+    "note": "Memo dated 27 June 2012."
   },
   {
     "publisher": "Elsevier BV",
@@ -840,6 +1067,52 @@
     "id": "pauliuk_2013_steel_stocks"
   },
   {
+    "id": "perez_villaseca_codelco",
+    "type": "report",
+    "title": "Opportunities for ferrous alloys used in copper mining",
+    "author": [
+      {
+        "given": "V.",
+        "family": "Pérez"
+      },
+      {
+        "given": "D.",
+        "family": "Villaseca"
+      }
+    ],
+    "publisher": "Corporación Nacional del Cobre (CODELCO), published by CBMM / niobium.tech",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "URL": "https://assets.niobium.tech/-/media/niobiumtech/attachments-biblioteca-tecnica/nt_opportunities-for-ferrous-alloys-used-in-copper-mining.pdf",
+    "note": "Undated; consumption estimates refer to 2014, latest cited source March 2015."
+  },
+  {
+    "id": "pgj_2013_pipe",
+    "type": "article-magazine",
+    "title": "World Oil And Gas Pipe Demand To Reach 51.8 Million Metric Tons In 2017",
+    "container-title": "Pipeline & Gas Journal",
+    "volume": "240",
+    "issue": "12",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "author": [
+      {
+        "literal": "Pipeline & Gas Journal"
+      }
+    ],
+    "URL": "https://pgjonline.com/2013/12/30/world-oil-and-gas-pipe-demand-to-reach-51-8-million-metric-tons-in-2017/"
+  },
+  {
     "id": "rotzer_schmidt_2020",
     "type": "article-journal",
     "title": "Historical, Current, and Future Energy Demand from Global Copper Production and Its Impact on Climate Change",
@@ -866,6 +1139,41 @@
     "page": "44",
     "DOI": "10.3390/resources9040044",
     "note": "Cumulative energy demand (CED) of global copper; quoted by Michaux 2021: CED rises ~30 % to 89 GJ-eq/t cathode if grade falls to 0.5 %. Candidate cross-check for Task 1.6."
+  },
+  {
+    "id": "schunke_2020_swro",
+    "type": "article-journal",
+    "title": "Energy Recovery in SWRO Desalination: Current Status and New Possibilities",
+    "author": [
+      {
+        "given": "Alexander J.",
+        "family": "Schunke"
+      },
+      {
+        "given": "German A.",
+        "family": "Hernandez Herrera"
+      },
+      {
+        "given": "Lokesh",
+        "family": "Padhye"
+      },
+      {
+        "given": "Terri-Ann",
+        "family": "Berry"
+      }
+    ],
+    "container-title": "Frontiers in Sustainable Cities",
+    "volume": "2",
+    "page": "9",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "DOI": "10.3389/frsc.2020.00009",
+    "URL": "https://doi.org/10.3389/frsc.2020.00009"
   },
   {
     "id": "un_wpp_2024",
@@ -1209,6 +1517,26 @@
     "note": "Copper chapter: world mine production 2024 (23,000 kt) and 2025e (23,000 kt); identified resources statement citing Hammarstrom et al. 2019."
   },
   {
+    "id": "usgs_myb_2018_explosives",
+    "type": "report",
+    "title": "Explosives in 2018 (Minerals Yearbook, advance release)",
+    "author": [
+      {
+        "literal": "U.S. Geological Survey"
+      }
+    ],
+    "publisher": "U.S. Geological Survey",
+    "issued": {
+      "date-parts": [
+        [
+          2020
+        ]
+      ]
+    },
+    "URL": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/atoms/files/myb1-2018-explosives.xls",
+    "note": "Workbook from Steve Aston's DS140/MYB mirror (sources/usgs.140/files/atoms/files/myb1-2018-explosives.xls). Table 3: explosives by use, data from the Institute of Makers of Explosives."
+  },
+  {
     "id": "valero_valero_2014",
     "type": "book",
     "title": "Thanatia: The Destiny of the Earth's Mineral Resources: A Thermodynamic Cradle-to-Cradle Assessment",
@@ -1234,6 +1562,25 @@
     "ISBN": "978-981-4273-93-0",
     "URL": "https://doi.org/10.1142/9789814273947_0010",
     "note": "URL is the DOI of the chapter 'Thanatia and the Crepuscular Earth Model'; no book-level DOI found in Crossref."
+  },
+  {
+    "id": "worldsteel_water",
+    "type": "webpage",
+    "title": "Water management in the steel industry",
+    "author": [
+      {
+        "literal": "World Steel Association"
+      }
+    ],
+    "publisher": "worldsteel",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "URL": "https://worldsteel.org/wider-sustainability/water-management-in-the-steel-industry/"
   },
   {
     "id": "worrell_2008",

@@ -17,7 +17,7 @@ import pandas as pd
 from metalwheels import __version__
 from metalwheels.copper.stockflow import FLOW_COLUMNS
 from metalwheels.registry import Registry
-from metalwheels.scenarios import BRACKETS, STEEL_COLUMNS, RunOutput
+from metalwheels.scenarios import BRACKETS, CASCADE_COLUMNS, STEEL_COLUMNS, RunOutput
 
 REPO = Path(__file__).resolve().parents[2]
 RUNS_DIR = REPO / "runs"
@@ -67,7 +67,7 @@ _STEEL_EXTRA = ("stock_per_capita", "cu_to_other_sinks", "energy_ej", "cu_penalt
 
 def schema(steel: bool = True) -> dict[str, str]:
     """Declared time-series columns and dtypes (index ``year``, int64). ``steel`` adds the
-    Phase 2 ``st_*`` columns."""
+    Phase 2 ``st_*`` columns and the Phase 3 ``cas_*`` columns (the cascade needs steel)."""
     cols = {c: "float64" for c in FLOW_COLUMNS if c not in ("target_stock", "demand_driven")}
     cols["demand_driven"] = "bool"
     cols["target_stock"] = "float64"
@@ -80,6 +80,8 @@ def schema(steel: bool = True) -> dict[str, str]:
         cols.update({f"{br}_remaining_{layer}": "float64" for layer in _LAYERS[br]})
     if steel:
         cols.update({f"st_{c}": "float64" for c in (*STEEL_COLUMNS, *_STEEL_EXTRA)})
+        for br in BRACKETS:
+            cols.update({f"cas_{br}_{c}": "float64" for c in CASCADE_COLUMNS})
     return cols
 
 

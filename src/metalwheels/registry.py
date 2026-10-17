@@ -63,6 +63,17 @@ ALLOWED_UNITS: frozenset[str] = frozenset(
         "MJ/kg",
         "MJ/kg/m",
         "EJ",
+        # Phase 3 cascade coefficients (input per unit of sector output)
+        "kg/t",
+        "t/t",
+        "m3",
+        "m3/t",
+        "MJ/t",
+        "MJ/m3",
+        "kWh/t",
+        "kWh/m3",
+        "t/MJ",
+        "m3/MJ",
     }
 )
 

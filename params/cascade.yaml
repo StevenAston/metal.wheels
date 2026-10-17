@@ -1,0 +1,355 @@
+# Phase 3 cascade: coefficients of the 7-sector physical input-output matrix A(t).
+# Sectors and units of output: copper (t refined Cu), steel (t crude steel), aluminium (t primary
+# Al), cement (t cement), ammonia (t NH3), water (m3 supplied), energy (MJ primary energy).
+# a_ij = input of sector i per unit output of sector j. Mixed units do not affect the spectral
+# radius: rescaling a sector's unit is a diagonal similarity transform, which leaves the
+# eigenvalues of A unchanged.
+# Boundary (Steve, 2026-10-17): consumables for every sector, plus the materials for building and
+# maintaining energy infrastructure spread over their lifetimes; other capital excluded. Zero
+# cells and their justifications are listed in metalwheels.cascade.matrix.ZERO_NOTES.
+# Electricity is converted to primary energy with cas.electricity_primary_factor throughout.
+domain: cascade
+parameters:
+  # --- shared conversions --------------------------------------------------------------------
+  cas.electricity_primary_factor:
+    value: 3.03
+    unit: "1"
+    status: derived
+    distribution: uniform
+    low: 2.5
+    high: 3.03
+    source: worrell_2008
+    locator: "Table 2.1.2 note, p. 7: primary energy includes generation, transmission and distribution losses of 67 % (1 / 0.33 = 3.03)"
+    note: "MJ primary per MJ electricity. Same convention as the steel route energies. Low bound 2.5 (40 % efficient supply) is an assumption reflecting today's more efficient fleet."
+  cas.ammonia_per_explosive:
+    value: 0.400
+    distribution: uniform
+    low: 0.36
+    high: 0.43
+    unit: t/t
+    status: assumption
+    note: "t NH3 per t ANFO, from stoichiometry: ANFO is 94 % ammonium nitrate, and NH4NO3 needs 2 x 17.03 / 80.04 = 0.4255 t NH3 per t when its nitric acid is also made from ammonia; 0.94 x 0.4255 = 0.400. Emulsions have similar ammonium nitrate content (bounds: 85-100 % AN, assumption)."
+  cas.powder_factor:
+    value: 0.35
+    unit: kg/t
+    status: sourced
+    distribution: uniform
+    low: 0.15
+    high: 0.5
+    source: ksm_2012_blasting
+    locator: "Memo 27 June 2012: design powder factor 0.96 kg/m3 = 0.35 kg/t at 2.77 t/m3 (one open-pit copper-gold design)"
+    note: "kg explosive per t of rock blasted, applied to copper ore and waste rock, iron ore and limestone. The bounds are an assumption spanning soft quarry rock to hard porphyry; only one project figure was sourced."
+
+  # --- copper column (per t refined copper) --------------------------------------------------
+  cas.cu.grinding_steel_per_ore:
+    value: 0.75
+    unit: kg/t
+    status: derived
+    distribution: uniform
+    low: 0.55
+    high: 1.0
+    source: perez_villaseca_codelco
+    locator: "Grinding balls 390 g/t ore (SAG) and 535 g/t (ball mills); liners 40 g/t (SAG) and 12 g/t (ball); Chile total 445 kt/yr (2014)"
+    note: "kg steel per t ore milled. High = SAG plus ball circuit (0.98 kg/t); low = ball-mill-only circuit (0.55 kg/t); central = midpoint."
+  cas.cu.loading_wear_per_rock:
+    value: 0.0032
+    distribution: uniform
+    low: 0.0016
+    high: 0.0048
+    unit: kg/t
+    status: sourced
+    source: perez_villaseca_codelco
+    locator: "'3.2 grams of steel for each tonne of material moved' (loading wear parts)"
+    note: "Bounds are an assumption."
+  cas.cu.water_per_ore:
+    value: 0.45
+    unit: m3/t
+    status: sourced
+    distribution: uniform
+    low: 0.45
+    high: 0.69
+    source: cochilco_2018_water
+    locator: "Concentration m3/t ore, 2009-2017 series 0.67 ... 0.45 (2017 value 0.45; 2009 value 0.69)"
+    note: "Chilean concentrator unit water consumption. Hydrometallurgy is lower (0.11 m3/t in 2017); concentrators dominate. Seawater was 19 % of mining water in Chile in 2017."
+  cas.cu.secondary_energy:
+    value: 15
+    unit: MJ/kg
+    status: assumption
+    distribution: uniform
+    low: 5
+    high: 30
+    note: "PENDING. Primary energy per kg of copper refined from scrap (re-melting, fire refining, electrorefining). Open item since Phase 1; Wang et al. 2021 (ES&T 55:5485) give per-unit values only in their SI, and low-grade scrap needs more than double the energy of no. 2 scrap."
+  cas.cu_energy_net_of_inputs:
+    value: 1
+    unit: "1"
+    status: assumption
+    note: "1 = treat the Phase 1 copper energy (Norgate gross energy requirement, cradle-to-gate) as including the energy embodied in the modelled consumables (steel, explosives, water), and net it out of the copper column to avoid double counting in the cascade. 0 = treat it as direct energy only. Whether Norgate & Jahanshahi's inventory covers these consumables is not stated in the parts read."
+
+  # --- steel column (per t crude steel) ------------------------------------------------------
+  cas.st.water_bf_bof:
+    value: 3.3
+    distribution: uniform
+    low: 2.3
+    high: 4.3
+    unit: m3/t
+    status: derived
+    source: worldsteel_water
+    locator: "Integrated plants: intake 28.6 m3/t, discharge 25.3 m3/t (2011 member survey); consumption = difference"
+    note: "Bounds are an assumption."
+  cas.st.water_eaf:
+    value: 1.6
+    distribution: uniform
+    low: 1.1
+    high: 2.1
+    unit: m3/t
+    status: derived
+    source: worldsteel_water
+    locator: "EAF plants: intake 28.1 m3/t, discharge 26.5 m3/t (2011 member survey); consumption = difference"
+    note: "Bounds are an assumption."
+  cas.st.ore_per_primary_iron:
+    value: 2.0
+    unit: t/t
+    status: derived
+    distribution: uniform
+    low: 1.8
+    high: 2.0
+    source: usgs_mcs_2026
+    locator: "Iron ore chapter: world usable ore 2,600 Mt (2025e); iron and steel chapter: world pig iron 1,300 Mt (2025e)"
+    note: "t usable ore per t primary iron. Low bound allows for direct reduced iron (not in MCS), which adds to primary iron from the same ore."
+  cas.st.rock_per_ore:
+    value: 2.5
+    unit: t/t
+    status: assumption
+    distribution: uniform
+    low: 1.5
+    high: 4.0
+    note: "t rock blasted (crude ore plus waste) per t usable iron ore. MCS gives crude ore only for the US (crude/usable about 2.5-3 there); no global strip ratio was found."
+
+  # --- aluminium column (per t primary aluminium) --------------------------------------------
+  cas.al.smelting_electricity:
+    value: 14000
+    unit: kWh/t
+    status: assumption
+    distribution: uniform
+    low: 13000
+    high: 15000
+    note: "PENDING IAI statistics (JS-gated): https://international-aluminium.org/statistics/primary-aluminium-smelting-energy-intensity/ (world AC intensity). Range '13-15 MWh of electricity' per tonne from trade press (AlCircle 2025)."
+  cas.al.alumina_per_al:
+    value: 1.92
+    unit: t/t
+    status: assumption
+    distribution: uniform
+    low: 1.89
+    high: 1.95
+    note: "t alumina per t primary aluminium; stoichiometric minimum 1.89 (Al2O3 / 2 Al = 101.96 / 53.96) plus small losses. The IAI LCI table that gives the value did not extract."
+  cas.al.alumina_energy:
+    value: 10456
+    distribution: uniform
+    low: 8400
+    high: 12500
+    unit: MJ/t
+    status: derived
+    source: iai_2022_lci
+    locator: "Alumina refining fuel table, 2019: heavy oil 842, diesel 7, natural gas 2,478, coal 6,414, electricity 547, other 168 MJ/t Al2O3"
+    note: "MJ per t alumina; summed as reported (electricity, 5 % of the total, is not converted to primary). Bounds are an assumption."
+  cas.al.water:
+    value: 11.0
+    distribution: uniform
+    low: 7.7
+    high: 14.3
+    unit: m3/t
+    status: derived
+    source: iai_2022_lci
+    locator: "Freshwater consumption 2019: alumina refining 5.4 m3/t Al ingot; smelting 5.6 m3/t Al ingot"
+    note: "Bounds are an assumption."
+
+  # --- cement column (per t cement) ----------------------------------------------------------
+  cas.ce.kiln_thermal:
+    value: 3600
+    distribution: uniform
+    low: 3300
+    high: 3900
+    unit: MJ/t
+    status: sourced
+    source: iea_2023_cement
+    locator: "Milestones table: kiln thermal energy intensity 3.6 GJ per tonne of clinker (2022)"
+    note: "MJ per t clinker. Bounds are an assumption."
+  cas.ce.clinker_ratio:
+    value: 0.71
+    distribution: uniform
+    low: 0.65
+    high: 0.75
+    unit: t/t
+    status: sourced
+    source: iea_2023_cement
+    locator: "Milestones table: clinker-to-cement ratio 0.71 (2022)"
+    note: "Bounds are an assumption."
+  cas.ce.electricity:
+    value: 91
+    unit: kWh/t
+    status: sourced
+    distribution: uniform
+    low: 79
+    high: 110
+    source: cki_2024_cement
+    locator: "p. 15 chart 'Electricity intensity of cement, 2014-50, kWh/t cement': 91 (2014), citing IEA Technology Roadmap (2018)"
+    note: "Low bound = the roadmap's 2050 value; high bound is an assumption for older plants."
+  cas.ce.limestone_per_clinker:
+    value: 1.55
+    unit: t/t
+    status: assumption
+    distribution: uniform
+    low: 1.5
+    high: 1.6
+    note: "t raw meal (mostly quarried limestone) per t clinker; standard kiln mass balance (CaCO3 loses 44 % as CO2)."
+
+  # --- ammonia column (per t NH3) ------------------------------------------------------------
+  cas.nh.energy:
+    value: 46500
+    unit: MJ/t
+    status: derived
+    distribution: uniform
+    low: 28000
+    high: 50000
+    source: iea_2021_ammonia
+    locator: "p. 26: 8.6 EJ energy consumption in 2020; p. 16: 185 Mt ammonia produced in 2020 (8.6 EJ / 185 Mt = 46.5 GJ/t, feedstock included); low = best available gas technology 28 GJ/t (p. 11)"
+
+  # --- water column (per m3 supplied) --------------------------------------------------------
+  cas.wa.global_withdrawal:
+    value: 4.0e12
+    unit: m3
+    status: derived
+    source: iea_2016_water_energy
+    locator: "p. 19: energy-sector withdrawals 398 bcm in 2014; pp. 5 and 12: energy accounts for 'around 10% of global water withdrawals'"
+    note: "Global water withdrawals (m3/yr); also the 2025 output of the water sector (held at the 2014 level; assumption)."
+  cas.wa.energy_conventional:
+    value: 2.40
+    distribution: uniform
+    low: 1.7
+    high: 3.1
+    unit: MJ/m3
+    status: derived
+    source: iea_2016_water_energy
+    locator: "p. 30: 120 Mtoe used in the water sector in 2014, about 60 % as electricity (~820 TWh), the rest thermal"
+    note: "Primary MJ per m3 of conventionally supplied water. Average: (820 TWh x 3.6 PJ/TWh x 3.03 + (5,024 - 2,952) PJ thermal) / 4,000 bcm = 2.75 MJ/m3; desalination removed: (2.75 - 0.0087 x 43.6) / (1 - 0.0087) = 2.40, where 43.6 MJ/m3 = 4.0 kWh/m3 x 3.6 x 3.03. Counts supply, treatment, distribution and wastewater; excludes in-field irrigation and water heating (Box 2). Bounds are an assumption."
+  cas.wa.desal_electricity:
+    value: 4.0
+    unit: kWh/m3
+    status: sourced
+    distribution: uniform
+    low: 3.5
+    high: 4.5
+    source: schunke_2020_swro
+    locator: "Introduction: SWRO 'between 3.5 and 4.5 kWh m-3 to produce product water' (full range 3-6.7)"
+  cas.wa.desal_share:
+    value: 0.0087
+    distribution: uniform
+    low: 0.006
+    high: 0.012
+    unit: "1"
+    status: derived
+    source: schunke_2020_swro
+    locator: "Global desalination 'over 95 million m3 day-1' in 2016 (GWI 2016): 34.7 bcm/yr of 4,000 bcm withdrawals"
+    note: "Share of supplied water that is desalinated; the scenario lever for mining's move to seawater. IEA 2016 p. 31: re-use and desalination supply 'less than 1% of all water needs'. Bounds are an assumption."
+
+  # --- energy column (per MJ primary energy supplied) ----------------------------------------
+  cas.en.own_use:
+    value: 0.077
+    unit: "1"
+    status: derived
+    distribution: uniform
+    low: 0.061
+    high: 0.077
+    source: iea_2021_kwes
+    locator: "World energy balance 2019: TES 606.5 EJ; energy industry own use 37.0 EJ; losses 9.6 EJ ((37.0 + 9.6) / 606.5)"
+    note: "MJ per MJ supplied. Power-plant conversion losses are excluded because they are already in the primary-energy factors. Low bound = own use only."
+  cas.en.copper_share:
+    value: 0.16
+    unit: "1"
+    status: derived
+    distribution: uniform
+    low: 0.12
+    high: 0.20
+    source: icsg_2020_factbook
+    locator: "p. 47, End-Use: Infrastructure 16 % (2019); same value as cu.share.infrastructure"
+    note: "Share of refined copper used by energy supply; a_cu,en = share x refined copper / primary energy, held at 2025 values. The ICA 'infrastructure' category is understood to cover power utility and telecommunication networks (category definition not stated in the factbook text; unverified). It includes telecom but excludes copper in generators and motors (industry), so these partly offset. Bounds are an assumption."
+  cas.en.steel_use:
+    value: 80
+    unit: Mt
+    status: derived
+    distribution: uniform
+    low: 52
+    high: 150
+    source: pgj_2013_pipe
+    locator: "'World oil and gas pipe demand to reach 51.8 million metric tons in 2017' (low bound)"
+    note: "Steel used by energy supply per year (Mt/yr). Oil and gas pipe alone is the low bound; the central value adds an assumed ~30 Mt/yr for power plants, wind turbines, towers and transmission; high bound is an assumption."
+  cas.en.aluminium_share:
+    value: 0.084
+    distribution: uniform
+    low: 0.06
+    high: 0.11
+    unit: "1"
+    status: derived
+    source: cullen_allwood_2013_al
+    locator: "Fig. 2 (2007): electrical cable 3.8 Mt of 45 Mt aluminium in end-use goods"
+    note: "Share of aluminium used for power cables; a_al,en = share x aluminium output / primary energy, held at 2025 values. Bounds are an assumption."
+  cas.en.water_consumption:
+    value: 48.0e9
+    unit: m3
+    status: sourced
+    distribution: uniform
+    low: 34.0e9
+    high: 62.0e9
+    source: iea_2016_water_energy
+    locator: "p. 19: energy-sector water consumption 48 bcm in 2014, about 12 % of its 398 bcm withdrawals"
+    note: "Consumption, not withdrawals: once-through cooling withdrawals are mostly self-supplied and returned. Divided by the 2025 primary energy for a_wa,en. Bounds +/- 30 % (assumption)."
+  cas.en.coal_explosives_per_t:
+    value: 1.49
+    distribution: uniform
+    low: 0.5
+    high: 1.49
+    unit: kg/t
+    status: derived
+    source: usgs_myb_2018_explosives
+    locator: "Table 3, 2018: coal mining 1,020 kt explosives; US coal production 755 million short tons = 685 Mt (EIA 2019)"
+    note: "kg explosives per t coal, US 2018. The US mines much of its coal at the surface, so this is likely an upper value for the world; the low bound (one third) is an assumption for a world mix with more underground mining."
+  cas.en.coal_per_mj:
+    value: 1.5e-5
+    unit: t/MJ
+    status: assumption
+    distribution: uniform
+    low: 1.3e-5
+    high: 1.7e-5
+    note: "PENDING. t coal mined per MJ of world primary energy: about 9 Gt coal per year over 600 EJ. Global coal tonnage not yet sourced (IEA Coal 2025 or the Energy Institute Statistical Review would give it)."
+
+  # --- 2025 gross outputs x (copper comes from the model run) --------------------------------
+  cas.x2025.steel:
+    value: 1900
+    unit: Mt
+    status: sourced
+    source: usgs_mcs_2026
+    locator: "Iron and steel chapter: world raw steel 1,900 Mt (2025e)"
+  cas.x2025.aluminium:
+    value: 74.0
+    unit: Mt
+    status: sourced
+    source: usgs_mcs_2026
+    locator: "Aluminum chapter: world primary smelter production 74,000 kt (2025e)"
+  cas.x2025.cement:
+    value: 3800
+    unit: Mt
+    status: sourced
+    source: usgs_mcs_2026
+    locator: "Cement chapter: world total 3,800,000 kt (2025e)"
+  cas.x2025.ammonia:
+    value: 194.5
+    unit: Mt
+    status: derived
+    source: usgs_mcs_2026
+    locator: "Nitrogen chapter: world ammonia 160,000 kt N (2025e); x 17.03 / 14.01 = 194.5 Mt NH3"
+  cas.x2025.energy:
+    value: 600
+    unit: EJ
+    status: sourced
+    source: ei_2025_statistical_review
+    locator: "Global primary energy 'just over 600 EJ' in 2025"

@@ -33,6 +33,9 @@ parameters:
     value: 0.066
     unit: "1"
     status: derived
+    distribution: uniform
+    low: 0.05
+    high: 0.12
     source: daehn_2017
     locator: "Fig. 1 (2008): direct reduction DRI 66 Mt of pig iron 928 + DRI 66 Mt"
-    note: "Share of primary iron made by direct reduction; held constant (assumption)."
+    note: "Share of primary iron made by direct reduction; held constant (assumption). Bounds are an assumption (DRI output has roughly doubled since 2008)."

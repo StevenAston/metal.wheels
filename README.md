@@ -24,6 +24,11 @@ uv run metalwheels params list --domain geology
 uv run metalwheels export web                   # interactive page -> web/dist/index.html (open in a browser)
 uv run metalwheels mc baseline                  # Monte Carlo (capped workers) -> runs/baseline/mc/
 uv run metalwheels report phase1                # validation report -> reports/phase1_validation.md
+uv run metalwheels data steel-production        # world crude steel 1900-2025 -> data/processed/
+uv run metalwheels report phase23               # steel coupling + cascade -> reports/phase2_3.md
+uv run metalwheels cascade sensitivity -y 2100  # elasticities of rho(A) and maintenance energy
+uv run metalwheels cascade gaps                 # cascade cells resting on assumptions
+uv run metalwheels mc baseline --no-steel       # faster Monte Carlo without Phases 2-3
 ```
 
 The browser tests need Chromium once: `uv run playwright install chromium`.
