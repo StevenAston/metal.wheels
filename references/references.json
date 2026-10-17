@@ -1617,5 +1617,280 @@
     },
     "publisher": "Lawrence Berkeley National Laboratory",
     "URL": "https://eta-publications.lbl.gov/bibcite/reference/25985"
+  },
+  {
+    "type": "journal-article",
+    "title": "Macromolecular Insights into the Altered Mechanical Deformation Mechanisms of Non-Polyolefin Contaminated Polyolefins",
+    "author": [
+      {
+        "given": "Ruben",
+        "family": "Demets"
+      },
+      {
+        "given": "Marie",
+        "family": "Grodent"
+      },
+      {
+        "given": "Karen",
+        "family": "Van Kets"
+      },
+      {
+        "given": "Steven",
+        "family": "De Meester"
+      },
+      {
+        "given": "Kim",
+        "family": "Ragaert"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2022
+        ]
+      ]
+    },
+    "container-title": "Polymers",
+    "volume": "14",
+    "issue": "2",
+    "page": "239",
+    "DOI": "10.3390/polym14020239",
+    "URL": "http://dx.doi.org/10.3390/polym14020239",
+    "publisher": "MDPI AG",
+    "language": "en",
+    "id": "demets_2022"
+  },
+  {
+    "type": "journal-article",
+    "title": "Life Cycle Assessment of Metals: A Scientific Synthesis",
+    "author": [
+      {
+        "given": "Philip",
+        "family": "Nuss"
+      },
+      {
+        "given": "Matthew J.",
+        "family": "Eckelman"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "container-title": "PLoS ONE",
+    "volume": "9",
+    "issue": "7",
+    "page": "e101298",
+    "DOI": "10.1371/journal.pone.0101298",
+    "URL": "http://dx.doi.org/10.1371/journal.pone.0101298",
+    "publisher": "Public Library of Science (PLoS)",
+    "language": "en",
+    "id": "nuss_eckelman_2014"
+  },
+  {
+    "id": "unep_2011_recycling_rates",
+    "type": "report",
+    "title": "Recycling Rates of Metals: A Status Report",
+    "author": [
+      {
+        "family": "Graedel",
+        "given": "T. E."
+      },
+      {
+        "family": "Allwood",
+        "given": "J."
+      },
+      {
+        "family": "Birat",
+        "given": "J.-P."
+      },
+      {
+        "family": "Reck",
+        "given": "B. K."
+      },
+      {
+        "family": "Sibley",
+        "given": "S. F."
+      },
+      {
+        "family": "Sonnemann",
+        "given": "G."
+      },
+      {
+        "family": "Buchert",
+        "given": "M."
+      },
+      {
+        "family": "Hagelüken",
+        "given": "C."
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "publisher": "United Nations Environment Programme",
+    "publisher-place": "Nairobi",
+    "URL": "https://www.resourcepanel.org/reports/recycling-rates-metals",
+    "note": "A Report of the Working Group on the Global Metal Flows to the International Resource Panel. PDF retrieved from https://resourcepanel.org/file/381/download?token=he_rldvr"
+  },
+  {
+    "id": "aa_2018_teal_sheets",
+    "type": "report",
+    "title": "International Alloy Designations and Chemical Composition Limits for Wrought Aluminum and Wrought Aluminum Alloys (Teal Sheets)",
+    "author": [
+      {
+        "literal": "The Aluminum Association"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "publisher": "The Aluminum Association",
+    "publisher-place": "Arlington, VA",
+    "URL": "https://www.aluminum.org/sites/default/files/2021-11/TealSheet.pdf",
+    "note": "Revised August 2018."
+  },
+  {
+    "id": "wrap_2004_glass_colour",
+    "type": "report",
+    "title": "Feasibility Study for the Reduction of Colour within the Glass Furnace",
+    "author": [
+      {
+        "literal": "WRAP (Waste & Resources Action Programme)"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2004
+        ]
+      ]
+    },
+    "publisher": "WRAP",
+    "publisher-place": "Banbury",
+    "URL": "https://www.glass-ts.com/site/assets/files/1015/2004_-_wrap_-_feasibility_study_for_the_reduction_of_colour_within_the_glass_furnace.pdf",
+    "note": "R&D Report: Glass, project code GLA0023, ISBN 1-84405-090-4."
+  },
+  {
+    "id": "scalet_2013_glass_bref",
+    "type": "report",
+    "title": "Best Available Techniques (BAT) Reference Document for the Manufacture of Glass",
+    "author": [
+      {
+        "family": "Scalet",
+        "given": "Bianca Maria"
+      },
+      {
+        "family": "Garcia Muñoz",
+        "given": "Marcos"
+      },
+      {
+        "family": "Sissa",
+        "given": "Aivi Querol"
+      },
+      {
+        "family": "Roudier",
+        "given": "Serge"
+      },
+      {
+        "family": "Delgado Sancho",
+        "given": "Luis"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "publisher": "Publications Office of the European Union",
+    "publisher-place": "Luxembourg",
+    "DOI": "10.2791/69502",
+    "URL": "https://eippcb.jrc.ec.europa.eu/sites/default/files/2019-11/GLS_Adopted_03_2012_0.pdf",
+    "note": "JRC Reference Report EUR 25786 EN."
+  },
+  {
+    "id": "chase_1998_janaf",
+    "type": "dataset",
+    "title": "NIST-JANAF Thermochemical Tables, Fourth Edition",
+    "author": [
+      {
+        "family": "Chase",
+        "given": "Malcolm W."
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          1998
+        ]
+      ]
+    },
+    "publisher": "National Institute of Standards and Technology",
+    "DOI": "10.18434/T42S31",
+    "URL": "https://janaf.nist.gov/",
+    "note": "J. Phys. Chem. Ref. Data Monograph 9; online as NIST SRD 13."
+  },
+  {
+    "id": "wagman_1982_nbs",
+    "type": "article-journal",
+    "title": "The NBS tables of chemical thermodynamic properties: Selected values for inorganic and C1 and C2 organic substances in SI units",
+    "author": [
+      {
+        "family": "Wagman",
+        "given": "Donald D."
+      },
+      {
+        "family": "Evans",
+        "given": "William H."
+      },
+      {
+        "family": "Parker",
+        "given": "Vivian B."
+      },
+      {
+        "family": "Schumm",
+        "given": "Richard H."
+      },
+      {
+        "family": "Halow",
+        "given": "Iva"
+      },
+      {
+        "family": "Bailey",
+        "given": "Sylvia M."
+      },
+      {
+        "family": "Churney",
+        "given": "Kenneth L."
+      },
+      {
+        "family": "Nuttall",
+        "given": "Ralph L."
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          1982
+        ]
+      ]
+    },
+    "container-title": "Journal of Physical and Chemical Reference Data",
+    "volume": "11",
+    "issue": "Supplement 2",
+    "URL": "https://srd.nist.gov/JPCRD/jpcrdS2Vol11.pdf"
   }
 ]

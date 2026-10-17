@@ -73,6 +73,17 @@ def fit_growth_rate(per_capita: dict[int, float], k_sat: float, window: int, end
     return mean_growth / (1 - k_mid / k_sat)
 
 
+def ramp_fraction(years: np.ndarray, policy: dict) -> np.ndarray:
+    """Share of a policy's change in effect each year: 0 before ``start_year``, then a linear
+    ramp over ``ramp_years`` (a step when 0)."""
+    start = int(policy.get("start_year", LAST_HISTORICAL_YEAR + 1))
+    if start <= LAST_HISTORICAL_YEAR:
+        raise ValueError("policies may only change years after the historical period")
+    ramp = float(policy.get("ramp_years", 0))
+    frac = np.clip((years - start + 1) / ramp, 0, 1) if ramp > 0 else (years >= start).astype(float)
+    return np.where(years >= start, frac, 0.0)
+
+
 def policy_rates(
     years: np.ndarray, prm: sf.CopperParams, policy: dict | None
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -84,12 +95,7 @@ def policy_rates(
     unknown = set(policy) - {"start_year", "ramp_years", "collection", "processing"}
     if unknown:
         raise ValueError(f"unknown policy keys: {sorted(unknown)}")
-    start = int(policy.get("start_year", LAST_HISTORICAL_YEAR + 1))
-    if start <= LAST_HISTORICAL_YEAR:
-        raise ValueError("policies may only change years after the historical period")
-    ramp = float(policy.get("ramp_years", 0))
-    frac = np.clip((years - start + 1) / ramp, 0, 1) if ramp > 0 else (years >= start).astype(float)
-    frac = np.where(years >= start, frac, 0.0)
+    frac = ramp_fraction(years, policy)
     for arr, key, base in ((c, "collection", prm.collection), (p, "processing", prm.processing)):
         if key in policy:
             arr[:] = base + frac * (float(policy[key]) - base)

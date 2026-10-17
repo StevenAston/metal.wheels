@@ -1,0 +1,14 @@
+name: carbon_cup
+description: >-
+  Baseline plus the carbon-cup lever: from 2030, half of end-of-life copper (ramped over 30 years)
+  is housed in burnable carbon sub-matrices, collected and processed at the cc.* rates, with the
+  CO2 stream partly captured.
+overrides: {}
+policy:
+  start_year: 2030
+  ramp_years: 30
+  carbon_cup:
+    share: 0.5
+options:
+  end_year: 3025
+  energy_option: norgate_coarse

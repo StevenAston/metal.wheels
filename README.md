@@ -29,11 +29,16 @@ uv run metalwheels report phase23               # steel coupling + cascade -> re
 uv run metalwheels cascade sensitivity -y 2100  # elasticities of rho(A) and maintenance energy
 uv run metalwheels cascade gaps                 # cascade cells resting on assumptions
 uv run metalwheels mc baseline --no-steel       # faster Monte Carlo without Phases 2-3
+uv run metalwheels ratchets list                # ratchet catalogue: tolerances, energy steps
+uv run metalwheels ratchets wheel               # Metal Wheel element x carrier-route matrix
+uv run metalwheels ratchets eligibility         # Ellingham carbon-reducibility by element
+uv run metalwheels ratchets carbon-cup          # carbon-cup scenario vs baseline
+uv run metalwheels report synthesis             # cross-phase report -> reports/synthesis.md
 ```
 
 The browser tests need Chromium once: `uv run playwright install chromium`.
 
-Outputs per run: `runs/<scenario>/timeseries.parquet` (schema in `metalwheels.export`), `summary.csv`, `meta.json` (git commit, registry hash, calibration values).
+Outputs per run: `runs/<scenario>/timeseries.parquet` (schema in `metalwheels.export`), `summary.csv`, `meta.json` (run ID, git commit, registry hash, calibration values). The synthesis report cites runs by run ID and writes the registry it used to `reports/synthesis_snapshot.json`.
 
 ## Data note
 

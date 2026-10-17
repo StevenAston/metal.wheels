@@ -1,0 +1,61 @@
+# Carbon-cup lever (Task 4.3). Every value here is an assumption chosen to make the lever
+# explicit and testable, not a measured property of an existing technology; the ranges are wide
+# on purpose and the scenario reports what each one does. See metalwheels.ratchets.carbon_cup.
+domain: carbon_cup
+parameters:
+  cc.t_max:
+    value: 1773.0
+    unit: K
+    status: assumption
+    distribution: uniform
+    low: 1473.0
+    high: 1873.0
+    note: "Highest temperature of the ash-reduction step (1500 C; range 1200-1600 C, the span of copper/lead smelting and steelmaking). Sets Ellingham eligibility."
+  cc.collection:
+    value: 0.85
+    unit: "1"
+    status: assumption
+    distribution: uniform
+    low: 0.67
+    high: 0.95
+    note: "Share of end-of-life copper in cups that reaches combustion with ash recovery. Low = today's copper collection rate (cu.eol_collection_rate)."
+  cc.processing:
+    value: 0.95
+    unit: "1"
+    status: assumption
+    distribution: uniform
+    low: 0.85
+    high: 0.99
+    note: "Share of collected cup copper recovered as metal from the ash."
+  cc.carbon_per_metal:
+    value: 1.0
+    unit: "1"
+    status: assumption
+    distribution: uniform
+    low: 0.2
+    high: 5.0
+    note: "kg of carbon in the burnable matrix per kg of copper housed."
+  cc.capture_fraction:
+    value: 0.9
+    unit: "1"
+    status: assumption
+    distribution: uniform
+    low: 0.5
+    high: 0.95
+    note: "Share of the carbon-cup CO2 stream captured."
+  cc.biogenic_share:
+    value: 0.5
+    unit: "1"
+    status: assumption
+    distribution: uniform
+    low: 0.0
+    high: 1.0
+    note: "Share of the stream's carbon that is biogenic (matrix and reductant)."
+  cc.matrix_net_energy:
+    value: 0.0
+    unit: MJ/kg
+    status: assumption
+    distribution: uniform
+    low: -25.0
+    high: 25.0
+    note: "Energy to make the matrix, net of energy recovered by burning it, per kg of carbon. Negative = net energy recovered."

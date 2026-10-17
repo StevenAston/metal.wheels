@@ -137,7 +137,10 @@ def run_scenario(
     s_loss = reg.value("cu.smelting_loss_fraction")
 
     step("stock-flow and demand")
-    pj = demand.project(end_year=sc.end_year, reg=reg, policy=sc.policy)
+    from metalwheels.ratchets import carbon_cup
+
+    policy, cup = carbon_cup.resolve_policy(sc.policy, reg)
+    pj = demand.project(end_year=sc.end_year, reg=reg, policy=policy)
     flows = pj.result.flows
     years = flows.index.to_numpy()
     ore_cu = flows["mine"].to_numpy() / (1 - tau)
@@ -154,6 +157,7 @@ def run_scenario(
     for col in media.columns:
         if col != "stock":
             ts[f"media_{col}"] = media[col]
+    ts = pd.concat([ts, carbon_cup.stream(ts, cup)], axis=1)
 
     em = energy.EnergyModel.from_registry(reg, sc.energy_option)
     mp = mass.MassParams.from_registry(reg)
@@ -222,9 +226,17 @@ def run_scenario(
         float(ts["old_scrap"].iloc[-1] / ts["eol"].iloc[-1]),
         "1",
     )
+    if cup is not None:
+        summary["cc_co2_captured_cum"] = (float(ts["cc_co2_captured"].sum()), "Mt CO2")
+        summary["cc_co2_emitted_cum"] = (
+            float((ts["cc_co2_emitted_fossil"] + ts["cc_co2_emitted_biogenic"]).sum()),
+            "Mt CO2",
+        )
+        summary["cc_co2_net_cum"] = (float(ts["cc_co2_net"].sum()), "Mt CO2")
     if sc.steel:
         step("steel coupling")
         _steel(ts, summary, calib, pj.result, reg)
+        ts = ts.copy()  # defragment before the cascade adds its columns
         step("cascade")
         _cascade(ts, summary, reg)
     for k, v in calib.items():

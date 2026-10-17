@@ -1,0 +1,58 @@
+element,compound,n_metal,n_o,method,janaf_table,dHf_kJ,S_compound,S_metal,nbs_page,note
+Al,Al2O3,2,3,janaf,Al-101,,,,,
+Mg,MgO,1,1,janaf,Mg-010,,,,,
+Ti,TiO,1,1,janaf,O-021,,,,,
+Ti,Ti2O3,2,3,janaf,O-061,,,,,
+Ti,Ti3O5,3,5,janaf,O-083,,,,,
+Ti,TiO2,1,2,janaf,O-045,,,,,
+Li,Li2O,2,1,janaf,Li-016,,,,,
+Cu,Cu2O,2,1,janaf,Cu-021,,,,,
+Cu,CuO,1,1,janaf,Cu-015,,,,,
+Co,CoO,1,1,janaf,Co-013,,,,,
+Pb,PbO,1,1,janaf,O-008,,,,,
+Fe,Fe0.947O,0.947,1,janaf,Fe-001,,,,,
+Fe,FeO,1,1,janaf,Fe-020,,,,,
+Cr,Cr2O3,2,3,janaf,Cr-016,,,,,
+Si,SiO2,1,2,janaf,O-039,,,,,
+Ca,CaO,1,1,janaf,Ca-029,,,,,
+Mo,MoO2,1,2,janaf,Mo-009,,,,,
+Mo,MoO3,1,3,janaf,Mo-016,,,,,
+W,WO2,1,2,janaf,O-047,,,,,
+W,WO3,1,3,janaf,O-067,,,,,
+Zr,ZrO2,1,2,janaf,O-054,,,,,
+Sr,SrO,1,1,janaf,O-015,,,,,
+Ba,BaO,1,1,janaf,Ba-036,,,,,
+B,B2O3,2,3,janaf,B-097,,,,,
+Nb,NbO,1,1,janaf,Nb-010,,,,,
+Nb,Nb2O5,2,5,janaf,Nb-018,,,,,
+V,VO,1,1,janaf,O-025,,,,,
+V,V2O3,2,3,janaf,O-064,,,,,
+V,V2O5,2,5,janaf,O-086,,,,,
+Ni,NiO,1,1,nbs_ulich,,-239.7,37.99,29.87,2-166,
+Sn,SnO,1,1,nbs_ulich,,-285.8,56.5,51.55,2-116,white tin
+Sn,SnO2,1,2,nbs_ulich,,-580.7,52.3,51.55,2-116,white tin
+Zn,ZnO,1,1,nbs_ulich,,-348.28,43.64,41.63,2-138,
+Mn,MnO,1,1,nbs_ulich,,-385.22,59.71,32.01,2-191,
+Ag,Ag2O,2,1,nbs_ulich,,-31.05,121.3,42.55,2-160,
+Pd,PdO,1,1,nbs_ulich_approx_s,,-85.4,,37.57,2-183,no S for PdO in NBS 1982: dS taken as -S(O2) per mol O2
+Rh,Rh2O3,2,3,nbs_ulich_approx_s,,-343.0,,31.51,2-184,no S for Rh2O3 in NBS 1982: dS taken as -S(O2) per mol O2
+Pt,Pt3O4,3,4,nbs_ulich_approx_s,,-163.0,,41.63,2-186,no S for Pt3O4 in NBS 1982: dS taken as -S(O2) per mol O2
+Ir,IrO2,1,2,nbs_ulich_approx_s,,-274.1,,35.48,2-189,no S for IrO2 in NBS 1982: dS taken as -S(O2) per mol O2
+Ru,RuO2,1,2,nbs_ulich_approx_s,,-305.0,,28.53,2-185,no S for RuO2 in NBS 1982: dS taken as -S(O2) per mol O2
+Os,OsO4,1,4,nbs_ulich,,-394.1,143.9,32.6,2-190,yellow crystal
+Au,Au(OH)3,1,0,noble,,,,,2-164,NBS 1982 lists no gold oxide; 2Au + 3/2 O2 + 3H2O(l) -> 2Au(OH)3 has dG(298 K) = 2(-316.92) - 3(-237.129) = +77.5 kJ (positive: no stable oxygen compound)
+Y,Y2O3,2,3,nbs_ulich,,-1905.31,99.08,44.43,2-216,
+La,La2O3,2,3,nbs_ulich,,-1793.7,127.32,56.9,2-243,
+Ce,Ce2O3,2,3,nbs_ulich,,-1796.2,150.6,72.0,2-241,
+Ce,CeO2,1,2,nbs_ulich,,-1088.7,62.30,72.0,2-241,
+Nd,Nd2O3,2,3,nbs_ulich,,-1807.9,158.6,71.5,2-237,hexagonal
+In,In2O3,2,3,nbs_ulich,,-925.79,104.2,57.82,2-133,
+Cd,CdO,1,1,nbs_ulich,,-258.2,54.8,51.76,2-144,
+Hg,HgO,1,1,nbs_ulich,,-90.83,70.29,76.02,2-150,red orthorhombic; Hg liquid
+Th,ThO2,1,2,nbs_ulich,,-1226.4,65.23,53.39,2-253,
+Cu,Cu2O,2,1,nbs_check,Cu-021,-168.6,93.14,33.150,2-154,cross-check of the Ulich approximation against JANAF
+Co,CoO,1,1,nbs_check,Co-013,-237.94,52.97,30.04,2-170,cross-check of the Ulich approximation against JANAF
+Pb,PbO,1,1,nbs_check,O-008,-217.32,68.70,64.81,2-119,yellow; cross-check of the Ulich approximation against JANAF
+Cr,Cr2O3,2,3,nbs_check,Cr-016,-1139.7,81.2,23.77,2-197,cross-check of the Ulich approximation against JANAF
+Fe,Fe0.947O,0.947,1,nbs_check,Fe-001,-266.27,57.49,27.28,2-177,wustite; cross-check of the Ulich approximation against JANAF
+W,WO2,1,2,nbs_check,O-047,-589.69,50.54,32.64,2-203,cross-check of the Ulich approximation against JANAF

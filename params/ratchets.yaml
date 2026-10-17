@@ -1,0 +1,527 @@
+# Ratchet catalogue (Task 4.1).
+#
+# `parameters` holds the numbers (validated by the registry like every other parameter file).
+# `ratchets` is the catalogue itself, validated by `metalwheels.ratchets.catalogue`; entries point
+# at parameter keys here or in other files, never at bare numbers.
+#
+# A ratchet is a mechanism that, once a unit of material has passed through it, cannot be undone
+# at reasonable cost, so that the next cycle starts from a worse position. Mechanism types
+# (PLAN.md Task 4.1):
+#   tramp_contamination - an element or material enters a host melt or mix and cannot be removed
+#   dissipation         - the substance leaves the useful cycle in a form or place that is not
+#                         recovered (in use, into another metal's scrap, residues, landfill)
+#   grade               - the next primary unit comes from leaner ore
+#   depth               - the next primary unit comes from deeper ore
+#   route_switch        - contamination or quality loss forces a secondary flow out of its route
+#                         and primary material in to replace it (dilution, down-cycling)
+#
+# Energy steps: MJ per kg of the stated basis, evaluated by the catalogue module with interval
+# arithmetic on each parameter's [low, high] range.
+domain: ratchets
+parameters:
+  # --- steel: tin -------------------------------------------------------------------------
+  rt.steel.sn_tolerance:
+    value: 0.0004
+    unit: "1"
+    status: sourced
+    source: daehn_2017
+    locator: "p. 6599: tin exacerbates hot shortness even at concentrations as low as 0.04 wt %"
+  rt.steel.tinplate_share_of_scrap:
+    value: 0.01
+    unit: "1"
+    status: sourced
+    source: daehn_2017
+    locator: "p. 6599: packaging tinplate makes up a much smaller (<1 %) portion of the scrap stream"
+    note: "Upper bound as stated (<1 %)."
+  # --- aluminium --------------------------------------------------------------------------
+  rt.al.fe_tolerance:
+    value: 0.0035
+    unit: "1"
+    status: sourced
+    low: 0.0035
+    high: 0.007
+    source: aa_2018_teal_sheets
+    locator: "PDF pp. 18, 20: Fe max 0.35 wt % for 5182 and 6063; 0.7 wt % for 6061 (low/high)"
+    note: "Maximum Fe in common wrought alloys (can stock, extrusion, structural)."
+  rt.al.si_tolerance:
+    value: 0.002
+    unit: "1"
+    status: sourced
+    low: 0.002
+    high: 0.006
+    source: aa_2018_teal_sheets
+    locator: "PDF pp. 18, 20: Si max 0.20 wt % for 5182; 0.20-0.6 wt % for 6063 (high = upper limit)"
+  rt.al.energy_primary:
+    value: 170.0
+    unit: MJ/kg
+    status: sourced
+    source: cullen_allwood_2013_al
+    locator: "Table 2 (accepted manuscript p. 12): electrolysis (pure Al) 170 GJ/t"
+  rt.al.energy_recycling:
+    value: 10.0
+    unit: MJ/kg
+    status: sourced
+    source: cullen_allwood_2013_al
+    locator: "Table 2 (accepted manuscript p. 12): recycling (scrap melting) 10 GJ/t, from IAI"
+  rt.al.dilution_flow:
+    value: 8.0
+    unit: Mt
+    status: sourced
+    source: cullen_allwood_2013_al
+    locator: "accepted manuscript p. 11: 8.0 Mt per year of pure aluminium used to dilute ('sweeten') alloy mixes in remelting and refining"
+  rt.al.downcycled_wrought_scrap:
+    value: 6.1
+    unit: Mt
+    status: sourced
+    source: cullen_allwood_2013_al
+    locator: "accepted manuscript p. 13: an estimated 6.1 Mt of wrought scrap diverted into cast products"
+  # --- EAF dust -----------------------------------------------------------------------------
+  rt.eaf.dust_per_t_steel:
+    value: 17.5
+    unit: kg/t
+    status: sourced
+    distribution: uniform
+    low: 15.0
+    high: 20.0
+    source: unep_2013_metal_recycling
+    locator: "Section 2.2.2.2, p. 75: about 15-20 kg of dust per tonne of steel (mid-point)"
+  rt.eaf.dust_zn_share:
+    value: 0.265
+    unit: "1"
+    status: sourced
+    distribution: uniform
+    low: 0.18
+    high: 0.35
+    source: unep_2013_metal_recycling
+    locator: "Table 26, p. 191 (Meurer 2010): EAF dust Zn 18-35 % (mid-point)"
+  rt.zn.eol_recycling_rate:
+    value: 0.35
+    unit: "1"
+    status: sourced
+    low: 0.19
+    high: 0.60
+    source: unep_2011_recycling_rates
+    locator: "Table D1, p. 31: Zn EOL-RR 19 % (Plachy), 35-60 % (Sempels), 52 % (Graedel et al.)"
+  # --- alloying metals lost into carbon steel -------------------------------------------------
+  rt.mo.eol_recycling_rate:
+    value: 0.30
+    unit: "1"
+    status: sourced
+    source: unep_2011_recycling_rates
+    locator: "Table C1, p. 30: Mo EOL-RR 30 % (Blossom, USGS 2004)"
+  rt.ni.eol_recycling_rate:
+    value: 0.57
+    unit: "1"
+    status: sourced
+    low: 0.57
+    high: 0.63
+    source: unep_2011_recycling_rates
+    locator: "Table C1, p. 30: Ni EOL-RR 57 % (Goonan), 58-63 % (Reck et al.)"
+  # --- glass ----------------------------------------------------------------------------------
+  rt.glass.green_in_flint:
+    value: 0.005
+    unit: "1"
+    status: sourced
+    source: wrap_2004_glass_colour
+    locator: "Executive summary (PDF p. 2) and PDF p. 17: flint glass generally has no more than 0.5 wt % green glass added as cullet"
+  rt.glass.green_in_amber:
+    value: 0.30
+    unit: "1"
+    status: sourced
+    source: wrap_2004_glass_colour
+    locator: "Executive summary (PDF p. 3): up to 30 % green cullet can be used in amber glass"
+  rt.glass.melt_energy:
+    value: 7.5
+    unit: MJ/kg
+    status: sourced
+    low: 5.2
+    high: 8.7
+    source: scalet_2013_glass_bref
+    locator: "Section 3.4.5, p. 121: EU-27 container glass melting typically 5.2-8.7 GJ/t, average 7.5 GJ/t"
+  rt.glass.cullet_energy_saving:
+    value: 0.275
+    unit: "1"
+    status: derived
+    low: 0.25
+    high: 0.30
+    source: scalet_2013_glass_bref
+    locator: "p. 314: every 10 % of extra cullet gives a 2.5-3.0 % reduction in furnace energy"
+    note: "Fractional furnace energy saved per unit cullet fraction (2.5-3.0 % per 10 %, mid-point)."
+  # --- polymers -------------------------------------------------------------------------------
+  rt.polymer.npo_in_hdpe:
+    value: 0.05
+    unit: "1"
+    status: sourced
+    source: demets_2022
+    locator: "Section 5 (Conclusions): HDPE stays ductile at 5 wt % non-polyolefin (PA-6, PET, PS); higher levels led to brittle failure"
+  # --- dissipation of precious and specialty metals ------------------------------------------
+  rt.pt.eol_rr_electronics:
+    value: 0.025
+    unit: "1"
+    status: sourced
+    low: 0.0
+    high: 0.05
+    source: unep_2011_recycling_rates
+    locator: "Table E1, p. 32: Pt EOL recycling rate in electronics 0-5 % (mid-point)"
+  rt.pt.eol_rr_vehicles:
+    value: 0.525
+    unit: "1"
+    status: sourced
+    low: 0.50
+    high: 0.55
+    source: unep_2011_recycling_rates
+    locator: "Table E1, p. 32: Pt EOL recycling rate in vehicles 50-55 % (mid-point)"
+  rt.pt.eol_rr_industrial:
+    value: 0.85
+    unit: "1"
+    status: sourced
+    low: 0.80
+    high: 0.90
+    source: unep_2011_recycling_rates
+    locator: "Table E1, p. 32: Pt EOL recycling rate in industrial applications 80-90 % (mid-point)"
+  rt.in.eol_recycling_rate:
+    value: 0.005
+    unit: "1"
+    status: sourced
+    low: 0.0
+    high: 0.01
+    source: unep_2011_recycling_rates
+    locator: "Table F1, p. 36: In EOL-RR < 1 % (recycled content 25-50 % from new scrap)"
+    note: "Stated as < 1 %; value is the mid-point of [0, 0.01]."
+  rt.ree.eol_recycling_rate:
+    value: 0.005
+    unit: "1"
+    status: sourced
+    low: 0.0
+    high: 0.01
+    source: unep_2011_recycling_rates
+    locator: "Table F1, pp. 36-37: every rare earth element EOL-RR < 1 %"
+    note: "Stated as < 1 %; value is the mid-point of [0, 0.01]."
+  # --- primary production energy of lost metals (replacement energy) --------------------------
+  rt.ced.pt:
+    value: 243000.0
+    unit: MJ/kg
+    status: sourced
+    low: 178000.0
+    high: 326000.0
+    source: nuss_eckelman_2014
+    locator: "Table S38 (Supporting Information S1): Pt TOTAL, CED 243,000 MJ/kg (2.5-97.5 %: 178,000-326,000)"
+  rt.ced.in:
+    value: 1720.0
+    unit: MJ/kg
+    status: sourced
+    low: 1170.0
+    high: 2520.0
+    source: nuss_eckelman_2014
+    locator: "Table S38: In TOTAL, CED 1,720 MJ/kg (1,170-2,520)"
+  rt.ced.nd:
+    value: 344.0
+    unit: MJ/kg
+    status: sourced
+    low: 267.0
+    high: 437.0
+    source: nuss_eckelman_2014
+    locator: "Table S38: Nd TOTAL, CED 344 MJ/kg (267-437)"
+  rt.ced.zn:
+    value: 52.9
+    unit: MJ/kg
+    status: sourced
+    low: 37.1
+    high: 80.3
+    source: nuss_eckelman_2014
+    locator: "Table S38: Zn TOTAL, CED 52.9 MJ/kg (37.1-80.3)"
+  rt.ced.ni:
+    value: 111.0
+    unit: MJ/kg
+    status: sourced
+    low: 96.4
+    high: 129.0
+    source: nuss_eckelman_2014
+    locator: "Table S38: Ni TOTAL, CED 111 MJ/kg (96.4-129)"
+  rt.ced.mo:
+    value: 117.0
+    unit: MJ/kg
+    status: sourced
+    low: 95.3
+    high: 145.0
+    source: nuss_eckelman_2014
+    locator: "Table S38: Mo TOTAL, CED 117 MJ/kg (95.3-145)"
+  rt.ced.cu:
+    value: 53.7
+    unit: MJ/kg
+    status: sourced
+    low: 42.1
+    high: 68.6
+    source: nuss_eckelman_2014
+    locator: "Table S38: Cu TOTAL, CED 53.7 MJ/kg (42.1-68.6)"
+
+ratchets:
+  - id: cu_in_steel
+    name: "Copper in steel scrap (hot shortness)"
+    mechanism: tramp_contamination
+    host: steel
+    agent: Cu
+    route: fe
+    removal: "No industrial removal from the melt; dilution with primary iron or cleaner scrap is the only commercial remedy (Daehn 2017, citing Björkman)."
+    tolerance: {param: st.tolerance.t0100, range_params: [st.tolerance.t0060, st.tolerance.t0400]}
+    tolerance_note: "0.1 wt % causes hot shortness; product tolerances run from 0.06 wt % (drawing steels) to 0.4 wt % (rebar)."
+    energy_step: {formula: "a - b", params: {a: st.energy.bf_bof, b: st.energy.scrap_eaf}, basis: "kg of iron charge switched from scrap to primary"}
+    modelled_in: [metalwheels.steel.dilution, metalwheels.steel.stockflow]
+    source: daehn_2017
+    locator: "p. 6599 (Introduction)"
+    wheel_check: [{route: fe, element: Cu, expect: [dissolved_harmful]}]
+    interactions:
+      - {with: sn_in_steel, kind: amplifies, note: "Tin exacerbates hot shortness (Daehn 2017), so the two tolerances are not independent."}
+      - {with: cu_to_other_scrap, kind: fed_by, note: "Copper collected but not separated travels in steel scrap (Phase 2 link)."}
+
+  - id: sn_in_steel
+    name: "Tin in steel scrap (hot shortness)"
+    mechanism: tramp_contamination
+    host: steel
+    agent: Sn
+    route: fe
+    removal: "Not removed in the EAF; tinplate can be isolated and detinned before melting."
+    tolerance: {param: rt.steel.sn_tolerance}
+    energy_step: {formula: "a - b", params: {a: st.energy.bf_bof, b: st.energy.scrap_eaf}, basis: "kg of iron charge switched from scrap to primary"}
+    modelled_in: []
+    source: daehn_2017
+    locator: "p. 6599 (Introduction)"
+    secondary_sources: ["unep_2013_metal_recycling p. 151: tin dissolves in molten steel and solidifies on grain boundaries"]
+    wheel_check: [{route: fe, element: Sn, expect: [dissolved_harmful]}]
+    interactions:
+      - {with: cu_in_steel, kind: amplifies, note: "Synergistic hot shortness."}
+
+  - id: alloys_into_carbon_steel
+    name: "Alloying metals lost into carbon steel (non-functional recycling)"
+    mechanism: dissipation
+    host: nickel, molybdenum, cobalt, tungsten
+    agent: Ni
+    route: fe
+    removal: "Stable in molten iron; stays in the steel, lost for other uses."
+    tolerance: null
+    tolerance_note: "Not a host tolerance: benign to carbon steel, lost to the alloying metal's own cycle."
+    energy_step: {formula: "a", params: {a: rt.ced.ni}, basis: "kg of Ni replaced from primary"}
+    modelled_in: []
+    source: unep_2013_metal_recycling
+    locator: "p. 151: alloying elements such as nickel, tungsten, molybdenum and cobalt are stable in molten iron, stay in metallic iron and are lost for other uses"
+    secondary_sources: ["unep_2011_recycling_rates Table C1, p. 30: EOL-RR Ni 57-63 %, Mo 30 %"]
+    wheel_check:
+      - {route: fe, element: Ni, expect: [dissolved_benign]}
+      - {route: fe, element: Mo, expect: [dissolved_benign]}
+    interactions:
+      - {with: cu_in_steel, kind: parallel, note: "Same thermodynamics (more noble than iron), opposite sign: copper harms the host, nickel is harmless to it but lost."}
+
+  - id: fe_in_aluminium
+    name: "Iron in aluminium scrap"
+    mechanism: tramp_contamination
+    host: aluminium (wrought)
+    agent: Fe
+    route: al
+    removal: "Practically impossible to remove; of the alloying elements only Mg and Zn can be removed (Nakajima et al., as cited by Cullen and Allwood 2013)."
+    tolerance: {param: rt.al.fe_tolerance}
+    energy_step: {formula: "a - b", params: {a: rt.al.energy_primary, b: rt.al.energy_recycling}, basis: "kg of aluminium supplied from primary instead of scrap"}
+    modelled_in: []
+    source: aa_2018_teal_sheets
+    locator: "PDF pp. 18, 20 (composition limits)"
+    secondary_sources: ["cullen_allwood_2013_al accepted manuscript p. 12 (irreversibility)"]
+    wheel_check: [{route: al, element: Fe, expect: [dissolved_benign, dissolved_harmful, dissolved_unrated]}]
+    interactions:
+      - {with: al_dilution, kind: feeds, note: "Iron above the wrought limit is diluted with primary aluminium."}
+
+  - id: si_in_aluminium
+    name: "Silicon and alloy mix: wrought-to-cast down-cycling"
+    mechanism: route_switch
+    host: aluminium (wrought)
+    agent: Si
+    route: al
+    removal: "Not removable; wrought scrap can go into casting alloys but not the reverse."
+    tolerance: {param: rt.al.si_tolerance}
+    energy_step: {formula: "a - b", params: {a: rt.al.energy_primary, b: rt.al.energy_recycling}, basis: "kg of wrought demand met from primary once cast demand no longer absorbs the scrap"}
+    modelled_in: []
+    source: cullen_allwood_2013_al
+    locator: "accepted manuscript pp. 12-13: 6.1 Mt wrought scrap down-cycled into cast products; non-recyclable casting scrap surplus projected (Modaresi and Müller; Hatayama et al.)"
+    wheel_check: [{route: al, element: Si, expect: [dissolved_benign, dissolved_harmful, dissolved_unrated]}]
+    interactions:
+      - {with: al_dilution, kind: feeds, note: "The cast-alloy sink hides the problem only while cast demand grows."}
+
+  - id: al_dilution
+    name: "Primary aluminium used to dilute ('sweeten') scrap"
+    mechanism: route_switch
+    host: aluminium
+    agent: alloy mix
+    route: al
+    removal: "Dilution is the remedy, and is irreversible."
+    tolerance: null
+    tolerance_note: "Set by the target alloy (see fe_in_aluminium, si_in_aluminium)."
+    energy_step: {formula: "a - b", params: {a: rt.al.energy_primary, b: rt.al.energy_recycling}, basis: "kg of sweetener"}
+    modelled_in: []
+    source: cullen_allwood_2013_al
+    locator: "accepted manuscript pp. 11-12 and Table 2: 8.0 Mt/yr sweetener; 5 % sweetener nearly doubles, 25 % raises five-fold the embodied energy of recycled aluminium"
+    wheel_check: []
+    interactions:
+      - {with: cu_in_steel, kind: parallel, note: "Aluminium's analogue of the copper-in-steel dilution."}
+
+  - id: zn_to_eaf_dust
+    name: "Zinc from galvanised steel to EAF dust"
+    mechanism: dissipation
+    host: zinc
+    agent: Zn
+    route: fe
+    removal: "Volatilised to dust; recoverable via the Waelz kiln where the dust is processed."
+    tolerance: null
+    tolerance_note: "Zn leaves the steel melt; the ratchet is on the zinc cycle."
+    energy_step: {formula: "a", params: {a: rt.ced.zn}, basis: "kg of Zn not recovered from dust, replaced from primary"}
+    modelled_in: []
+    source: unep_2013_metal_recycling
+    locator: "p. 75 (15-20 kg dust per t steel; 5.2-7 Mt/yr) and Table 26, p. 191 (18-35 % Zn)"
+    secondary_sources: ["unep_2011_recycling_rates Table D1, p. 31: Zn EOL-RR 19-60 %"]
+    wheel_check: [{route: fe, element: Zn, expect: [volatilised]}]
+    interactions:
+      - {with: cu_in_steel, kind: parallel, note: "Same scrap stream; zinc leaves the melt, copper stays."}
+
+  - id: glass_colour_mixing
+    name: "Glass colour mixing (green cullet in flint)"
+    mechanism: tramp_contamination
+    host: container glass (flint)
+    agent: green cullet (Cr2O3, Fe2O3 colourants)
+    route: null
+    removal: "Colourants cannot be removed in the furnace at reasonable cost; mixed cullet goes to amber or green glass."
+    tolerance: {param: rt.glass.green_in_flint, range_params: [rt.glass.green_in_flint, rt.glass.green_in_amber]}
+    tolerance_note: "0.5 % green in flint; amber accepts up to 30 % green."
+    energy_step: {formula: "a * b", params: {a: rt.glass.melt_energy, b: rt.glass.cullet_energy_saving}, basis: "kg of cullet that cannot be used, replaced by batch"}
+    modelled_in: []
+    source: wrap_2004_glass_colour
+    locator: "Executive summary (PDF pp. 2-3)"
+    secondary_sources: ["scalet_2013_glass_bref pp. 121, 314 (melting energy, cullet saving)"]
+    wheel_check: []
+    interactions: []
+
+  - id: polymer_blending
+    name: "Immiscible polymer blending (non-polyolefins in HDPE)"
+    mechanism: tramp_contamination
+    host: HDPE
+    agent: PET, PA-6, PS
+    route: null
+    removal: "Not separable after melt blending; compatibilisers only partly restore properties."
+    tolerance: {param: rt.polymer.npo_in_hdpe}
+    energy_step: null
+    energy_note: "No sourced virgin-vs-recycled polymer energy in the registry yet."
+    modelled_in: []
+    source: demets_2022
+    locator: "Section 5 (Conclusions)"
+    wheel_check: []
+    interactions: []
+
+  - id: pt_dissipation
+    name: "Platinum dissipated in electronics"
+    mechanism: dissipation
+    host: platinum-group metals
+    agent: Pt
+    route: cu
+    removal: "Recovered in copper/precious-metal smelters when the product reaches them; mostly it does not."
+    tolerance: null
+    tolerance_note: "Recycling rate 0-5 % in electronics against 50-55 % in vehicles and 80-90 % in industrial uses."
+    energy_step: {formula: "a", params: {a: rt.ced.pt}, basis: "kg of Pt replaced from primary"}
+    modelled_in: []
+    source: unep_2011_recycling_rates
+    locator: "Table E1, p. 32"
+    wheel_check: [{route: cu, element: Pt, expect: [recovered]}]
+    interactions: []
+
+  - id: in_dissipation
+    name: "Indium dissipated in electronics"
+    mechanism: dissipation
+    host: indium
+    agent: In
+    route: pbzn
+    removal: "Recoverable in Zn/Pb (and Cu) infrastructure in principle; old scrap rarely reaches it."
+    tolerance: null
+    energy_step: {formula: "a", params: {a: rt.ced.in}, basis: "kg of In replaced from primary"}
+    modelled_in: []
+    source: unep_2011_recycling_rates
+    locator: "Table F1, p. 36"
+    wheel_check: [{route: pbzn, element: In, expect: [recovered]}]
+    interactions: []
+
+  - id: ree_dissipation
+    name: "Rare earths lost to slag and landfill"
+    mechanism: dissipation
+    host: rare earth elements
+    agent: REE
+    route: fe
+    removal: "Oxides more stable than iron or copper oxides; report to slag in base-metal routes."
+    tolerance: null
+    energy_step: {formula: "a", params: {a: rt.ced.nd}, basis: "kg of Nd replaced from primary"}
+    modelled_in: []
+    source: unep_2011_recycling_rates
+    locator: "Table F1, pp. 36-37"
+    wheel_check:
+      - {route: fe, element: REE, expect: [lost_to_slag]}
+      - {route: cu, element: REE, expect: [lost_to_slag]}
+    interactions: []
+
+  - id: cu_to_other_scrap
+    name: "Copper collected but not separated (into steel and other scrap)"
+    mechanism: dissipation
+    host: copper
+    agent: Cu
+    route: fe
+    removal: "Once shredded into steel scrap, copper stays in the steel."
+    tolerance: null
+    energy_step: {formula: "a", params: {a: rt.ced.cu}, basis: "kg of Cu replaced from primary"}
+    modelled_in: [metalwheels.copper.fates, metalwheels.steel.link]
+    source: helbig_2020
+    locator: "Fig. S11 (other scrap markets, WMR.2)"
+    wheel_check: [{route: fe, element: Cu, expect: [dissolved_harmful]}]
+    interactions:
+      - {with: cu_in_steel, kind: feeds, note: "This flow is the copper load of steel scrap."}
+      - {with: cu_ore_grade, kind: feeds, note: "Copper lost to steel is replaced from leaner ore."}
+
+  - id: cu_in_use_dissipation
+    name: "Copper dissipated in use (corrosion, wear, fungicides)"
+    mechanism: dissipation
+    host: copper
+    agent: Cu
+    route: null
+    removal: "None."
+    tolerance: null
+    energy_step: {formula: "a", params: {a: rt.ced.cu}, basis: "kg of Cu replaced from primary"}
+    modelled_in: [metalwheels.copper.stockflow]
+    source: helbig_2020
+    locator: "Fig. S11 (dissipation, ENV.0); registry cu.in_use_dissipation_fraction"
+    wheel_check: []
+    interactions:
+      - {with: cu_ore_grade, kind: feeds, note: "Replaced from primary."}
+
+  - id: cu_ore_grade
+    name: "Declining copper ore grade"
+    mechanism: grade
+    host: copper
+    agent: ore grade
+    route: null
+    removal: "Irreversible at human time scales: richest deposits are mined first."
+    tolerance: null
+    energy_step: null
+    energy_note: "Modelled: E(g, D) = a + b/g + k_D (D - D0) (Phase 1, Norgate/Koppelaar options)."
+    modelled_in: [metalwheels.copper.geology, metalwheels.copper.energy]
+    source: harmsen_2013
+    locator: "grade-energy relation and endowment bracket (Phase 1 registry)"
+    wheel_check: []
+    interactions:
+      - {with: cu_depth, kind: amplifies, note: "Leaner ore is also deeper ore in the extraction ordering."}
+
+  - id: cu_depth
+    name: "Increasing copper mining depth"
+    mechanism: depth
+    host: copper
+    agent: depth
+    route: null
+    removal: "Irreversible."
+    tolerance: null
+    energy_step: {formula: "a", params: {a: en.depth.energy_per_m}, basis: "kg Cu per additional metre of depth (MJ/kg/m)"}
+    modelled_in: [metalwheels.copper.geology, metalwheels.copper.energy]
+    source: harmsen_2013
+    locator: "registry en.depth.energy_per_m"
+    wheel_check: []
+    interactions:
+      - {with: cu_ore_grade, kind: amplifies, note: "See cu_ore_grade."}

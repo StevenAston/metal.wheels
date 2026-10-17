@@ -214,6 +214,7 @@ class State:
     cu_primary_share: np.ndarray  # primary share of copper supplied to fabrication
     cu_supply_2025: float  # t copper supplied to fabrication in 2025
     st_primary_share: np.ndarray  # primary iron share of the iron charge
+    cu_extra_energy: np.ndarray | None = None  # MJ/t copper (carbon-cup matrix, Phase 4)
 
     @classmethod
     def from_timeseries(cls, ts: pd.DataFrame, bracket: str) -> State:
@@ -239,6 +240,11 @@ class State:
             cu_primary_share=prim,
             cu_supply_2025=float(ts.loc[BASE_YEAR, "fabrication_input"]) * 1e6,
             st_primary_share=st_share,
+            cu_extra_energy=(
+                ts["cc_matrix_energy_mj_per_t"].fillna(0.0).to_numpy()
+                if "cc_matrix_energy_mj_per_t" in ts.columns
+                else None
+            ),
         )
 
 
@@ -292,6 +298,10 @@ def build(cf: Coefficients, st: State) -> np.ndarray:
             mult = leontief.leontief_inverse(a)[:, en, :]  # MJ per unit final demand of each input
             embodied = sum(a[:, i, c] * mult[:, i] for i in (s, nh, wa))
             a[:, en, c] = np.maximum(gross - embodied, 0.0)
+    if st.cu_extra_energy is not None:
+        # carbon-cup matrix energy (Phase 4) is not part of Norgate's gross figure: added after
+        # netting; a net energy credit cannot take the cell below zero
+        a[:, en, c] = np.maximum(a[:, en, c] + st.cu_extra_energy, 0.0)
     return a
 
 

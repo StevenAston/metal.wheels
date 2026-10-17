@@ -20,6 +20,10 @@ Rules enforced on load (Task 0.2 done condition):
 * ``source`` (a bibliography key, resolved in Task 0.3) is required unless
   ``status: assumption``. ``status: sourced`` also requires a ``locator``.
 * ``low <= value <= high`` whenever bounds are given.
+
+Top-level keys other than ``domain`` and ``parameters`` are ignored here; they hold structured
+data read by their own modules (``ratchets`` in ``ratchets.yaml``, the transcriptions in
+``metal_wheel.yaml``).
 * A non-``fixed`` distribution requires both ``low`` and ``high``.
 
 Distribution semantics (used by the Monte Carlo, Task 1.9):
@@ -74,6 +78,8 @@ ALLOWED_UNITS: frozenset[str] = frozenset(
         "kWh/m3",
         "t/MJ",
         "m3/MJ",
+        # Phase 4 (carbon cup)
+        "K",
     }
 )
 

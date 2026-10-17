@@ -1,0 +1,159 @@
+# Metal Wheel compatibility matrix (Task 4.2): where an element goes when it enters each
+# carrier-metal route. Not numeric, so `parameters` is empty and the registry ignores the rest;
+# `metalwheels.ratchets.metal_wheel` reads `routes`, `wheel` and `radar`.
+#
+# Two figures, transcribed by eye from the 2013 UNEP report (unep_2013_metal_recycling):
+#
+#   wheel - Fig. 15, p. 62 (PDF p. 64): the "Metal Wheel" (Reuter and van Schaik 2012a,b;
+#           Ullmann's 2005). Each slice is one carrier-metal processing infrastructure at best
+#           available technique. Rings: `metal` = light-blue ring, "dissolves mainly in carrier
+#           metal if metallic"; `compound` = white ring, "compounds mainly to dust, slime,
+#           speiss, slag"; `sink` = outer green ring, "mainly to benign low value products"
+#           (oxides; the oxide label is mapped to its element: REOs -> REE, CaF2 -> Ca and F,
+#           Cu2O/NiO -> Cu and Ni, KCl -> K and Cl, FeOx -> Fe). Colours: G = "mainly recovered
+#           element", O = "mainly element in alloy or compound in oxidic product, probably lost
+#           (possible functionality, not detrimental)", R = "mainly element lost, not always
+#           compatible with carrier metal or product (detrimental to properties)".
+#
+#   radar - Fig. 64, p. 152 (PDF p. 154): "element radar chart" of the thermodynamic
+#           distribution between metal, slag and gas phases in single reactors (after
+#           Nakajima et al. 2008, 2009, 2011; Nakamura and Nakajima 2005; Nakamura et al. 2007).
+#           Markers: R = recoverable element (as pure metal), A = alloying element,
+#           D = deoxidation agent, - = none. A list of phases means the symbol is drawn across
+#           a phase boundary; the first phase is where most of the symbol sits.
+#
+# Reading notes (flagged, not silent):
+#   * `boundary` lists symbols drawn across a ring boundary on the wheel; the first ring given
+#     is the one holding the centre of the symbol.
+#   * Fe slice: one red symbol read as "Tr" in the metal ring is not an element symbol and is
+#     omitted.
+#   * Pb/Zn: the wheel's Zn (RLE/fume) and Pb (smelt/refine) slices share their outer rings,
+#     so they form one route. Radar phases come from the "Zn&Pb (ISP)" sector; the "Pb (blast
+#     furnace)" sector agrees except that W goes to slag there.
+#   * Ni: the wheel's Ni/Cr (stainless steel) slice; its white and green rings are shared with
+#     the Mn (TRIP steel) slice. No radar sector covers Ni or Sn.
+#   * Al: the green ring is shared with the Ti slice.
+#   * REE is the rare-earth group (wheel: "REs"/"REOs"; radar: La, Ce, Gd, Y, Dy, Ho, Yb...).
+#     Where radar REE symbols sit on both sides of the Al slag/metal boundary, REE is given
+#     as [metal, slag].
+domain: metal_wheel
+parameters: {}
+
+source: unep_2013_metal_recycling
+wheel_locator: "Fig. 15, p. 62 (Metal Wheel)"
+radar_locator: "Fig. 64, p. 152 (element radar chart, after Nakajima et al.)"
+
+routes:
+  fe:
+    name: "Iron and steel (BOF, EAF)"
+    carriers: [Fe]
+    wheel_slice: "Fe - Steel (BOF & EAF)"
+    radar_sector: "Fe (BOF, EAF)"
+  al:
+    name: "Aluminium (remelt, refine)"
+    carriers: [Al]
+    wheel_slice: "Al - Remelt, refine"
+    radar_sector: "Al (Remelting)"
+  cu:
+    name: "Copper (smelt, convert, refine)"
+    carriers: [Cu]
+    wheel_slice: "Cu/Ni - Smelt, refine"
+    radar_sector: "Cu (Converter)"
+  pbzn:
+    name: "Lead and zinc (smelt, fume, RLE)"
+    carriers: [Pb, Zn]
+    wheel_slice: "Zn - RLE/fume + Pb - Smelt, refine (shared rings)"
+    radar_sector: "Zn&Pb (ISP)"
+  ni:
+    name: "Nickel-chromium (stainless steel)"
+    carriers: [Ni]
+    wheel_slice: "Ni/Cr - Stainless steel (outer rings shared with Mn - TRIP steel)"
+    radar_sector: null
+  sn:
+    name: "Tin (smelt, refine)"
+    carriers: [Sn]
+    wheel_slice: "Sn - Smelt, refine"
+    radar_sector: null
+
+wheel:
+  fe:
+    metal: {Cu: R, Mo: O, Si: O, Pt: R, Rh: R, Pd: R, Ni: O, Co: O, Ta: O, Nb: O, V: O, W: O,
+            Ti: O, Cr: O, REE: O, Au: R}
+    compound: {Sb: R, Sn: R, Bi: R, Ag: R, As: R, Cd: R, Hg: R, Br: R, Cl: R, Na: R, K: R,
+               P: R, Zn: O, Pb: O}
+    sink: {Th: R, REE: R, Ta: R, Nb: R, Ba: R, Ti: R, W: R, In: R, Ga: R, Zr: R, Sr: O, Mg: O,
+           Si: O, Al: O, Ca: O, F: O, Fe: O}
+    boundary: {Cu: [metal, compound], REE: [metal, compound], Au: [metal, compound],
+               Sn: [compound, metal]}
+  al:
+    metal: {Fe: O, Mn: O, Si: O, Mg: O, Sn: O, Ni: O, Cu: O, Ag: R, Au: R, Pd: R, Pt: R}
+    compound: {Cd: O, Hg: O, F: O, Na: R, K: R, Pb: O, P: R, Cr: R, Zn: O, Ti: O, Sb: R}
+    sink: {Ca: R, REE: R, V: O, Sr: O, Ba: R, Mg: R, K: O, Cl: O, Al: R, Zr: R, Ti: R}
+    boundary: {Zn: [compound, metal], Ti: [compound, metal], Sb: [compound, metal]}
+  cu:
+    metal: {Au: G, Pt: G, Pd: G, Se: G, Rh: G, Te: G, Ag: G, Th: R, As: O}
+    compound: {Pb: G, REE: R, Mo: G, Co: G, Sb: O, Hg: G, Br: G, Zn: G, Bi: G, Cd: G, F: O,
+               Na: R, Sn: G, Ge: G, Cl: G, P: R, K: R}
+    sink: {V: O, In: G, Ga: G, Ti: R, Ta: R, Nb: R, Sr: O, Zr: R, Mg: O, Mn: O, W: R, Ba: R,
+           REE: R, Al: O, Si: O, Ca: O, Fe: O, Cu: O, Ni: O, Th: R}
+    boundary: {Ag: [metal, compound], As: [metal, compound], Mo: [compound, metal],
+               Co: [compound, metal]}
+  pbzn:
+    metal: {In: G, Pt: G, Bi: G, Au: G, Sn: G, Ga: G, Sb: G}
+    compound: {Co: G, Cu: G, Ge: G, Cd: G}
+    sink: {Al: O, Ca: O, Si: O, Fe: O}
+    boundary: {In: [metal, compound], Ga: [metal, compound]}
+  ni:
+    metal: {Ni: G, Fe: G, Cr: G}
+    compound: {Pb: O, F: O, Cl: O, Zn: O}
+    sink: {Ca: O, F: O, Al: O, Si: O, Fe: O, Mg: O}
+    boundary: {}
+  sn:
+    metal: {Ag: G}
+    compound: {Bi: G, Pb: G, Zn: G, Cu: G, As: O, Sb: O}
+    sink: {In: G, Ti: R, Ta: R, W: R, Ca: O, Al: O, Mg: O, Si: O, V: O, Mn: O, Nb: R, Fe: O,
+           Zr: R, REE: R}
+    boundary: {Cu: [compound, metal], As: [compound, metal], Sb: [compound, metal]}
+
+radar:
+  fe:
+    slag: {Ca: D, Mg: D, REE: D, Al: D, Sr: '-', Zr: '-', U: '-', Ti: '-', Si: '-', B: '-',
+           Nb: '-', Ta: '-', V: A, Cr: A, Mn: A}
+    metal: {Cu: '-', Sn: '-', W: A, Mo: A, Co: A, Ni: A}
+    gas: {Zn: R, Pb: '-', Ag: '-'}
+    boundary: {}
+  al:
+    slag: {Mg: A, Ca: '-', Be: '-', Li: '-', Sr: '-'}
+    metal: {Pb: '-', Bi: '-', In: '-', Sb: '-', Ag: '-', Ga: '-', Mn: A, Sn: '-', As: '-',
+            Cu: A, Ge: '-', Au: '-', Cr: '-', Si: A, Fe: A, Ti: '-', Pd: '-', Co: '-', Ni: '-',
+            V: '-', B: '-', U: '-', Mo: '-', W: '-', Ta: '-', Ir: '-', Pt: '-', REE: '-',
+            Zr: '-', Nb: '-'}
+    gas: {Hg: '-', Cd: '-', Zn: A}
+    boundary: {Li: [slag, metal], Sr: [slag, metal], REE: [metal, slag], Zr: [metal, slag],
+               Nb: [metal, slag]}
+  cu:
+    slag: {W: '-', B: '-', Al: '-', Re: '-', Cr: '-', Sr: '-', Mg: '-', Fe: '-', Ge: '-',
+           Ga: '-', Mn: A, In: '-', Ni: A, Pb: A, Zn: A}
+    metal: {Sn: A, Sb: '-', Bi: R, Ag: R, Te: R, Se: R, Au: R, Pd: R, Rh: R, Pt: R}
+    gas: {Cd: '-', Hg: R}
+    boundary: {Ni: [slag, metal], Sn: [metal, slag], Pb: [slag, gas], Zn: [slag, gas]}
+  pbzn:
+    slag: {Fe: '-', Cr: '-', Ga: '-', Mn: '-', Al: '-', Mg: '-'}
+    metal: {W: '-', Pt: R, Pd: R, Au: R, Ag: R, Bi: R, Cu: R, In: '-', Ni: '-', Sn: '-'}
+    gas: {Hg: R}
+    boundary: {Ni: [metal, slag], Sn: [metal, slag]}
+
+# Elements reported to the gas phase / flue dust in pyrometallurgical carrier routes, used only
+# for `compound`-ring cells on routes without a radar sector (ni, sn). Each member is sourced:
+volatile:
+  members: [Zn, Pb, Cd, Hg, F, Cl]
+  basis:
+    - "unep_2013_metal_recycling Table 26, p. 191: EAF dust 18-35 % Zn, 2-7 % Pb, 0.03-0.1 % Cd, 0.2-0.5 % F (Meurer 2010)"
+    - "unep_2013_metal_recycling Table 25, p. 191: Cl 0.4-5 % in Zn/Pb-bearing dusts (Schneider et al. 2000)"
+    - "unep_2013_metal_recycling Fig. 64, p. 152: Hg and Cd to the gas phase in the Cu converter and Al remelting"
+  pyrometallurgical_routes: [fe, cu, pbzn, ni, sn]
+
+# Elements the matrix covers (>= 30, Task 4.2 done condition).
+elements: [Fe, Al, Cu, Zn, Pb, Ni, Sn, Cr, Mn, Mo, Co, W, V, Nb, Ta, Ti, Zr, Si, Mg, Ca, Li, B,
+           Ag, Au, Pt, Pd, Rh, Ir, Bi, Sb, As, Se, Te, Cd, Hg, In, Ga, Ge, REE, Th, P, F, Cl, Br,
+           Na, K, Sr, Ba]

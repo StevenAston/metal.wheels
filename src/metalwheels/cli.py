@@ -393,6 +393,16 @@ def report_phase23() -> None:
     typer.echo(f"written to {path}")
 
 
+@report_app.command("synthesis")
+def report_synthesis() -> None:
+    """Regenerate reports/synthesis.md (Phase 4: ratchets, interactions, maintenance energy,
+    design levers), its figures and the registry snapshot."""
+    from metalwheels import report_synthesis
+
+    path = report_synthesis.build()
+    typer.echo(f"written to {path} (snapshot {report_synthesis.SNAPSHOT_NAME})")
+
+
 export_app = typer.Typer(help="Export model results.", no_args_is_help=True)
 app.add_typer(export_app, name="export")
 
@@ -492,3 +502,121 @@ def cascade_gaps() -> None:
     for (i, o), items in gaps.items():
         typer.echo(f"  {i} -> {o}: {'; '.join(items)}")
     typer.echo(f"{len(cascade.ZERO_NOTES)} zero cells, each with a justification note")
+
+
+ratchets_app = typer.Typer(help="Phase 4 ratchets and design levers.", no_args_is_help=True)
+app.add_typer(ratchets_app, name="ratchets")
+
+
+@ratchets_app.command("list")
+def ratchets_list() -> None:
+    """Ratchet catalogue with tolerances and energy steps (Task 4.1)."""
+    from rich.console import Console
+    from rich.table import Table
+
+    from metalwheels.ratchets import catalogue
+
+    cat = catalogue.load()
+    df = cat.frame()
+    table = Table(title=f"Ratchet catalogue ({len(cat)} entries)")
+    for c in ("id", "mechanism", "host", "agent", "tolerance", "energy step", "source"):
+        table.add_column(c, no_wrap=c in ("id", "mechanism"))
+    for r in df.itertuples():
+        tol = "" if r.tolerance != r.tolerance else f"{r.tolerance * 100:g} wt%"
+        es = (
+            ""
+            if r.energy_step != r.energy_step
+            else (f"{r.energy_step:.4g} {r.energy_unit} ({r.energy_low:.3g}-{r.energy_high:.3g})")
+        )
+        table.add_row(r.id, r.mechanism, r.host, r.agent, tol, es, r.source)
+    Console(width=180).print(table)
+    bad = catalogue.check_wheel(cat, catalogue.mw.MetalWheel.load())
+    typer.echo("Metal Wheel cross-check: " + ("all consistent" if not bad else "; ".join(bad)))
+
+
+@ratchets_app.command("wheel")
+def ratchets_wheel(
+    markdown: bool = typer.Option(False, "--markdown", help="Print the Markdown table."),
+) -> None:
+    """Metal Wheel element x carrier-route fate matrix (Task 4.2)."""
+    from rich.console import Console
+    from rich.table import Table
+
+    from metalwheels.ratchets import metal_wheel as mwm
+
+    wheel = mwm.MetalWheel.load()
+    if markdown:
+        typer.echo(wheel.to_markdown())
+        return
+    m = wheel.matrix(symbols=True)
+    table = Table(title=f"Metal Wheel: {len(m)} elements x {len(m.columns)} carrier routes")
+    table.add_column("element")
+    for c in m.columns:
+        table.add_column(c, justify="center")
+    for el in m.index:
+        table.add_row(el, *m.loc[el])
+    Console(width=120).print(table)
+    typer.echo(", ".join(f"{s} = {f}" for f, s in mwm.SYMBOL.items()))
+    n = wheel.frame()["fate"].value_counts()
+    typer.echo("cells by fate: " + ", ".join(f"{k} {v}" for k, v in n.items()))
+
+
+@ratchets_app.command("eligibility")
+def ratchets_eligibility(
+    t_max: float | None = typer.Option(None, "--t-max", help="K (default: cc.t_max)."),
+) -> None:
+    """Ellingham carbon-reducibility of each metal's most stable oxide (Task 4.3)."""
+    from rich.console import Console
+    from rich.table import Table
+
+    from metalwheels import registry
+    from metalwheels.ratchets import carbon_cup
+
+    t = t_max if t_max is not None else registry.load().value("cc.t_max")
+    df = carbon_cup.Thermo().table(t).sort_values("onset_K")
+    table = Table(title=f"Carbon reducibility at T_max = {t:.0f} K ({t - 273.15:.0f} C)")
+    for c in ("element", "oxide", "method", "onset (K)", "eligible"):
+        table.add_column(c)
+    for r in df.itertuples():
+        table.add_row(
+            r.element, r.oxide, r.method, f"{r.onset_K:.0f}", "yes" if r.eligible else "no"
+        )
+    Console(width=100).print(table)
+
+
+@ratchets_app.command("carbon-cup")
+def ratchets_carbon_cup(
+    scenario: str = typer.Option("carbon_cup", "--scenario", "-s"),
+    baseline: str = typer.Option("baseline", "--baseline", "-b"),
+) -> None:
+    """Run a carbon-cup scenario against its baseline: delta maintenance energy, delta rho,
+    CO2 captured and emitted (Task 4.3)."""
+    import logging
+
+    from metalwheels import registry, scenarios
+    from metalwheels.ratchets import carbon_cup
+
+    logging.getLogger("metalwheels").setLevel(logging.ERROR)
+    reg = registry.load()
+    base = scenarios.run_scenario(scenarios.load_scenario(baseline), reg)
+    cup = scenarios.run_scenario(scenarios.load_scenario(scenario), reg)
+    _df, out = carbon_cup.compare(base, cup)
+    for br in scenarios.BRACKETS:
+        v, _ = out[f"d_maintenance_energy_cum_{br}"]
+        until = out[f"common_valid_until_{br}"][0]
+        de = out[f"d_maintenance_energy_{br}_2100"][0]
+        typer.echo(
+            f"{br}: delta maintenance energy {de:+.3f} EJ/yr (2100), {v:+.0f} EJ cumulative to "
+            f"{until:.0f}; delta rho {out[f'd_rho_{br}_2100'][0]:+.5f} (2100)"
+        )
+    fossil, biogenic = out["cc_co2_emitted_fossil_cum"][0], out["cc_co2_emitted_biogenic_cum"][0]
+    typer.echo(
+        f"CO2 to {int(cup.timeseries.index[-1])}: captured {out['cc_co2_captured_cum'][0]:,.0f} "
+        f"Mt, emitted {fossil + biogenic:,.0f} Mt (fossil {fossil:,.0f}), net "
+        f"{out['cc_co2_net_cum'][0]:+,.0f} Mt"
+    )
+    typer.echo(
+        f"steel crossover (LP) {out['st_crossover_year_lp_base'][0]:.0f} -> "
+        f"{out['st_crossover_year_lp_cup'][0]:.0f}; copper EoL recycling rate at end "
+        f"{out['eol_recycling_rate_end_base'][0]:.3f} -> {out['eol_recycling_rate_end_cup'][0]:.3f}"
+    )

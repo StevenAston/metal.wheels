@@ -16,6 +16,7 @@ import pandas as pd
 
 from metalwheels import __version__
 from metalwheels.copper.stockflow import FLOW_COLUMNS
+from metalwheels.ratchets.carbon_cup import STREAM_COLUMNS
 from metalwheels.registry import Registry
 from metalwheels.scenarios import BRACKETS, CASCADE_COLUMNS, STEEL_COLUMNS, RunOutput
 
@@ -75,6 +76,7 @@ def schema(steel: bool = True) -> dict[str, str]:
         {"population": "float64", "stock_per_capita": "float64", "ore_cu_demand": "float64"}
     )
     cols.update({c: "float64" for c in _MEDIA})
+    cols.update({c: "float64" for c in STREAM_COLUMNS})
     for br in BRACKETS:
         cols.update({f"{br}_{c}": "float64" for c in _BRACKET})
         cols.update({f"{br}_remaining_{layer}": "float64" for layer in _LAYERS[br]})
@@ -124,6 +126,26 @@ def git_commit() -> str:
         return "unknown"
 
 
+def run_id(run: RunOutput, reg: Registry) -> str:
+    """Short identifier of a run's inputs: scenario definition, registry contents and code
+    commit. Two runs with the same ID produce the same outputs."""
+    sc = run.scenario
+    payload = json.dumps(
+        {
+            "scenario": sc.name,
+            "overrides": sc.overrides,
+            "policy": sc.policy,
+            "end_year": sc.end_year,
+            "energy_option": sc.energy_option,
+            "steel": sc.steel,
+            "registry_sha256": registry_hash(reg),
+            "git_commit": git_commit(),
+        },
+        sort_keys=True,
+    )
+    return hashlib.sha256(payload.encode()).hexdigest()[:12]
+
+
 def write(run: RunOutput, reg: Registry, out_dir: Path | None = None) -> Path:
     """Write a run to ``out_dir`` (default ``runs/<scenario>``); returns the directory."""
     validate(run.timeseries)
@@ -136,6 +158,7 @@ def write(run: RunOutput, reg: Registry, out_dir: Path | None = None) -> Path:
         for k, (v, unit) in run.summary.items():
             w.writerow([k, f"{v:.6g}", unit])
     meta = {
+        "run_id": run_id(run, reg),
         "scenario": run.scenario.name,
         "description": run.scenario.description,
         "overrides": run.scenario.overrides,
