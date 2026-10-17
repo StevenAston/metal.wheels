@@ -1,6 +1,6 @@
 {
  "registry_sha256": "35eb5ce581a4be6cf7a1f49d085319fd68529fb4b48843db826568a8c0dbbb1f",
- "git_commit": "f6a1d41+dirty",
+ "git_commit": "bcbc760",
  "metalwheels_version": "0.1.0",
  "files": {
   "params/ratchets.yaml": "bce2b1de58c4d09f1e5c9829cc86bd7459a82389565c309c5993c204de500655",
