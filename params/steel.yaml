@@ -1,36 +1,34 @@
 # Steel module (Phase 2): sector stock model, scrap copper and tolerances.
 # Sectors follow Daehn et al. (2017) / Pauliuk et al. (2013): transport, industrial equipment,
 # construction, metal goods. Concentrations are mass fractions (0.003 = 0.3 wt% Cu).
-#
-# PENDING entries (status: assumption, note starts "PENDING") are placeholders until the
-# Daehn 2017 Supporting Information arrives (see PLAN change log).
+# "SI" below = Daehn et al. 2017 Supporting Information (es7b00997_si_001.pdf).
 domain: steel
 parameters:
   st.share.transport:
-    value: 0.1278
+    value: 0.1929
     unit: "1"
     status: derived
     source: daehn_2017
-    locator: "Fig. 1 (2008 end-use products, after Cullen et al. 2012): vehicles 139 of 1,088 Mt"
-    note: "Share of final steel by end-use sector, held constant over time (assumption). Includes castings."
+    locator: "SI Table S45, Pauliuk row: vehicles 200 of 1,037 Mt"
+    note: "Pauliuk et al. 2013a 2008 final demand by sector (1,037 Mt) as tabulated by Daehn. Cullen et al. 2012 gives 139/176/596/177 of 1,088 Mt; Pauliuk's split is used because lifetimes and saturation levels are his. Held constant over 1900-2025 (assumption); Daehn combines Pauliuk's sector demand with Cullen's product matrix in the same way (SI 2.2.1.1)."
   st.share.industrial_equipment:
-    value: 0.1618
+    value: 0.1591
     unit: "1"
     status: derived
     source: daehn_2017
-    locator: "Fig. 1: industrial equipment 176 of 1,088 Mt"
+    locator: "SI Table S45, Pauliuk row: machinery 165 of 1,037 Mt"
   st.share.construction:
-    value: 0.5478
+    value: 0.5236
     unit: "1"
     status: derived
     source: daehn_2017
-    locator: "Fig. 1: construction 596 of 1,088 Mt"
+    locator: "SI Table S45, Pauliuk row: construction 543 of 1,037 Mt"
   st.share.metal_goods:
-    value: 0.1626
+    value: 0.1244
     unit: "1"
     status: derived
     source: daehn_2017
-    locator: "Fig. 1: metal goods 177 of 1,088 Mt"
+    locator: "SI Table S45, Pauliuk row: goods 129 of 1,037 Mt"
 
   st.lifetime.transport:
     value: 20
@@ -117,152 +115,226 @@ parameters:
   st.target.scrap_cu_2008.transport:
     value: 0.003
     unit: "1"
-    status: derived
+    status: sourced
+    distribution: triangular
+    low: 0.002
+    high: 0.005
     source: daehn_2017
-    locator: "Fig. 3, 2008 panel, 'Transport scrap' step (read from figure)"
-    note: "Calibration target for the copper -> steel link share of this sector (steel.calibrate). Stated range PENDING Daehn 2017 SI Table S21."
+    locator: "SI Table S22 (2008 Sankey value); range SI Table S21: Transport 0.3 (0.2-0.5) wt%"
+    note: "Calibration target for this sector's copper -> steel link share (steel.calibrate)."
   st.target.scrap_cu_2008.industrial_equipment:
     value: 0.002
     unit: "1"
-    status: derived
+    status: sourced
+    distribution: triangular
+    low: 0.002
+    high: 0.004
     source: daehn_2017
-    locator: "Fig. 3, 2008 panel, 'Industrial eq. scrap' step (read from figure)"
-    note: "Calibration target for the copper -> steel link share of this sector (steel.calibrate). Stated range PENDING Daehn 2017 SI Table S21."
+    locator: "SI Table S22 (2008 Sankey value); range SI Table S21: Machinery 0.25 (0.2-0.4) wt%"
+    note: "Table S21 lists 0.25 as expected but Table S22 and Fig. 3 use 0.2; 0.2 is used (it is what the 2008 Sankey was built with). Calibration target for this sector's copper -> steel link share (steel.calibrate)."
   st.target.scrap_cu_2008.construction:
     value: 0.001
     unit: "1"
-    status: derived
+    status: sourced
+    distribution: triangular
+    low: 0.0
+    high: 0.001
     source: daehn_2017
-    locator: "Fig. 3, 2008 panel, 'Construction scrap' step (read from figure)"
-    note: "Calibration target for the copper -> steel link share of this sector (steel.calibrate). Stated range PENDING Daehn 2017 SI Table S21."
+    locator: "SI Table S22 (2008 Sankey value); range SI Table S21: Construction 0.1 (0-0.1) wt%"
+    note: "Calibration target for this sector's copper -> steel link share (steel.calibrate)."
   st.target.scrap_cu_2008.metal_goods:
     value: 0.003
     unit: "1"
-    status: derived
+    status: sourced
+    distribution: triangular
+    low: 0.002
+    high: 0.004
     source: daehn_2017
-    locator: "Fig. 3, 2008 panel, 'Goods scrap' step (read from figure)"
-    note: "Calibration target for the copper -> steel link share of this sector (steel.calibrate). Stated range PENDING Daehn 2017 SI Table S21."
+    locator: "SI Table S22 (2008 Sankey value); range SI Table S21: Goods 0.4 (0.2-0.3) wt%"
+    note: "Table S21 row is internally inconsistent (expected 0.4 outside 0.2-0.3); Table S22 and Fig. 3 use 0.3, so 0.3 is used with the range widened to span all three values (0.2-0.4). Calibration target for this sector's copper -> steel link share (steel.calibrate)."
+  st.target.scrap_mass_2008.transport:
+    value: 107
+    unit: Mt
+    status: sourced
+    source: daehn_2017
+    locator: "SI Table S22: transport scrap 107 Mt (2008)"
+    note: "Validation target (Mt/yr)."
+  st.target.scrap_mass_2008.industrial_equipment:
+    value: 81
+    unit: Mt
+    status: sourced
+    source: daehn_2017
+    locator: "SI Table S22: machinery scrap 81 Mt (2008)"
+  st.target.scrap_mass_2008.construction:
+    value: 68
+    unit: Mt
+    status: sourced
+    source: daehn_2017
+    locator: "SI Table S22: construction scrap 68 Mt (2008)"
+  st.target.scrap_mass_2008.metal_goods:
+    value: 42
+    unit: Mt
+    status: sourced
+    source: daehn_2017
+    locator: "SI Table S22: goods scrap 42 Mt (2008)"
+  st.allocation_pinch:
+    value: 0
+    unit: "1"
+    status: assumption
+    note: "How copper is spread over products before tolerances bind. 0 = mixed: as evenly as tolerances allow, close to Daehn's 2008 Sankey where EAF steel goes to products pro rata (EAF share of construction 38 %, vehicles 16 %; SI Table S24). 1 = pinch: most tolerant products first (Daehn's perfect-allocation analysis), which concentrates copper in long-lived construction steel. Primary iron and unusable scrap are the same either way; only where copper sits, and so what returns decades later, differs."
+  st.cu_to_process_losses:
+    value: 0.0
+    unit: "1"
+    status: assumption
+    distribution: uniform
+    low: 0.0
+    high: 1.0
+    note: "Share of the copper concentration carried by the process-loss allowance (slag, dust, unrecovered yield losses). 0 = copper stays with the steel, since it is more noble than iron and does not oxidise into slag; tolerance then applies to product mass, as in Daehn Fig. 2 (1.8 Mt tolerable in 2008). 1 = losses carry copper at melt concentration, as in Daehn Fig. 3."
 
-  # Product tolerance bands (Fig. 3 steps; legend bins of Fig. 1) and their shares of demand.
+  # Product tolerance bands: SI Table S36 estimated copper tolerance of every intermediate
+  # product in each end-use sector. Bounds are the mass-weighted means of the products' own
+  # high/low tolerances (Table S36) using 2008 masses (Table S46); sampled triangular.
   st.tolerance.t0400:
     value: 0.004
     unit: "1"
     status: sourced
+    distribution: triangular
+    low: 0.004
+    high: 0.005
     source: daehn_2017
-    locator: "Fig. 1 legend and Fig. 3 (reinforcing bar, 0.4 wt%)"
-  st.tolerance.t0250:
-    value: 0.0025
+    locator: "SI Table S36 (products at 0.4 wt%: 165 Mt in 2008, Table S46)"
+  st.tolerance.t0300:
+    value: 0.003
     unit: "1"
-    status: derived
+    status: sourced
+    distribution: triangular
+    low: 0.002
+    high: 0.003
     source: daehn_2017
-    locator: "Fig. 3 step at 0.25 wt% (midpoint of the Fig. 1 0.2-0.3 bin)"
-  st.tolerance.t0175:
-    value: 0.00175
+    locator: "SI Table S36 (products at 0.3 wt%: 89 Mt in 2008, Table S46)"
+  st.tolerance.t0200:
+    value: 0.002
     unit: "1"
-    status: derived
+    status: sourced
+    distribution: triangular
+    low: 0.000613
+    high: 0.002034
     source: daehn_2017
-    locator: "Fig. 3 step at 0.175 wt% (midpoint of the Fig. 1 0.15-0.2 bin)"
-  st.tolerance.t0125:
-    value: 0.00125
+    locator: "SI Table S36 (products at 0.2 wt%: 119 Mt in 2008, Table S46)"
+  st.tolerance.t0150:
+    value: 0.0015
     unit: "1"
-    status: derived
+    status: sourced
+    distribution: triangular
+    low: 0.001
+    high: 0.002
     source: daehn_2017
-    locator: "Fig. 3 step at 0.125 wt% (midpoint of the Fig. 1 0.1-0.15 bin)"
-  st.tolerance.t0080:
-    value: 0.0008
+    locator: "SI Table S36 (products at 0.15 wt%: 337 Mt in 2008, Table S46)"
+  st.tolerance.t0100:
+    value: 0.001
     unit: "1"
-    status: derived
+    status: sourced
+    distribution: triangular
+    low: 0.000643
+    high: 0.001847
     source: daehn_2017
-    locator: "Fig. 3 step at 0.08 wt% (midpoint of the Fig. 1 0.06-0.1 bin)"
+    locator: "SI Table S36 (products at 0.1 wt%: 167 Mt in 2008, Table S46)"
   st.tolerance.t0060:
     value: 0.0006
     unit: "1"
     status: sourced
+    distribution: triangular
+    low: 0.00057
+    high: 0.001078
     source: daehn_2017
-    locator: "p. 6599: 'less than 0.06 wt % copper for drawing steels'; Fig. 3 lowest step"
-  # Band shares by sector: share of each sector's steel in each tolerance band (missing = 0).
-  # Read from Daehn et al. 2017 Fig. 1, right-hand 'Set copper tolerances' column: the height in
-  # pixels of each legend colour within each end-use group (embedded 2100 px figure image),
-  # cast iron and cast steel excluded. About 4-5 Mt per pixel, so flows under ~5 Mt are missed.
-  # Check: applying these to the 2008 sector split reproduces the Fig. 3 band totals within ~15 %.
+    locator: "SI Table S36 (products at 0.06 wt%: 134 Mt in 2008, Table S46)"
+  # Band shares by sector = post-yield product masses in Daehn SI Table S46 (Cullen et al. 2012
+  # end-product to sector matrix, castings excluded) grouped by Table S36 tolerance, divided by
+  # the sector total. Applied to model demand by sector, as in Daehn SI 2.2.1.2.
+  st.band_share.transport.t0150:
+    value: 0.4472
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "SI Tables S46 and S36, transport: hot rolled bar 15; plate 27; hot rolled coil 6; welded tube 1; seamless tube 6 of 123 Mt"
+  st.band_share.transport.t0100:
+    value: 0.0813
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "SI Tables S46 and S36, transport: wire rod 10 of 123 Mt"
   st.band_share.transport.t0060:
-    value: 0.519
+    value: 0.4715
     unit: "1"
     status: derived
     source: daehn_2017
-    locator: "Fig. 1 end-use column, transport: 14 of 27 px"
-  st.band_share.transport.t0125:
-    value: 0.481
+    locator: "SI Tables S46 and S36, transport: cold rolled coil galv 58 of 123 Mt"
+  st.band_share.industrial_equipment.t0150:
+    value: 0.5833
     unit: "1"
     status: derived
     source: daehn_2017
-    locator: "Fig. 1 end-use column, transport: 13 of 27 px"
+    locator: "SI Tables S46 and S36, industrial_equipment: rail 1; hot rolled bar 36; plate 30; welded tube 20; seamless tube 4 of 156 Mt"
+  st.band_share.industrial_equipment.t0100:
+    value: 0.2436
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "SI Tables S46 and S36, industrial_equipment: wire rod 8; hot rolled coil 30 of 156 Mt"
   st.band_share.industrial_equipment.t0060:
-    value: 0.194
+    value: 0.1731
     unit: "1"
     status: derived
     source: daehn_2017
-    locator: "Fig. 1 end-use column, industrial_equipment: 7 of 36 px"
-  st.band_share.industrial_equipment.t0080:
-    value: 0.167
-    unit: "1"
-    status: derived
-    source: daehn_2017
-    locator: "Fig. 1 end-use column, industrial_equipment: 6 of 36 px"
-  st.band_share.industrial_equipment.t0125:
-    value: 0.639
-    unit: "1"
-    status: derived
-    source: daehn_2017
-    locator: "Fig. 1 end-use column, industrial_equipment: 23 of 36 px"
-  st.band_share.construction.t0080:
-    value: 0.097
-    unit: "1"
-    status: derived
-    source: daehn_2017
-    locator: "Fig. 1 end-use column, construction: 14 of 144 px"
-  st.band_share.construction.t0125:
-    value: 0.243
-    unit: "1"
-    status: derived
-    source: daehn_2017
-    locator: "Fig. 1 end-use column, construction: 35 of 144 px"
-  st.band_share.construction.t0175:
-    value: 0.236
-    unit: "1"
-    status: derived
-    source: daehn_2017
-    locator: "Fig. 1 end-use column, construction: 34 of 144 px"
-  st.band_share.construction.t0250:
-    value: 0.146
-    unit: "1"
-    status: derived
-    source: daehn_2017
-    locator: "Fig. 1 end-use column, construction: 21 of 144 px"
+    locator: "SI Tables S46 and S36, industrial_equipment: cold rolled coil 19; electrical sheet 8 of 156 Mt"
   st.band_share.construction.t0400:
-    value: 0.278
+    value: 0.29
     unit: "1"
     status: derived
     source: daehn_2017
-    locator: "Fig. 1 end-use column, construction: 40 of 144 px"
+    locator: "SI Tables S46 and S36, construction: rebar 165 of 569 Mt"
+  st.band_share.construction.t0300:
+    value: 0.1564
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "SI Tables S46 and S36, construction: light section 42; heavy section 38; rail 9 of 569 Mt"
+  st.band_share.construction.t0200:
+    value: 0.2091
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "SI Tables S46 and S36, construction: hot rolled bar 4; hot rolled coil 88; hot rolled coil galv 9; hr narrow strip 18 of 569 Mt"
+  st.band_share.construction.t0150:
+    value: 0.239
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "SI Tables S46 and S36, construction: wire rod 77; plate 6; welded tube 37; seamless tube 16 of 569 Mt"
+  st.band_share.construction.t0100:
+    value: 0.1055
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "SI Tables S46 and S36, construction: cold rolled coil 60 of 569 Mt"
+  st.band_share.metal_goods.t0150:
+    value: 0.3374
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "SI Tables S46 and S36, metal_goods: hot rolled bar 29; plate 25; welded tube 1 of 163 Mt"
+  st.band_share.metal_goods.t0100:
+    value: 0.362
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "SI Tables S46 and S36, metal_goods: wire rod 38; hot rolled coil 6; hr narrow strip 15 of 163 Mt"
   st.band_share.metal_goods.t0060:
-    value: 0.351
+    value: 0.3006
     unit: "1"
     status: derived
     source: daehn_2017
-    locator: "Fig. 1 end-use column, metal_goods: 13 of 37 px"
-  st.band_share.metal_goods.t0080:
-    value: 0.297
-    unit: "1"
-    status: derived
-    source: daehn_2017
-    locator: "Fig. 1 end-use column, metal_goods: 11 of 37 px"
-  st.band_share.metal_goods.t0125:
-    value: 0.352
-    unit: "1"
-    status: derived
-    source: daehn_2017
-    locator: "Fig. 1 end-use column, metal_goods: 13 of 37 px"
+    locator: "SI Tables S46 and S36, metal_goods: cold rolled coil 29; cold rolled coil coated 12; cold rolled coil tinned 8 of 163 Mt"
 
   st.saturation_stock_per_capita.transport:
     value: 1500

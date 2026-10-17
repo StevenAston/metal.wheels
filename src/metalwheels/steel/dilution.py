@@ -18,8 +18,9 @@ global trade and free blending. It is solved as a linear programme:
                sum_j x_ij <= s_i,   x_ij, p_j >= 0          (scrap available)
 
 Among allocations with the least primary iron, the one putting the least copper into products
-is chosen (and, among those, the one placing copper in the most tolerant products), so when
-some scrap cannot be used it is the dirtiest scrap that is left over. Scrap that is not used
+is chosen, so when some scrap cannot be used it is the dirtiest scrap that is left over. Where
+freedom remains, copper is spread as evenly as tolerances allow ("mixed", default) or steered
+into the most tolerant products ("pinch"); see :func:`allocate`. Scrap that is not used
 is split into scrap that is surplus by mass (more scrap than total demand) and scrap that is
 *unusable because of copper*. Primary iron above the mass-only requirement max(0, sum m - sum s)
 is the copper-induced primary requirement that Task 2.4 charges back.
@@ -105,8 +106,21 @@ def allocate(
     sink_mass: Sequence[float],
     sink_tolerance: Sequence[float],
     primary_conc: float,
+    mode: str = "mixed",
 ) -> Allocation:
-    """Allocate scrap and primary iron to product sinks (see module docstring)."""
+    """Allocate scrap and primary iron to product sinks (see module docstring).
+
+    ``mode`` settles how copper is spread when tolerances leave freedom:
+
+    * ``"mixed"`` (default): copper is spread as evenly as the tolerances allow
+      (water-filling: every product reaches min(tau_j, z) with the lowest common level z).
+      This resembles Daehn's 2008 Sankey, where EAF steel goes to products pro rata.
+    * ``"pinch"``: copper is steered into the most tolerant products first, as in Daehn's
+      perfect-allocation pinch analysis. It concentrates copper in construction steel.
+
+    Both give the same primary iron and unusable scrap; only where the copper sits differs."""
+    if mode not in ("mixed", "pinch"):
+        raise ValueError(f"unknown allocation mode {mode!r}")
     s = np.asarray(scrap_mass, dtype=float)
     c = np.asarray(scrap_conc, dtype=float)
     m = np.asarray(sink_mass, dtype=float)
@@ -118,8 +132,9 @@ def allocate(
     if np.any(tau <= primary_conc):
         raise ValueError("every tolerance must exceed the primary concentration")
     n_i, n_j = len(s), len(m)
-    nx = n_i * n_j  # x_ij flattened row-major (source-major), then p_j
-    n = nx + n_j
+    nx = n_i * n_j  # x_ij flattened row-major (source-major), then p_j, then z (mixed mode)
+    mixed = mode == "mixed"
+    n = nx + n_j + (1 if mixed else 0)
 
     def xi(i, j):
         return i * n_j + j
@@ -138,27 +153,40 @@ def allocate(
         for j in range(n_j):
             a_ub[n_j + i, xi(i, j)] = 1.0
         b_ub[n_j + i] = s[i]
+    if mixed:  # sink copper <= z * m_j for every sink
+        lvl = np.zeros((n_j, n))
+        lvl[:, :nx] = a_ub[:n_j, :nx]
+        lvl[:, nx : nx + n_j] = a_ub[:n_j, nx : nx + n_j]
+        lvl[:, -1] = -m
+        a_ub = np.vstack([a_ub, lvl])
+        b_ub = np.append(b_ub, np.zeros(n_j))
 
     # One LP gives the lexicographic optimum: each Mt of primary costs 1 + c_p and each Mt of
     # scrap i costs c_i < 1. Swapping scrap for primary always raises the cost, so the solution
     # minimises primary first and, among those solutions, the copper put into products.
-    # A third, much smaller term (TIE_BREAK) settles the remaining freedom: copper is steered
-    # into the most tolerant sinks, as in Daehn et al.'s pinch, so the allocation is unique and
-    # does not flip between equally good solver vertices from one year to the next.
+    # A third, much smaller term settles the remaining freedom so the allocation is unique and
+    # does not flip between equally good solver vertices from year to year: in "pinch" mode a
+    # TIE_BREAK weight steers copper to the most tolerant sinks; in "mixed" mode a small cost
+    # on the common level z spreads it evenly. The z weight is kept below
+    # m_min / c_max, so lowering z can never pay for leaving usable scrap behind.
     if np.any(c >= 1.0):
         raise ValueError("concentrations must be mass fractions below 1")
     cost = np.empty(n)
-    tight = (tau.max() - tau) / tau.max() if tau.max() > 0 else np.zeros(n_j)
+    tight = (tau.max() - tau) / tau.max() if (tau.max() > 0 and not mixed) else np.zeros(n_j)
     for i in range(n_i):
         cost[i * n_j : (i + 1) * n_j] = c[i] * (1.0 + TIE_BREAK * tight)
-    cost[nx:] = 1.0 + primary_conc
+    cost[nx : nx + n_j] = 1.0 + primary_conc
+    if mixed:
+        m_pos = m[m > 0]
+        c_top = max(float(c.max()) if c.size else 0.0, primary_conc, 1e-9)
+        cost[-1] = 1e-3 * (float(m_pos.min()) if m_pos.size else 1.0) / c_top
     res = linprog(cost, A_ub=a_ub, b_ub=b_ub, A_eq=a_eq, b_eq=m, method="highs")
     if not res.success:
         raise RuntimeError(f"allocation LP failed: {res.message}")
     sol = res.x
 
     flows = np.clip(sol[:nx].reshape(n_i, n_j), 0.0, None)
-    primary = np.clip(sol[nx:], 0.0, None)
+    primary = np.clip(sol[nx : nx + n_j], 0.0, None)
     used = flows.sum(axis=1)
     unused = np.clip(s - used, 0.0, None)
     sink_cu = c @ flows + primary_conc * primary

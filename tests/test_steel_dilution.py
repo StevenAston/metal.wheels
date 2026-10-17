@@ -140,3 +140,23 @@ def test_daehn_2008_copper_in_system():
     supply, tolerable = dl.copper_balance(s, c, m, tau, CP)
     assert supply == pytest.approx(0.7, rel=0.15)
     assert tolerable == pytest.approx(1.8, rel=0.15)
+
+
+def test_mixed_spreads_copper_pinch_concentrates_it():
+    s, c, m, tau = [50.0], [0.003], [100.0, 100.0], [0.004, 0.0006]
+    mixed = dl.allocate(s, c, m, tau, CP, mode="mixed")
+    pinch = dl.allocate(s, c, m, tau, CP, mode="pinch")
+    # Same primary and scrap use either way.
+    assert mixed.primary_total == pytest.approx(pinch.primary_total, rel=1e-9)
+    assert mixed.scrap_used.sum() == pytest.approx(50.0, rel=1e-9)
+    # Mixed: total Cu 0.15 + 150 x CP = 0.18 Mt over 200 Mt; tight sink capped at 0.06 %.
+    assert mixed.sink_concentration[1] == pytest.approx(0.0006, rel=1e-6)
+    assert mixed.sink_concentration[0] == pytest.approx((0.18 - 0.06) / 100, rel=1e-6)
+    # Pinch: all scrap into the tolerant sink.
+    assert pinch.sink_concentration[0] == pytest.approx((0.15 + 50 * CP) / 100, rel=1e-6)
+    assert pinch.sink_concentration[1] == pytest.approx(CP, rel=1e-6)
+
+
+def test_unknown_mode_rejected():
+    with pytest.raises(ValueError):
+        dl.allocate([1.0], [0.003], [1.0], [0.004], CP, mode="bogus")

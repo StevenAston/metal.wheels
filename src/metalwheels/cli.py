@@ -81,7 +81,8 @@ def params_list(
         raise typer.Exit(code=1)
 
     table = Table(title=f"Parameter registry ({len(items)} of {len(reg)})", show_lines=False)
-    for col in ("key", "value", "unit", "low", "high", "dist", "status", "source", "locator"):
+    table.add_column("key", no_wrap=True, min_width=max(len(p.key) for p in items))
+    for col in ("value", "unit", "low", "high", "dist", "status", "source", "locator"):
         table.add_column(col, overflow="fold")
     if notes:
         table.add_column("note", overflow="fold")

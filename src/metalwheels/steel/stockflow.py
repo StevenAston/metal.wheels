@@ -19,7 +19,10 @@ metal goods. Per year *t*:
    (``dilution.allocate``), run on band totals. The LP gives primary iron, scrap that cannot
    be used, and the copper concentration of every product. Unusable scrap is stockpiled and
    not offered again (assumption).
-5. Copper leaving with the lambda losses is taken to be at the melt concentration.
+5. The lambda losses carry a share pi (``st.cu_to_process_losses``) of the melt copper
+   concentration. With pi = 0 (default) copper stays with the steel, since it is more noble
+   than iron and does not go to slag, so tolerances apply to product mass (Daehn Fig. 2); with
+   pi = 1 concentration is preserved through the losses (Daehn Fig. 3).
 
 Copper balance of the steel system, checked every year:
     A + c_p P = Δ(Cu in stock) + Cu to landfill + Cu in stockpiled scrap + Cu in process losses.
@@ -81,6 +84,8 @@ class SteelParams:
     recovery: float
     product_yield: float
     loss_allowance: float
+    cu_to_losses: float  # share of melt copper concentration carried by process losses
+    allocation: str  # "mixed" or "pinch" (see dilution.allocate)
     primary_cu: float
     tolerance: np.ndarray  # (B,)
     band_share: np.ndarray  # (S, B), rows sum to 1
@@ -106,6 +111,8 @@ class SteelParams:
             "recovery": reg.value("st.eol_recovery_rate"),
             "product_yield": reg.value("st.product_yield"),
             "loss_allowance": reg.value("st.process_loss_allowance"),
+            "cu_to_losses": reg.value("st.cu_to_process_losses"),
+            "allocation": "pinch" if reg.value("st.allocation_pinch") >= 0.5 else "mixed",
             "primary_cu": reg.value("st.primary_cu"),
             "share": np.array([reg.value(f"st.share.{s}") for s in SECTORS]),
             "lifetime": np.array([reg.value(f"st.lifetime.{s}") for s in SECTORS]),
@@ -194,6 +201,12 @@ def run(
     pmf = lifetime_pmf(prm.lifetime, prm.sigma_frac, max_age)
     n_age = pmf.shape[1]
     lam, rho, c_p = prm.loss_allowance, prm.recovery, prm.primary_cu
+    # Copper in the charge that ends up in products, and the tolerance expressed per tonne of
+    # charge, given the share of melt concentration carried by the process losses.
+    pi_loss = prm.cu_to_losses
+    to_product = (1 + lam - pi_loss * lam) / (1 + lam)
+    tol_charge = prm.tolerance / (1 + lam - pi_loss * lam)
+    c_p = prm.primary_cu / (1 + lam - pi_loss * lam)  # primary steel at 0.02 % in products
 
     inflow = np.zeros((T, S))
     inflow_cu = np.zeros((T, S))
@@ -232,14 +245,14 @@ def run(
         band_mass = sinks.sum(axis=0)
         # Sinks with the same tolerance are interchangeable, so the LP runs on band totals and
         # each band's copper is shared across sectors in proportion to mass.
-        alloc = dilution.allocate(rec, conc, band_mass, prm.tolerance, c_p)
+        alloc = dilution.allocate(rec, conc, band_mass, tol_charge, c_p, prm.allocation)
         band_c = np.divide(
             alloc.sink_copper, band_mass, out=np.zeros(B), where=band_mass > 0
         )  # fmt: skip
         cu_charge = sinks * band_c[None, :]
-        inflow_cu[t] = cu_charge.sum(axis=1) / (1 + lam)
+        inflow_cu[t] = cu_charge.sum(axis=1) * to_product
         prod_c[t] = np.divide(inflow_cu[t], inflow[t], out=np.zeros(S), where=inflow[t] > 0)
-        cu_loss = cu_charge.sum() * lam / (1 + lam)
+        cu_loss = cu_charge.sum() * (1 - to_product)
         unusable[t] = alloc.scrap_unused
         cu_unused = float(conc @ alloc.scrap_unused)
         stockpile += alloc.scrap_unused.sum()
@@ -248,7 +261,7 @@ def run(
         stock_cu = prev_cu + inflow_cu[t] - b_cu
         prev, prev_cu = stock[t], stock_cu
         supply, tolerable = dilution.copper_balance(
-            rec, conc, band_mass, prm.tolerance, c_p
+            rec, conc, band_mass, tol_charge, c_p
         )  # fmt: skip
 
         r = flows[t]
