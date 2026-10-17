@@ -232,12 +232,11 @@ def run_scenario(
 
 def _steel(ts: pd.DataFrame, summary: dict, calib: dict, cu_result, reg: Registry) -> None:
     """Phase 2: copper -> steel link, steel stock model, tolerances and energy penalty."""
-    from metalwheels.steel import demand as st_demand
+    from metalwheels.steel import coupled, link
     from metalwheels.steel import energy as st_energy
-    from metalwheels.steel import link
 
-    lk = link.route(cu_result, link.link_shares(reg))
-    sp = st_demand.project(ts.index.to_numpy(), reg, lk.to_steel.to_numpy())
+    cs = coupled.run(cu_result, reg)
+    cal, lk, sp = cs.calibration, cs.link, cs.projection
     sf = sp.result.flows
     en = st_energy.SteelEnergy.from_registry(reg)
     for c in STEEL_COLUMNS:
@@ -246,8 +245,12 @@ def _steel(ts: pd.DataFrame, summary: dict, calib: dict, cu_result, reg: Registr
     ts["st_cu_to_other_sinks"] = lk.to_other_sinks.to_numpy()
     ts["st_energy_ej"] = st_energy.steel_energy_ej(sf["primary_iron"], sf["scrap_used"], en)
     ts["st_cu_penalty_ej"] = st_energy.penalty_ej(sf["copper_induced_primary"], en)
-    calib["steel_growth_rate"] = sp.growth_rate
-    calib["steel_k0"] = sp.k0
+    for j, s_name in enumerate(link.SECTORS):
+        calib[f"steel_growth_rate_{s_name}"] = float(sp.growth_rate[j])
+        calib[f"steel_k0_{s_name}"] = float(sp.k0[j])
+        calib[f"steel_cu_link_{s_name}"] = float(cal.phi[j])
+        summary[f"st_scrap_cu_2008_{s_name}"] = (float(cal.achieved[j]), "1")
+        summary[f"st_scrap_cu_2008_bulk_share_{s_name}"] = (float(cal.bulk_share[j]), "1")
     for kind in ("lp", "aggregate"):
         y = sp.result.crossover_year(kind)
         summary[f"st_crossover_year_{kind}"] = (float(y) if y else float("nan"), "year")

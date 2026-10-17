@@ -18,10 +18,11 @@ global trade and free blending. It is solved as a linear programme:
                sum_j x_ij <= s_i,   x_ij, p_j >= 0          (scrap available)
 
 Among allocations with the least primary iron, the one putting the least copper into products
-is chosen, so when some scrap cannot be used it is the dirtiest scrap that is left over.
-Scrap that is not used is split into scrap that is surplus by mass (more scrap than total
-demand) and scrap that is *unusable because of copper*. Primary iron above the mass-only requirement
-max(0, sum m - sum s) is the copper-induced primary requirement that Task 2.4 charges back.
+is chosen (and, among those, the one placing copper in the most tolerant products), so when
+some scrap cannot be used it is the dirtiest scrap that is left over. Scrap that is not used
+is split into scrap that is surplus by mass (more scrap than total demand) and scrap that is
+*unusable because of copper*. Primary iron above the mass-only requirement max(0, sum m - sum s)
+is the copper-induced primary requirement that Task 2.4 charges back.
 """
 
 from __future__ import annotations
@@ -31,6 +32,9 @@ from dataclasses import dataclass
 
 import numpy as np
 from scipy.optimize import linprog
+
+#: Relative weight of the "copper into the most tolerant products" tie-break in the LP.
+TIE_BREAK = 1e-3
 
 
 def dilution_share(c_scrap, c_tolerance, c_primary):
@@ -77,17 +81,22 @@ class Allocation:
     @property
     def copper_induced_primary(self) -> float:
         """Primary iron required only because of copper (Mt)."""
-        return max(0.0, self.primary_total - self.mass_only_primary)
+        return self._clean(max(0.0, self.primary_total - self.mass_only_primary))
+
+    def _clean(self, v: float) -> float:
+        """Zero out solver noise (below 1e-9 of throughput)."""
+        return 0.0 if v < 1e-9 * max(1.0, float(self.sink_mass.sum())) else v
 
     @property
     def surplus_scrap(self) -> float:
         """Scrap left over because total scrap exceeds total demand (Mt)."""
-        return max(0.0, float((self.scrap_used + self.scrap_unused).sum() - self.sink_mass.sum()))
+        total = (self.scrap_used + self.scrap_unused).sum()
+        return self._clean(max(0.0, float(total - self.sink_mass.sum())))
 
     @property
     def unusable_scrap(self) -> float:
         """Scrap left over because of copper, beyond any mass surplus (Mt)."""
-        return max(0.0, float(self.scrap_unused.sum()) - self.surplus_scrap)
+        return self._clean(max(0.0, float(self.scrap_unused.sum()) - self.surplus_scrap))
 
 
 def allocate(
@@ -133,11 +142,15 @@ def allocate(
     # One LP gives the lexicographic optimum: each Mt of primary costs 1 + c_p and each Mt of
     # scrap i costs c_i < 1. Swapping scrap for primary always raises the cost, so the solution
     # minimises primary first and, among those solutions, the copper put into products.
+    # A third, much smaller term (TIE_BREAK) settles the remaining freedom: copper is steered
+    # into the most tolerant sinks, as in Daehn et al.'s pinch, so the allocation is unique and
+    # does not flip between equally good solver vertices from one year to the next.
     if np.any(c >= 1.0):
         raise ValueError("concentrations must be mass fractions below 1")
     cost = np.empty(n)
+    tight = (tau.max() - tau) / tau.max() if tau.max() > 0 else np.zeros(n_j)
     for i in range(n_i):
-        cost[i * n_j : (i + 1) * n_j] = c[i]
+        cost[i * n_j : (i + 1) * n_j] = c[i] * (1.0 + TIE_BREAK * tight)
     cost[nx:] = 1.0 + primary_conc
     res = linprog(cost, A_ub=a_ub, b_ub=b_ub, A_eq=a_eq, b_eq=m, method="highs")
     if not res.success:
@@ -152,12 +165,13 @@ def allocate(
     return Allocation(used, unused, primary, sink_cu, flows, primary_conc)
 
 
-def copper_balance(scrap_mass, scrap_conc, sink_mass, sink_tolerance, primary_conc):
-    """Daehn et al. (2017) Fig. 2 aggregate test: ``(copper in supply, copper tolerable)`` (Mt).
-
-    Supply is all scrap plus the primary iron needed to make up the mass shortfall; tolerable is
-    sum_j tau_j m_j. The aggregate crossover is the first year supply exceeds tolerable."""
+def copper_balance(scrap_mass, scrap_conc, sink_mass, sink_tolerance, primary_conc=None):
+    """Daehn et al. (2017) Fig. 2 aggregate test: ``(copper in scrap supply, copper tolerable)``
+    (Mt). Copper in supply counts scrap only, as in Daehn (0.7 Mt in 2008 against 1.8 Mt
+    tolerable, p. 6602); tolerable is sum_j tau_j m_j. The aggregate crossover is the first year
+    supply exceeds tolerable. ``primary_conc`` is accepted for symmetry with :func:`allocate`
+    and ignored. The LP in :func:`allocate` is the stricter test, since primary iron also uses
+    up some tolerance."""
     s, c = np.asarray(scrap_mass, float), np.asarray(scrap_conc, float)
     m, tau = np.asarray(sink_mass, float), np.asarray(sink_tolerance, float)
-    supply = float(s @ c + primary_conc * max(0.0, m.sum() - s.sum()))
-    return supply, float(m @ tau)
+    return float(s @ c), float(m @ tau)

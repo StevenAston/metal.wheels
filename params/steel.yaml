@@ -2,8 +2,8 @@
 # Sectors follow Daehn et al. (2017) / Pauliuk et al. (2013): transport, industrial equipment,
 # construction, metal goods. Concentrations are mass fractions (0.003 = 0.3 wt% Cu).
 #
-# PENDING entries (status: assumption, note starts "PENDING") are placeholders until Steve
-# supplies Daehn 2017 SI, Pauliuk et al. 2013a/b and Cullen et al. 2012 (see PLAN change log).
+# PENDING entries (status: assumption, note starts "PENDING") are placeholders until the
+# Daehn 2017 Supporting Information arrives (see PLAN change log).
 domain: steel
 parameters:
   st.share.transport:
@@ -35,46 +35,57 @@ parameters:
   st.lifetime.transport:
     value: 20
     unit: a
-    status: assumption
-    low: 15
-    high: 25
-    note: "PENDING Pauliuk et al. 2013a/b. Placeholder recalled, not checked against the paper."
+    status: sourced
+    distribution: uniform
+    low: 13
+    high: 27
+    source: pauliuk_2013_steel_stocks
+    locator: "Table 4 basic set (also Pauliuk et al. 2013a Table 1, all regions except developed Asia); bounds = Table 4 'all lifetimes 33% shorter/longer'"
   st.lifetime.industrial_equipment:
     value: 30
     unit: a
-    status: assumption
+    status: sourced
+    distribution: uniform
     low: 20
     high: 40
-    note: "PENDING Pauliuk et al. 2013a/b. Placeholder recalled, not checked against the paper."
+    source: pauliuk_2013_steel_stocks
+    locator: "Table 4 basic set (also Pauliuk et al. 2013a Table 1, all regions except developed Asia); bounds = Table 4 'all lifetimes 33% shorter/longer'"
   st.lifetime.construction:
     value: 75
     unit: a
     status: sourced
+    distribution: uniform
     low: 50
     high: 100
-    source: daehn_2017
-    locator: "p. 6601: '75 years ago (average product lifetime considering most EAF steels are used in construction)', citing Pauliuk, Wang & Müller 2013"
-    note: "Bounds PENDING Pauliuk et al. 2013b."
+    source: pauliuk_2013_steel_stocks
+    locator: "Table 4 basic set; bounds = Table 4 'construction lifetime 33% shorter/longer' (50, 100 a). Daehn et al. 2017 p. 6601 uses the same 75 a"
   st.lifetime.metal_goods:
     value: 15
     unit: a
-    status: assumption
+    status: sourced
+    distribution: uniform
     low: 10
     high: 20
-    note: "PENDING Pauliuk et al. 2013a/b. Placeholder recalled, not checked against the paper."
+    source: pauliuk_2013_steel_stocks
+    locator: "Table 4 basic set (also Pauliuk et al. 2013a Table 1, all regions except developed Asia); bounds = Table 4 'all lifetimes 33% shorter/longer'"
   st.lifetime_sigma_fraction:
     value: 0.3
     unit: "1"
-    status: assumption
-    note: "PENDING Pauliuk et al. 2013a. Standard deviation of the normal lifetime distribution as a fraction of the mean."
+    status: sourced
+    source: pauliuk_2013_steel_stocks
+    locator: "Section 2.3.3, p. 26: 'the lifetime followed a normal distribution and the standard deviation was set to 30% of the mean'"
 
   st.eol_recovery_rate:
     value: 0.80
     unit: "1"
     status: sourced
+    distribution: uniform
+    low: 0.70
+    high: 0.90
     source: daehn_2017
     locator: "p. 6601: '80% (average end-of-life recovery rate)', citing worldsteel 2010 fact sheet"
-    note: "Share of end-of-life steel recovered as scrap; the rest stays in obsolete stocks or landfill."
+    range_source: pauliuk_2013_steel_stocks
+    note: "Share of end-of-life steel recovered as scrap; the rest stays in obsolete stocks or landfill. Low bound: Pauliuk et al. 2013b p. 29 (iii) assume ca. 30 % of steel leaving use is lost to landfill or obsolete stocks. High bound 0.90: UNEP/Daehn p. 6599 cites recovery 'as high as 90%'."
   st.product_yield:
     value: 0.7594
     unit: "1"
@@ -109,28 +120,28 @@ parameters:
     status: derived
     source: daehn_2017
     locator: "Fig. 3, 2008 panel, 'Transport scrap' step (read from figure)"
-    note: "Calibration target. Stated range PENDING Daehn 2017 SI Table S21."
+    note: "Calibration target for the copper -> steel link share of this sector (steel.calibrate). Stated range PENDING Daehn 2017 SI Table S21."
   st.target.scrap_cu_2008.industrial_equipment:
     value: 0.002
     unit: "1"
     status: derived
     source: daehn_2017
     locator: "Fig. 3, 2008 panel, 'Industrial eq. scrap' step (read from figure)"
-    note: "Calibration target. Stated range PENDING Daehn 2017 SI Table S21."
+    note: "Calibration target for the copper -> steel link share of this sector (steel.calibrate). Stated range PENDING Daehn 2017 SI Table S21."
   st.target.scrap_cu_2008.construction:
     value: 0.001
     unit: "1"
     status: derived
     source: daehn_2017
     locator: "Fig. 3, 2008 panel, 'Construction scrap' step (read from figure)"
-    note: "Calibration target. Stated range PENDING Daehn 2017 SI Table S21."
+    note: "Calibration target for the copper -> steel link share of this sector (steel.calibrate). Stated range PENDING Daehn 2017 SI Table S21."
   st.target.scrap_cu_2008.metal_goods:
     value: 0.003
     unit: "1"
     status: derived
     source: daehn_2017
     locator: "Fig. 3, 2008 panel, 'Goods scrap' step (read from figure)"
-    note: "Calibration target. Stated range PENDING Daehn 2017 SI Table S21."
+    note: "Calibration target for the copper -> steel link share of this sector (steel.calibrate). Stated range PENDING Daehn 2017 SI Table S21."
 
   # Product tolerance bands (Fig. 3 steps; legend bins of Fig. 1) and their shares of demand.
   st.tolerance.t0400:
@@ -169,73 +180,145 @@ parameters:
     status: sourced
     source: daehn_2017
     locator: "p. 6599: 'less than 0.06 wt % copper for drawing steels'; Fig. 3 lowest step"
-  st.band_share.t0400:
-    value: 0.171
+  # Band shares by sector: share of each sector's steel in each tolerance band (missing = 0).
+  # Read from Daehn et al. 2017 Fig. 1, right-hand 'Set copper tolerances' column: the height in
+  # pixels of each legend colour within each end-use group (embedded 2100 px figure image),
+  # cast iron and cast steel excluded. About 4-5 Mt per pixel, so flows under ~5 Mt are missed.
+  # Check: applying these to the 2008 sector split reproduces the Fig. 3 band totals within ~15 %.
+  st.band_share.transport.t0060:
+    value: 0.519
     unit: "1"
-    status: assumption
-    note: "PENDING Cullen et al. 2012 / Daehn SI product-to-sector matrix. Placeholder = 2008 band mass share read from Daehn Fig. 3 (185 of 1,080 Mt), applied to every sector alike."
-  st.band_share.t0250:
-    value: 0.079
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, transport: 14 of 27 px"
+  st.band_share.transport.t0125:
+    value: 0.481
     unit: "1"
-    status: assumption
-    note: "PENDING Cullen et al. 2012. Placeholder from Daehn Fig. 3 2008 (85 of 1,080 Mt)."
-  st.band_share.t0175:
-    value: 0.111
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, transport: 13 of 27 px"
+  st.band_share.industrial_equipment.t0060:
+    value: 0.194
     unit: "1"
-    status: assumption
-    note: "PENDING Cullen et al. 2012. Placeholder from Daehn Fig. 3 2008 (120 of 1,080 Mt)."
-  st.band_share.t0125:
-    value: 0.333
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, industrial_equipment: 7 of 36 px"
+  st.band_share.industrial_equipment.t0080:
+    value: 0.167
     unit: "1"
-    status: assumption
-    note: "PENDING Cullen et al. 2012. Placeholder from Daehn Fig. 3 2008 (360 of 1,080 Mt)."
-  st.band_share.t0080:
-    value: 0.157
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, industrial_equipment: 6 of 36 px"
+  st.band_share.industrial_equipment.t0125:
+    value: 0.639
     unit: "1"
-    status: assumption
-    note: "PENDING Cullen et al. 2012. Placeholder from Daehn Fig. 3 2008 (170 of 1,080 Mt)."
-  st.band_share.t0060:
-    value: 0.149
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, industrial_equipment: 23 of 36 px"
+  st.band_share.construction.t0080:
+    value: 0.097
     unit: "1"
-    status: assumption
-    note: "PENDING Cullen et al. 2012. Placeholder from Daehn Fig. 3 2008 (160 of 1,080 Mt); rounded so the six shares sum to 1."
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, construction: 14 of 144 px"
+  st.band_share.construction.t0125:
+    value: 0.243
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, construction: 35 of 144 px"
+  st.band_share.construction.t0175:
+    value: 0.236
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, construction: 34 of 144 px"
+  st.band_share.construction.t0250:
+    value: 0.146
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, construction: 21 of 144 px"
+  st.band_share.construction.t0400:
+    value: 0.278
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, construction: 40 of 144 px"
+  st.band_share.metal_goods.t0060:
+    value: 0.351
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, metal_goods: 13 of 37 px"
+  st.band_share.metal_goods.t0080:
+    value: 0.297
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, metal_goods: 11 of 37 px"
+  st.band_share.metal_goods.t0125:
+    value: 0.352
+    unit: "1"
+    status: derived
+    source: daehn_2017
+    locator: "Fig. 1 end-use column, metal_goods: 13 of 37 px"
 
-  st.saturation_stock_per_capita:
-    value: 13000
+  st.saturation_stock_per_capita.transport:
+    value: 1500
     unit: kg/person
-    status: assumption
+    status: sourced
     distribution: uniform
-    low: 11000
-    high: 15000
-    note: "PENDING Pauliuk, Wang & Müller 2013b. Placeholder 13 +/- 2 t/person recalled, not checked against the paper."
-
-  # Copper -> steel link (Task 2.2): share of the copper module's 'other scrap markets' flow
-  # from each copper end-use category that ends up attached to that sector's steel scrap.
-  st.cu_link.transport:
-    value: 0.9
+    low: 800
+    high: 2200
+    source: pauliuk_2013_steel_stocks
+    locator: "Table 6, p. 29: transportation 1.5 +/- 0.7 t/person (mature stocks); Pauliuk et al. 2013a Table 1 uses 1.5"
+  st.saturation_stock_per_capita.industrial_equipment:
+    value: 1300
+    unit: kg/person
+    status: sourced
+    distribution: uniform
+    low: 800
+    high: 1800
+    source: pauliuk_2013_steel_stocks
+    locator: "Table 6, p. 29: machinery 1.3 +/- 0.5 t/person (Pauliuk et al. 2013a Table 1 uses 1.6 for most regions)"
+  st.saturation_stock_per_capita.construction:
+    value: 10000
+    unit: kg/person
+    status: sourced
+    distribution: uniform
+    low: 8000
+    high: 12000
+    source: pauliuk_2013_steel_stocks
+    locator: "Table 6, p. 29: construction 10 +/- 2 t/person"
+  st.saturation_stock_per_capita.metal_goods:
+    value: 600
+    unit: kg/person
+    status: sourced
+    distribution: uniform
+    low: 400
+    high: 800
+    source: pauliuk_2013_steel_stocks
+    locator: "Table 6, p. 29: appliances and other 0.6 +/- 0.2 t/person"
+    note: "Total 13.4 t/person ('13 +/- 2', Table 6). Sectors are sampled independently in Monte Carlo, which widens the total range slightly beyond +/- 2 t."
+  st.target.stock_per_capita_2008:
+    value: 3700
+    unit: kg/person
+    status: sourced
+    source: pauliuk_2013_scrap_age
+    locator: "p. 3451: 'Global average per capita stock will grow from the present 3.7 tons'"
+    note: "Validation target (global average, 2008)."
+  st.target.final_demand_2008:
+    value: 1100
+    unit: Mt
+    status: sourced
+    source: pauliuk_2013_scrap_age
+    locator: "p. 3451: 'Aggregated final demand will increase from 1100 Mt/yr in 2008 to ca. 1600 Mt/yr in 2050 and ca. 2000 Mt/yr in 2100'"
+    note: "Validation target (Mt/yr). Pauliuk's final demand counts all steel-containing products; the model's product inflow excludes castings."
+  st.target.construction_stock_share:
+    value: 0.75
     unit: "1"
-    status: assumption
-    low: 0
-    high: 1
-    note: "Copper 'transport' -> steel 'transport'. Placeholder; to be calibrated to the 2008 scrap copper targets once lifetimes are sourced."
-  st.cu_link.industrial_equipment:
-    value: 0.4
-    unit: "1"
-    status: assumption
-    low: 0
-    high: 1
-    note: "Copper 'industry' -> steel 'industrial_equipment'. Placeholder; to be calibrated."
-  st.cu_link.construction:
-    value: 0.1
-    unit: "1"
-    status: assumption
-    low: 0
-    high: 1
-    note: "Copper 'construction' + 'infrastructure' -> steel 'construction'. Placeholder; to be calibrated."
-  st.cu_link.metal_goods:
-    value: 0.15
-    unit: "1"
-    status: assumption
-    low: 0
-    high: 1
-    note: "Copper 'consumer' -> steel 'metal_goods'. Placeholder; to be calibrated."
+    status: sourced
+    source: pauliuk_2013_scrap_age
+    locator: "p. 3451: 'Construction accounts for 75% of the stocks, followed by transportation (ca. 10%) and machinery (ca. 8%)'"
+    note: "Validation target."

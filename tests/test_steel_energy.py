@@ -7,8 +7,7 @@ import pytest
 
 from metalwheels import registry
 from metalwheels.copper import demand as cu_demand
-from metalwheels.steel import demand as st_demand
-from metalwheels.steel import energy, link
+from metalwheels.steel import coupled, energy
 
 logging.getLogger("metalwheels").setLevel(logging.ERROR)
 
@@ -47,8 +46,7 @@ def test_scrap_vs_ore_on_primary_basis(en):
 
 def _coupled(reg, end_year=2200, policy=None):
     pj = cu_demand.project(end_year=end_year, reg=reg, policy=policy)
-    lk = link.route(pj.result, link.link_shares(reg))
-    return st_demand.project(pj.result.years, reg, lk.to_steel.to_numpy())
+    return coupled.run(pj.result, reg).projection
 
 
 def test_full_copper_processing_gives_zero_penalty(reg, en):

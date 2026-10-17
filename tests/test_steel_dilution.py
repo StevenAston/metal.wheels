@@ -83,5 +83,60 @@ def test_mass_and_copper_conservation():
 
 def test_aggregate_copper_balance():
     supply, tolerable = dl.copper_balance([290.0], [0.002], [500.0, 500.0], [0.004, 0.0006], CP)
-    assert supply == pytest.approx(290 * 0.002 + 710 * CP)
+    assert supply == pytest.approx(290 * 0.002)
     assert tolerable == pytest.approx(500 * 0.004 + 500 * 0.0006)
+
+
+# --- Task 2.3 done condition: crossover with Daehn-equivalent inputs -------------------------
+# Iron sources and end products read from Daehn et al. 2017 Fig. 3 (best-estimate case built on
+# Pauliuk et al. 2013a): (Mt, wt% Cu) steps, read from the figure to about +/- 10 Mt.
+DAEHN_FIG3 = {
+    2040: {
+        "sources": [(220, 0.30), (180, 0.30), (190, 0.20), (210, 0.175)],
+        "pig_iron": 730,
+        "products": [(220, 0.4), (110, 0.25), (160, 0.175), (560, 0.125), (210, 0.08), (270, 0.06)],
+    },
+    2050: {
+        "sources": [(300, 0.30), (180, 0.30), (230, 0.20), (275, 0.175)],
+        "pig_iron": 335,
+        "products": [(200, 0.4), (110, 0.25), (150, 0.175), (670, 0.125), (140, 0.08), (50, 0.06)],
+    },
+}
+
+
+def _daehn_case(year):
+    d = DAEHN_FIG3[year]
+    s = np.array([m for m, _ in d["sources"]], float)
+    c = np.array([w for _, w in d["sources"]]) / 100
+    m = np.array([m for m, _ in d["products"]], float)
+    tau = np.array([w for _, w in d["products"]]) / 100
+    return s, c, m, tau
+
+
+def test_daehn_equivalent_crossover_between_2040_and_2060():
+    """Daehn's best estimate puts the crossover at about 2050; our balance and LP, fed the same
+    inputs, cross between the 2040 and 2050 snapshots."""
+    gap = {}
+    for year in DAEHN_FIG3:
+        s, c, m, tau = _daehn_case(year)
+        supply, tolerable = dl.copper_balance(s, c, m, tau, CP)
+        gap[year] = supply - tolerable
+        unusable = dl.allocate(s, c, m, tau, CP).unusable_scrap
+        assert (unusable > 0) == (gap[year] > 0), year
+    assert gap[2040] < 0 < gap[2050]
+    crossing = 2040 + 10 * (-gap[2040]) / (gap[2050] - gap[2040])
+    assert 2040 <= crossing <= 2060
+
+
+def test_daehn_2008_copper_in_system():
+    """Daehn et al. 2017 p. 6602: about 0.7 Mt copper in the 2008 system (scrap), 1.8 Mt
+    tolerable.
+    2008 Fig. 3 steps: transport 125 Mt + goods 50 Mt at 0.3 %, industrial 70 Mt at 0.2 %,
+    construction 70 Mt at 0.1 %; pig iron to 1,080 Mt; products as read below."""
+    s = np.array([125.0, 50.0, 70.0, 70.0])
+    c = np.array([0.003, 0.003, 0.002, 0.001])
+    m = np.array([185.0, 85.0, 120.0, 360.0, 170.0, 160.0])
+    tau = np.array([0.004, 0.0025, 0.00175, 0.00125, 0.0008, 0.0006])
+    supply, tolerable = dl.copper_balance(s, c, m, tau, CP)
+    assert supply == pytest.approx(0.7, rel=0.15)
+    assert tolerable == pytest.approx(1.8, rel=0.15)

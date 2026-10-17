@@ -94,8 +94,13 @@ class SteelParams:
             )
         )
         tol = np.array([reg.value(f"st.tolerance.{b}") for b in bands])
-        shared = np.array([reg.value(f"st.band_share.{b}") for b in bands])
-        band_share = np.tile(shared, (len(SECTORS), 1))
+        band_share = np.array(
+            [
+                [reg.value(f"st.band_share.{s}.{b}") if f"st.band_share.{s}.{b}" in reg else 0.0
+                 for b in bands]
+                for s in SECTORS
+            ]
+        )  # fmt: skip
         vals = {
             "sigma_frac": reg.value("st.lifetime_sigma_fraction"),
             "recovery": reg.value("st.eol_recovery_rate"),
@@ -171,14 +176,18 @@ def run(
     """Run the steel stock model.
 
     ``products`` (Mt/yr) is supply-driven where finite; NaN years are demand-driven towards
-    ``target_stock`` (Mt). ``attached_cu`` is (years, sectors) Mt Cu/yr from the copper link
-    (zeros if omitted)."""
+    ``target_stock`` (Mt): either a total per year (inflow split by the fixed sector shares) or
+    a (years, sectors) array of sector targets. ``attached_cu`` is (years, sectors) Mt Cu/yr
+    from the copper link (zeros if omitted)."""
     years = np.asarray(years)
     products = np.asarray(products, dtype=float)
     T, S, B = len(years), len(prm.sectors), len(prm.bands)
     demand_years = np.isnan(products)
     if demand_years.any() and target_stock is None:
         raise ValueError("NaN product values require target_stock")
+    by_sector = target_stock is not None and np.ndim(target_stock) == 2
+    if by_sector and np.shape(target_stock) != (T, S):
+        raise ValueError(f"sector targets must have shape {(T, S)}")
     A_cu = np.zeros((T, S)) if attached_cu is None else np.asarray(attached_cu, dtype=float)
     if A_cu.shape != (T, S):
         raise ValueError(f"attached_cu must have shape {(T, S)}")
@@ -205,8 +214,15 @@ def run(
         else:
             b_cu = np.zeros(S)
         E = eol[t].sum()
-        F = max(target_stock[t] - prev.sum() + E, 0.0) if demand_years[t] else products[t]
-        inflow[t] = prm.share * F
+        if not demand_years[t]:
+            F = products[t]
+            inflow[t] = prm.share * F
+        elif by_sector:
+            inflow[t] = np.maximum(target_stock[t] - prev + eol[t], 0.0)
+            F = inflow[t].sum()
+        else:
+            F = max(target_stock[t] - prev.sum() + E, 0.0)
+            inflow[t] = prm.share * F
 
         rec = rho * eol[t]
         cu_rec = rho * b_cu + A_cu[t]
@@ -265,7 +281,10 @@ def run(
         used = alloc.scrap_used.sum()
         r[col["secondary_cu"]] = float(conc @ alloc.scrap_used) / used if used > 0 else np.nan
         r[col["product_cu_mean"]] = inflow_cu[t].sum() / F if F > 0 else np.nan
-        r[col["target_stock"]] = target_stock[t] if target_stock is not None else np.nan
+        if target_stock is None:
+            r[col["target_stock"]] = np.nan
+        else:
+            r[col["target_stock"]] = np.sum(target_stock[t]) if by_sector else target_stock[t]
         r[col["demand_driven"]] = float(demand_years[t])
 
     idx = pd.Index(years, name="year")

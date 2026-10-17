@@ -18,7 +18,6 @@ import numpy as np
 import pandas as pd
 
 from metalwheels.copper.stockflow import StockFlowResult
-from metalwheels.registry import Registry
 
 SECTORS = ("transport", "industrial_equipment", "construction", "metal_goods")
 
@@ -29,14 +28,6 @@ CU_CATEGORY_MAP: dict[str, tuple[str, ...]] = {
     "construction": ("construction", "infrastructure"),
     "metal_goods": ("consumer",),
 }
-
-
-def link_shares(reg: Registry) -> np.ndarray:
-    """phi_g for each steel sector, in ``SECTORS`` order."""
-    phi = np.array([reg.value(f"st.cu_link.{s}") for s in SECTORS])
-    if np.any((phi < 0) | (phi > 1)):
-        raise ValueError("copper link shares must lie in [0, 1]")
-    return phi
 
 
 def other_scrap_by_category(cu: StockFlowResult) -> pd.DataFrame:
@@ -65,7 +56,13 @@ class LinkResult:
 
 
 def route(cu: StockFlowResult, phi: np.ndarray) -> LinkResult:
-    """Split copper 'other scrap markets' into steel-attached copper and other sinks."""
+    """Split copper 'other scrap markets' into steel-attached copper and other sinks.
+
+    ``phi`` (one share per steel sector, in ``SECTORS`` order) normally comes from
+    ``metalwheels.steel.calibrate.calibrate_shares``."""
+    phi = np.asarray(phi, dtype=float)
+    if phi.shape != (len(SECTORS),) or np.any((phi < 0) | (phi > 1)):
+        raise ValueError("copper link shares must be one value in [0, 1] per sector")
     other = other_scrap_by_category(cu)
     to_steel = pd.DataFrame(index=other.index)
     for s, f in zip(SECTORS, phi, strict=True):
